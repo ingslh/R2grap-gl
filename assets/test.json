@@ -1,0 +1,3769 @@
+{
+  "FINANCIAL GROWTH": {
+    "width": 1000,
+    "height": 1000,
+    "pixelAspect": 1,
+    "frameRate": 60,
+    "frameDuration": 0.01666666666667,
+    "duration": 2,
+    "time": 0.31666666666667,
+    "dropFrame": true,
+    "numLayers": 5,
+    "motionBlur": false,
+    "draft3d": false,
+    "frameBlending": false,
+    "preserveNestedFrameRate": false,
+    "activeCamera": null,
+    "displayStartTime": 0,
+    "shutterAngle": 180,
+    "shutterPhase": -90,
+    "renderer": "ADBE Advanced 3d",
+    "Markers": [],
+    "layers": [
+      {
+        "index": 1,
+        "name": "Coin Outlines",
+        "blendingMode": 5212,
+        "Parent&Link": "",
+        "startTime": -0.36666666666667,
+        "outPoint": 1.63333333333333,
+        "inPoint": -0.05,
+        "Contents": {
+          "Group 1": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    -11.9910278320313,
+                    -0.54595947265625
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    6.35000610351563,
+                    3.23101806640625
+                  ],
+                  [
+                    7.44497680664063,
+                    2.1650390625
+                  ],
+                  [
+                    4.65298461914063,
+                    0
+                  ],
+                  [
+                    2.16299438476563,
+                    -1.12103271484375
+                  ],
+                  [
+                    0,
+                    -1.8070068359375
+                  ],
+                  [
+                    -1.56100463867188,
+                    -1.25897216796875
+                  ],
+                  [
+                    -3.64300537109375,
+                    -1.5880126953125
+                  ],
+                  [
+                    -6.9539794921875,
+                    -2.57298278808594
+                  ],
+                  [
+                    -4.27099609375,
+                    -3.2030029296875
+                  ],
+                  [
+                    -1.94400024414063,
+                    -3.968994140625
+                  ],
+                  [
+                    0,
+                    -9.03399658203125
+                  ],
+                  [
+                    5.80300903320313,
+                    -5.09197998046875
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    10.89501953125,
+                    0.60302734375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -11.4440307617188,
+                    -5.14599609375
+                  ],
+                  [
+                    -4.3809814453125,
+                    0
+                  ],
+                  [
+                    -1.77999877929688,
+                    1.0679931640625
+                  ],
+                  [
+                    0,
+                    1.8070068359375
+                  ],
+                  [
+                    1.2860107421875,
+                    1.177978515625
+                  ],
+                  [
+                    3.17599487304688,
+                    1.45196533203125
+                  ],
+                  [
+                    11.4429626464844,
+                    4.05303955078125
+                  ],
+                  [
+                    4.98199462890625,
+                    5.17498779296875
+                  ],
+                  [
+                    0,
+                    9.19903564453125
+                  ],
+                  [
+                    -5.8299560546875,
+                    5.74798583984375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    11.114013671875,
+                    4.8189697265625
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -7.447998046875,
+                    -2.1610107421875
+                  ],
+                  [
+                    -5.6400146484375,
+                    0
+                  ],
+                  [
+                    -2.16400146484375,
+                    1.12298583984375
+                  ],
+                  [
+                    0,
+                    2.6280517578125
+                  ],
+                  [
+                    1.55999755859375,
+                    1.260009765625
+                  ],
+                  [
+                    3.63998413085938,
+                    1.5889892578125
+                  ],
+                  [
+                    6.18600463867188,
+                    2.2459716796875
+                  ],
+                  [
+                    4.27102661132813,
+                    3.2030029296875
+                  ],
+                  [
+                    1.9429931640625,
+                    3.969970703125
+                  ],
+                  [
+                    0,
+                    5.91302490234375
+                  ],
+                  [
+                    -5.80401611328125,
+                    5.09197998046875
+                  ],
+                  [
+                    -11.6090087890625,
+                    1.20501708984375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -11.0609741210938,
+                    -4.76397705078125
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    9.197998046875,
+                    0
+                  ],
+                  [
+                    1.77801513671875,
+                    -1.06805419921875
+                  ],
+                  [
+                    0,
+                    -2.08099365234375
+                  ],
+                  [
+                    -1.28799438476563,
+                    -1.177001953125
+                  ],
+                  [
+                    -3.17599487304688,
+                    -1.45001220703125
+                  ],
+                  [
+                    -5.64102172851563,
+                    -1.91595458984375
+                  ],
+                  [
+                    -4.9840087890625,
+                    -5.17401123046875
+                  ],
+                  [
+                    0,
+                    -8.15802001953125
+                  ],
+                  [
+                    5.83203125,
+                    -5.75
+                  ],
+                  [
+                    11.1699829101563,
+                    -1.36700439453125
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    -8.21299743652344,
+                    53.7674560546875
+                  ],
+                  [
+                    -42.8720245361328,
+                    45.718505859375
+                  ],
+                  [
+                    -42.8720245361328,
+                    18.4514770507813
+                  ],
+                  [
+                    -22.1750030517578,
+                    26.5404663085938
+                  ],
+                  [
+                    -2.54600524902344,
+                    29.7854614257813
+                  ],
+                  [
+                    7.67900085449219,
+                    28.1015014648438
+                  ],
+                  [
+                    10.9239959716797,
+                    22.4754638671875
+                  ],
+                  [
+                    8.58299255371094,
+                    17.87646484375
+                  ],
+                  [
+                    0.78099060058594,
+                    13.60546875
+                  ],
+                  [
+                    -13.9620208740234,
+                    7.85650634765625
+                  ],
+                  [
+                    -30.7990264892578,
+                    -0.80853271484375
+                  ],
+                  [
+                    -40.1210174560547,
+                    -11.5675048828125
+                  ],
+                  [
+                    -43.0370025634766,
+                    -26.3925170898438
+                  ],
+                  [
+                    -34.3310089111328,
+                    -47.58251953125
+                  ],
+                  [
+                    -8.21299743652344,
+                    -57.0275268554688
+                  ],
+                  [
+                    -8.21299743652344,
+                    -75.2525024414063
+                  ],
+                  [
+                    8.78797912597656,
+                    -75.2525024414063
+                  ],
+                  [
+                    8.78797912597656,
+                    -57.1915283203125
+                  ],
+                  [
+                    41.7229766845703,
+                    -49.1425170898438
+                  ],
+                  [
+                    31.9489898681641,
+                    -25.7355346679688
+                  ],
+                  [
+                    0.98597717285156,
+                    -33.4555053710938
+                  ],
+                  [
+                    -8.25401306152344,
+                    -31.8544921875
+                  ],
+                  [
+                    -10.9230194091797,
+                    -27.1315307617188
+                  ],
+                  [
+                    -8.99302673339844,
+                    -22.655517578125
+                  ],
+                  [
+                    -2.30000305175781,
+                    -18.7135009765625
+                  ],
+                  [
+                    10.9239959716797,
+                    -13.6625366210938
+                  ],
+                  [
+                    35.5630035400391,
+                    0.176513671875
+                  ],
+                  [
+                    43.0370025634766,
+                    20.1754760742188
+                  ],
+                  [
+                    34.2889556884766,
+                    42.5985107421875
+                  ],
+                  [
+                    8.78797912597656,
+                    53.2744750976563
+                  ],
+                  [
+                    8.78797912597656,
+                    75.2525024414063
+                  ],
+                  [
+                    -8.21299743652344,
+                    75.2525024414063
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.88599997127757,
+                  0.69400000478707,
+                  0.38800000957414,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.313873291016,
+                153.70832824707
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 2": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    53.5580444335938
+                  ],
+                  [
+                    -53.5569763183594,
+                    0
+                  ],
+                  [
+                    0,
+                    -53.5589599609375
+                  ],
+                  [
+                    53.56396484375,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    -53.5589599609375
+                  ],
+                  [
+                    53.56396484375,
+                    0
+                  ],
+                  [
+                    0,
+                    53.5580444335938
+                  ],
+                  [
+                    -53.5569763183594,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    96.9779968261719,
+                    0.00094604492188
+                  ],
+                  [
+                    -0.00302124023438,
+                    96.9779968261719
+                  ],
+                  [
+                    -96.9779968261719,
+                    0.00094604492188
+                  ],
+                  [
+                    -0.00302124023438,
+                    -96.9779968261719
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.98000003590303,
+                  0.92900001675475,
+                  0.61199999042586,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.314163208008,
+                151.311080932617
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 3": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    56.9450073242188
+                  ],
+                  [
+                    -56.9450073242188,
+                    0
+                  ],
+                  [
+                    0,
+                    -56.9469604492188
+                  ],
+                  [
+                    56.9450073242188,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    -56.9469604492188
+                  ],
+                  [
+                    56.9450073242188,
+                    0
+                  ],
+                  [
+                    0,
+                    56.9450073242188
+                  ],
+                  [
+                    -56.9450073242188,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    103.108505249023,
+                    -0.00054931640625
+                  ],
+                  [
+                    -0.00050354003906,
+                    103.109497070313
+                  ],
+                  [
+                    -103.108505249023,
+                    -0.00054931640625
+                  ],
+                  [
+                    -0.00050354003906,
+                    -103.109497070313
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.88599997127757,
+                  0.69400000478707,
+                  0.38800000957414,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.314208984375,
+                151.312576293945
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 4": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    -76.2279968261719,
+                    0
+                  ],
+                  [
+                    0,
+                    -76.22802734375
+                  ],
+                  [
+                    76.2259826660156,
+                    0
+                  ],
+                  [
+                    0,
+                    76.22900390625
+                  ]
+                ],
+                "InPos": [
+                  [
+                    76.2259826660156,
+                    0
+                  ],
+                  [
+                    0,
+                    76.22900390625
+                  ],
+                  [
+                    -76.2279968261719,
+                    0
+                  ],
+                  [
+                    0,
+                    -76.22802734375
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    -0.00151062011719,
+                    138.022994995117
+                  ],
+                  [
+                    -138.024520874023,
+                    0.00102233886719
+                  ],
+                  [
+                    -0.00151062011719,
+                    -138.022964477539
+                  ],
+                  [
+                    138.023513793945,
+                    0.00102233886719
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.98000003590303,
+                  0.92900001675475,
+                  0.61199999042586,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.314514160156,
+                151.311431884766
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 5": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    83.4300537109375
+                  ],
+                  [
+                    -83.4299926757813,
+                    0
+                  ],
+                  [
+                    0,
+                    -83.427001953125
+                  ],
+                  [
+                    83.4309692382813,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    -83.427001953125
+                  ],
+                  [
+                    83.4309692382813,
+                    0
+                  ],
+                  [
+                    0,
+                    83.4300537109375
+                  ],
+                  [
+                    -83.4299926757813,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    151.063980102539,
+                    -0.00053405761719
+                  ],
+                  [
+                    -0.00102233886719,
+                    151.062515258789
+                  ],
+                  [
+                    -151.064010620117,
+                    -0.00053405761719
+                  ],
+                  [
+                    -0.00102233886719,
+                    -151.062484741211
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.96499998803232,
+                  0.7490000406901,
+                  0.23899999880323,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.313995361328,
+                151.312561035156
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          }
+        },
+        "Masks": {},
+        "Effects": {},
+        "Transform": {
+          "Anchor Point": [
+            149.747894287109,
+            302.375076293945,
+            0
+          ],
+          "Position": [
+            499.403305053711,
+            428.104675292969,
+            0
+          ],
+          "X Position": 0,
+          "Y Position": 0,
+          "Z Position": 0,
+          "Scale": [
+            100,
+            100,
+            100
+          ],
+          "Orientation": [
+            0,
+            0,
+            0
+          ],
+          "X Rotation": 0,
+          "Y Rotation": 0,
+          "Rotation": 0,
+          "Opacity": 100,
+          "Appears in Reflections": 1
+        },
+        "Sets": {}
+      },
+      {
+        "index": 2,
+        "name": "vase",
+        "blendingMode": 5212,
+        "Parent&Link": "",
+        "startTime": 0,
+        "outPoint": 2,
+        "inPoint": 0,
+        "Contents": {
+          "Group 1": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -7.41702270507813,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    -7.41598510742188
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    7.4169921875
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -7.41702270507813,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    75.718505859375,
+                    32.8084869384766
+                  ],
+                  [
+                    -62.2894897460938,
+                    32.8084869384766
+                  ],
+                  [
+                    -75.718505859375,
+                    19.3795013427734
+                  ],
+                  [
+                    -75.718505859375,
+                    -19.3805084228516
+                  ],
+                  [
+                    -62.2894897460938,
+                    -32.8084869384766
+                  ],
+                  [
+                    75.718505859375,
+                    -32.8084869384766
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.22400001077091,
+                  0.675,
+                  0.70999995212929,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                75.9685974121094,
+                33.0585021972656
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 2": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -7.42498779296875,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    -7.42599487304688
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    7.42498779296875,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    7.42498779296875
+                  ]
+                ],
+                "InPos": [
+                  [
+                    7.42498779296875,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    7.42498779296875
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -7.42498779296875,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    -7.42599487304688
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    137.99201965332,
+                    32.8084869384766
+                  ],
+                  [
+                    -137.991989135742,
+                    32.8084869384766
+                  ],
+                  [
+                    -151.436965942383,
+                    19.3635101318359
+                  ],
+                  [
+                    -151.436965942383,
+                    -19.3635101318359
+                  ],
+                  [
+                    -137.991989135742,
+                    -32.8084869384766
+                  ],
+                  [
+                    137.99201965332,
+                    -32.8084869384766
+                  ],
+                  [
+                    151.436965942383,
+                    -19.3635101318359
+                  ],
+                  [
+                    151.436965942383,
+                    19.3635101318359
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.2669999964097,
+                  0.81199999042586,
+                  0.88599997127757,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                151.686996459961,
+                33.0585021972656
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 3": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    133.241500854492,
+                    -10
+                  ],
+                  [
+                    131.672470092773,
+                    10
+                  ],
+                  [
+                    -131.658493041992,
+                    10
+                  ],
+                  [
+                    -133.241500854492,
+                    -10
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.12899998683555,
+                  0.4,
+                  0.4080000035903,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                152.306716918945,
+                71.1866912841797
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 4": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    -69.2975006103516,
+                    -119.3330078125
+                  ],
+                  [
+                    -64.8905181884766,
+                    -57.9419860839844
+                  ],
+                  [
+                    -64.8765106201172,
+                    -57.7869873046875
+                  ],
+                  [
+                    -63.3075103759766,
+                    -38.5249938964844
+                  ],
+                  [
+                    -50.4435272216797,
+                    119.3330078125
+                  ],
+                  [
+                    69.2975006103516,
+                    119.3330078125
+                  ],
+                  [
+                    69.2975006103516,
+                    -119.3330078125
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.22400001077091,
+                  0.675,
+                  0.70999995212929,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                83.9553070068359,
+                119.738990783691
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 5": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    138.595504760742,
+                    -119.3330078125
+                  ],
+                  [
+                    132.309494018555,
+                    -57.9419860839844
+                  ],
+                  [
+                    132.295455932617,
+                    -57.7869873046875
+                  ],
+                  [
+                    130.726486206055,
+                    -38.5249938964844
+                  ],
+                  [
+                    117.86247253418,
+                    119.3330078125
+                  ],
+                  [
+                    -119.741500854492,
+                    119.3330078125
+                  ],
+                  [
+                    -132.604507446289,
+                    -38.5249938964844
+                  ],
+                  [
+                    -134.17448425293,
+                    -57.7869873046875
+                  ],
+                  [
+                    -134.188491821289,
+                    -57.9419860839844
+                  ],
+                  [
+                    -138.595504760742,
+                    -119.3330078125
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.2669999964097,
+                  0.81199999042586,
+                  0.88599997127757,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                153.253005981445,
+                119.738990783691
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          }
+        },
+        "Masks": {},
+        "Effects": {},
+        "Transform": {
+          "Anchor Point": [
+            153.253005981445,
+            239.071990966797,
+            0
+          ],
+          "Position": [
+            501.969314575195,
+            844.020195007324,
+            0
+          ],
+          "X Position": 0,
+          "Y Position": 0,
+          "Z Position": 0,
+          "Scale": [
+            100,
+            100,
+            100
+          ],
+          "Orientation": [
+            0,
+            0,
+            0
+          ],
+          "X Rotation": 0,
+          "Y Rotation": 0,
+          "Rotation": {
+            "value": 0,
+            "Curve1": {
+              "lastkeyValue": 0,
+              "lastkeyTime": 0,
+              "OutPos": {
+                "x": [
+                  0.30654101237114
+                ],
+                "y": [
+                  -0.0065010072315
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": -3,
+              "keyTime": 0.0625
+            },
+            "Curve2": {
+              "lastkeyValue": -3,
+              "lastkeyTime": 0.0625,
+              "OutPos": {
+                "x": [
+                  0.31992526515778
+                ],
+                "y": [
+                  0.00677612475496
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 3,
+              "keyTime": 0.1875
+            },
+            "Curve3": {
+              "lastkeyValue": 3,
+              "lastkeyTime": 0.1875,
+              "OutPos": {
+                "x": [
+                  0.33333333
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 0,
+              "keyTime": 0.25
+            }
+          },
+          "Opacity": 100,
+          "Appears in Reflections": 1
+        },
+        "Sets": {}
+      },
+      {
+        "index": 3,
+        "name": "root",
+        "blendingMode": 5212,
+        "Parent&Link": "",
+        "startTime": -0.15,
+        "outPoint": 1.85,
+        "inPoint": -0.15,
+        "Contents": {
+          "Group 1": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    9.46000671386719,
+                    -119.907989501953
+                  ],
+                  [
+                    -9.46000671386719,
+                    -119.907989501953
+                  ],
+                  [
+                    -9.46000671386719,
+                    119.907989501953
+                  ],
+                  [
+                    9.46000671386719,
+                    119.907989501953
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.54100000718061,
+                  0.83899996888404,
+                  0.54100000718061,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                28.5410308837891,
+                120.324981689453
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 2": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    18.9205017089844,
+                    -119.907989501953
+                  ],
+                  [
+                    -18.9205017089844,
+                    -119.907989501953
+                  ],
+                  [
+                    -18.9205017089844,
+                    119.907989501953
+                  ],
+                  [
+                    18.9205017089844,
+                    119.907989501953
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.41600000718061,
+                  0.6669999664905,
+                  0.42699997845818,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                19.1705017089844,
+                120.157989501953
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          }
+        },
+        "Masks": {},
+        "Effects": {},
+        "Transform": {
+          "Anchor Point": [
+            19.1705017089844,
+            240.065979003906,
+            0
+          ],
+          "Position": {
+            "value": [
+              497.210479736328,
+              816.786564980762,
+              0
+            ],
+            "Curve1": {
+              "lastkeyValue": [
+                497.210479736328,
+                844.112976074219,
+                0
+              ],
+              "lastkeyTime": 0.08333333333333,
+              "OutPos": {
+                "x": 1,
+                "y": 0
+              },
+              "InPos": {
+                "x": 0.66666667,
+                "y": 1
+              },
+              "keyValue": [
+                497.210479736328,
+                657.112976074219,
+                0
+              ],
+              "keyTime": 0.53333333333333
+            }
+          },
+          "X Position": 0,
+          "Y Position": 0,
+          "Z Position": 0,
+          "Scale": [
+            100,
+            100,
+            100
+          ],
+          "Orientation": [
+            0,
+            0,
+            0
+          ],
+          "X Rotation": 0,
+          "Y Rotation": 0,
+          "Rotation": 0,
+          "Opacity": 100,
+          "Appears in Reflections": 1
+        },
+        "Sets": {}
+      },
+      {
+        "index": 4,
+        "name": "leaf",
+        "blendingMode": 5212,
+        "Parent&Link": "",
+        "startTime": -0.15,
+        "outPoint": 1.85,
+        "inPoint": -0.15,
+        "Contents": {
+          "Group 1": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    102.522003173828,
+                    -6.35394287109375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0.01998901367188,
+                    -0.2149658203125
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1.71099853515625,
+                    -27.3059997558594
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    -76.3104858398438,
+                    -70.696533203125
+                  ],
+                  [
+                    28.9555053710938,
+                    25.6104736328125
+                  ],
+                  [
+                    76.3424987792969,
+                    72.9974670410156
+                  ],
+                  [
+                    72.2904968261719,
+                    77.0504760742188
+                  ],
+                  [
+                    -76.3424987792969,
+                    -70.3665161132813
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.54100000718061,
+                  0.83899996888404,
+                  0.54100000718061,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                89.3467864990234,
+                77.3005676269531
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 2": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    1.71099853515625,
+                    -27.3059997558594
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    102.522003173828,
+                    -6.35400390625
+                  ],
+                  [
+                    -111.785003662109,
+                    12.333984375
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    82.6475067138672,
+                    70.9160003662109
+                  ],
+                  [
+                    35.2604827880859,
+                    23.5290069580078
+                  ],
+                  [
+                    -70.0055084228516,
+                    -72.7779998779297
+                  ],
+                  [
+                    29.1374969482422,
+                    33.8380279541016
+                  ],
+                  [
+                    74.4315032958984,
+                    79.1320037841797
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.41600000718061,
+                  0.6669999664905,
+                  0.42699997845818,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                82.8974914550781,
+                79.3824005126953
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          }
+        },
+        "Masks": {},
+        "Effects": {},
+        "Transform": {
+          "Anchor Point": [
+            160.969627380371,
+            157.382202148438,
+            0
+          ],
+          "Position": [
+            500.922027587891,
+            600.424896240234,
+            0
+          ],
+          "X Position": 0,
+          "Y Position": 0,
+          "Z Position": 0,
+          "Scale": {
+            "value": [
+              0,
+              0,
+              100
+            ],
+            "Curve1": {
+              "lastkeyValue": [
+                0,
+                0,
+                100
+              ],
+              "lastkeyTime": 0.3828125,
+              "OutPos": {
+                "x": [
+                  0.33333333,
+                  0.33333333,
+                  0.33333333
+                ],
+                "y": [
+                  0,
+                  0,
+                  0.33333333
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667,
+                  0.66666667,
+                  0.66666667
+                ],
+                "y": [
+                  1,
+                  1,
+                  0.66666667
+                ]
+              },
+              "keyValue": [
+                100,
+                100,
+                100
+              ],
+              "keyTime": 0.5453125
+            }
+          },
+          "Orientation": [
+            0,
+            0,
+            0
+          ],
+          "X Rotation": 0,
+          "Y Rotation": 0,
+          "Rotation": {
+            "value": -6.91863926933034,
+            "Curve1": {
+              "lastkeyValue": -12,
+              "lastkeyTime": 0.2,
+              "OutPos": {
+                "x": [
+                  0.33333333
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 0,
+              "keyTime": 0.4599609375
+            },
+            "Curve2": {
+              "lastkeyValue": 0,
+              "lastkeyTime": 0.4599609375,
+              "OutPos": {
+                "x": [
+                  0.33333333
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": -6,
+              "keyTime": 0.59407552083333
+            },
+            "Curve3": {
+              "lastkeyValue": -6,
+              "lastkeyTime": 0.59407552083333,
+              "OutPos": {
+                "x": [
+                  0.16666666667
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 5,
+              "keyTime": 0.728125
+            },
+            "Curve4": {
+              "lastkeyValue": 5,
+              "lastkeyTime": 0.728125,
+              "OutPos": {
+                "x": [
+                  0.16666666667
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 0,
+              "keyTime": 0.85
+            }
+          },
+          "Opacity": 100,
+          "Appears in Reflections": 1
+        },
+        "Sets": {}
+      },
+      {
+        "index": 5,
+        "name": "leaf",
+        "blendingMode": 5212,
+        "Parent&Link": "",
+        "startTime": -0.28333333333333,
+        "outPoint": 1.71666666666667,
+        "inPoint": -0.28333333333333,
+        "Contents": {
+          "Group 1": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    -102.522033691406,
+                    -6.35394287109375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -0.02001953125,
+                    -0.2149658203125
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -1.71099853515625,
+                    -27.3059997558594
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    76.3105163574219,
+                    -70.696533203125
+                  ],
+                  [
+                    -28.9555358886719,
+                    25.6104736328125
+                  ],
+                  [
+                    -76.3424987792969,
+                    72.9974670410156
+                  ],
+                  [
+                    -72.2894897460938,
+                    77.0504760742188
+                  ],
+                  [
+                    76.3424987792969,
+                    -70.3665161132813
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.54100000718061,
+                  0.83899996888404,
+                  0.54100000718061,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                76.5925140380859,
+                77.3005676269531
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          },
+          "Group 2": {
+            "Blend Mode": 1,
+            "Contents": {
+              "Path 1": {
+                "Shape Direction": 1,
+                "OutPos": [
+                  [
+                    -102.522033691406,
+                    -6.35394287109375
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    111.784973144531,
+                    12.3350219726563
+                  ]
+                ],
+                "InPos": [
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    -1.71099853515625,
+                    -27.3060150146484
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0
+                  ]
+                ],
+                "Vertices": [
+                  [
+                    70.0050354003906,
+                    -72.7780303955078
+                  ],
+                  [
+                    -35.2610168457031,
+                    23.5289916992188
+                  ],
+                  [
+                    -82.6479797363281,
+                    70.9159698486328
+                  ],
+                  [
+                    -74.4319763183594,
+                    79.1319732666016
+                  ],
+                  [
+                    -29.1369934082031,
+                    33.8379669189453
+                  ]
+                ],
+                "Closed": true
+              },
+              "Fill 1": {
+                "Blend Mode": 1,
+                "Composite": 1,
+                "Fill Rule": 1,
+                "Color": [
+                  0.41600000718061,
+                  0.6669999664905,
+                  0.42699997845818,
+                  1
+                ],
+                "Opacity": 100
+              }
+            },
+            "Transform": {
+              "Anchor Point": [
+                0,
+                0
+              ],
+              "Position": [
+                82.8979949951172,
+                79.3820648193359
+              ],
+              "Scale": [
+                100,
+                100
+              ],
+              "Skew": 0,
+              "Skew Axis": 0,
+              "Rotation": 0,
+              "Opacity": 100
+            },
+            "Material Options": {
+              "Front Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Front Ambient": 100,
+              "Front Diffuse": 50,
+              "Front Specular Intensity": 50,
+              "Front Specular Shininess": 5,
+              "Front Metal": 100,
+              "Front Reflection Intensity": 0,
+              "Front Reflection Sharpness": 100,
+              "Front Reflection Rolloff": 0,
+              "Front Transparency": 0,
+              "Front Transparency Rolloff": 0,
+              "Front Index of Refraction": 1,
+              "Bevel Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Bevel Ambient": 100,
+              "Bevel Diffuse": 50,
+              "Bevel Specular Intensity": 50,
+              "Bevel Specular Shininess": 5,
+              "Bevel Metal": 100,
+              "Bevel Reflection Intensity": 0,
+              "Bevel Reflection Sharpness": 100,
+              "Bevel Reflection Rolloff": 0,
+              "Bevel Transparency": 0,
+              "Bevel Transparency Rolloff": 0,
+              "Bevel Index of Refraction": 1,
+              "Side Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Side Ambient": 100,
+              "Side Diffuse": 50,
+              "Side Specular Intensity": 50,
+              "Side Specular Shininess": 5,
+              "Side Metal": 100,
+              "Side Reflection Intensity": 0,
+              "Side Reflection Sharpness": 100,
+              "Side Reflection Rolloff": 0,
+              "Side Transparency": 0,
+              "Side Transparency Rolloff": 0,
+              "Side Index of Refraction": 1,
+              "Back Color": [
+                1,
+                0,
+                0,
+                1
+              ],
+              "Back Ambient": 100,
+              "Back Diffuse": 50,
+              "Back Specular Intensity": 50,
+              "Back Specular Shininess": 5,
+              "Back Metal": 100,
+              "Back Reflection Intensity": 0,
+              "Back Reflection Sharpness": 100,
+              "Back Reflection Rolloff": 0,
+              "Back Transparency": 0,
+              "Back Transparency Rolloff": 0,
+              "Back Index of Refraction": 1
+            }
+          }
+        },
+        "Masks": {},
+        "Effects": {},
+        "Transform": {
+          "Anchor Point": [
+            0.89800262451172,
+            157.382019042969,
+            0
+          ],
+          "Position": [
+            494.604888916016,
+            600.424713134766,
+            0
+          ],
+          "X Position": 0,
+          "Y Position": 0,
+          "Z Position": 0,
+          "Scale": {
+            "value": [
+              26.6059885208484,
+              26.6059885208484,
+              100
+            ],
+            "Curve1": {
+              "lastkeyValue": [
+                0,
+                0,
+                100
+              ],
+              "lastkeyTime": 0.25885416666667,
+              "OutPos": {
+                "x": [
+                  0.33333333,
+                  0.33333333,
+                  0.33333333
+                ],
+                "y": [
+                  0,
+                  0,
+                  0.33333333
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667,
+                  0.66666667,
+                  0.66666667
+                ],
+                "y": [
+                  1,
+                  1,
+                  0.66666667
+                ]
+              },
+              "keyValue": [
+                100,
+                100,
+                100
+              ],
+              "keyTime": 0.4296875
+            }
+          },
+          "Orientation": [
+            0,
+            0,
+            0
+          ],
+          "X Rotation": 0,
+          "Y Rotation": 0,
+          "Rotation": {
+            "value": -0.24692401150967,
+            "Curve1": {
+              "lastkeyValue": -12,
+              "lastkeyTime": 0.06666666666667,
+              "OutPos": {
+                "x": [
+                  0.33333333
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.66666667
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 0,
+              "keyTime": 0.33997395833333
+            },
+            "Curve2": {
+              "lastkeyValue": 0,
+              "lastkeyTime": 0.33997395833333,
+              "OutPos": {
+                "x": [
+                  0.33333333
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": -6,
+              "keyTime": 0.48095703125
+            },
+            "Curve3": {
+              "lastkeyValue": -6,
+              "lastkeyTime": 0.48095703125,
+              "OutPos": {
+                "x": [
+                  0.16666666667
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 5,
+              "keyTime": 0.621875
+            },
+            "Curve4": {
+              "lastkeyValue": 5,
+              "lastkeyTime": 0.621875,
+              "OutPos": {
+                "x": [
+                  0.16666666667
+                ],
+                "y": [
+                  0
+                ]
+              },
+              "InPos": {
+                "x": [
+                  0.83333333333
+                ],
+                "y": [
+                  1
+                ]
+              },
+              "keyValue": 0,
+              "keyTime": 0.75
+            }
+          },
+          "Opacity": 100,
+          "Appears in Reflections": 1
+        },
+        "Sets": {}
+      }
+    ]
+  }
+}
