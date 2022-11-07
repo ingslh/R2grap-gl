@@ -1,4 +1,5 @@
 #include "LayersInfo.h"
+#include "Transform.h"
 using namespace R2grap;
 
 GroupContents::GroupContents(const nlohmann::json& json){
@@ -19,20 +20,20 @@ GroupContents::GroupContents(const nlohmann::json& json){
   }
 }
 
-ShapeGroup::ShapeGroup(const nlohmann::json& json){
-  blend_mode_ = json["Blend Mode"];
-  //transform = std::make_shared<Transform>(json["Transform"]);
-  contents_ = std::make_shared<GroupContents>(json["Contents"]);
+ShapeGroup::ShapeGroup(const nlohmann::json& json):
+blend_mode_(json["Blend Mode"]), transform_(std::make_shared<Transform>(json["Transform"])), 
+contents_(std::make_shared<GroupContents>(json["Contents"])) 
+{
 }
 
 LayersInfo::LayersInfo(const nlohmann::json& layer) :
 index_(layer["index"]),name_(layer["name"]),blend_mode_(layer["blendingMode"]),
 link_(layer["Parent&Link"]),start_time_(layer["startTime"]),out_point_(layer["outPoint"]),in_point_(layer["inPoint"])
 {
-  /*
-  transform = std::make_shared<Transform>(layer["Transform"],true);
-  transform->SetInandOutPos(index, inPoint, outPoint);
-  transform->GenerateTransformMat();*/
+  
+  transform_ = std::make_shared<Transform>(layer["Transform"],true);
+  //transform->SetInandOutPos(index, in_point_, out_point_);
+  //transform->GenerateTransformMat();
 
   auto contents = layer["Contents"].items();
   for(auto& el : contents){

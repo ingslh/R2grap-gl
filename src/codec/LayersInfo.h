@@ -1,6 +1,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 #include <string>
+#include "Transform.h"
 
 namespace R2grap{
 class PathInfo;
@@ -21,9 +22,11 @@ class ShapeGroup{
 public:
   ShapeGroup(const nlohmann::json& json);
   std::shared_ptr<GroupContents> GetContents()const {return contents_;}
+  std::shared_ptr<Transform> GetTransform()const {return transform_;}
 
 private:
   std::shared_ptr<GroupContents> contents_;
+  std::shared_ptr<Transform> transform_;
   unsigned int blend_mode_;
 };
 
@@ -33,7 +36,9 @@ public:
   LayersInfo(const nlohmann::json& layer);
 
   unsigned int GetLayerInd() const {return index_;}
-  std::vector<std::shared_ptr<ShapeGroup>> GetShapeGroup()const{ return groups_;}
+  const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroup()const{ return groups_;}
+  const std::shared_ptr<Transform> GetShapeTransform()const {return transform_;}
+
 
 private:
   unsigned int index_;
@@ -44,5 +49,6 @@ private:
   float out_point_;
   float in_point_;
   std::vector<std::shared_ptr<ShapeGroup>> groups_;
+  std::shared_ptr<Transform> transform_;
 };
 }
