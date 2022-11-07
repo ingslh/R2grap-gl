@@ -1,5 +1,5 @@
 #include "VertRenderData.h"
-#include "AniInfoManger.h"
+#include "AniInfoManager.h"
 #include "Transform.h"
 
 namespace R2grap{
@@ -32,6 +32,49 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
       bezier_vert_data_.emplace_back(signal_path_data);
     }
   }
+}
+
+unsigned int VerticesRenderData::GetVertNumByPathInd(unsigned int ind) const { 
+  if(multi_paths_data_.size()){
+    return static_cast<unsigned int>(multi_paths_data_[ind].size()); 
+  }
+  else if(bezier_vert_data_.size()){
+    return static_cast<unsigned int>(bezier_vert_data_[ind].verts.size());
+  }
+  return 0;
+}
+
+template<typename T>
+T& VerticesRenderData::Normalize(const T& pos){
+  auto width = AniInfoManager::GetIns().GetWidth();
+  auto height = AniInfoManager::GetIns().GetHeight();
+  if(typeid(T) == typeid(glm::vec2)){
+    return glm::vec2((pos.x - width/2) / width, (pos.y - height/2) / height);
+  }
+  else
+    return glm::vec3((pos.x - width/2) / width, (pos.y - height/2) / height, 0)
+}
+
+bool VerticesRenderData::ConverToOpenglVert(unsigned int path_ind, std::vector<float>& verts){
+  auto vertices = multi_paths_data_[path_ind];
+  verts.resize(12 * vertices.size());
+  auto vert_cluster_ind = 0;
+  for(auto& el : vertices){
+    verts[vert_cluster_ind * 12] = el.start.x;
+    verts[vert_cluster_ind * 12 + 1] = el.start.y;
+    verts[vert_cluster_ind * 12 + 2] = 0.0f;
+    verts[vert_cluster_ind * 12 + 3] = el.out.x;
+    verts[vert_cluster_ind * 12 + 4] = el.out.y;
+    verts[vert_cluster_ind * 12 + 5] = 0.0f;
+    verts[vert_cluster_ind * 12 + 6] = el.in.x;
+    verts[vert_cluster_ind * 12 + 7] = el.in.y;
+    verts[vert_cluster_ind * 12 + 8] = 0.0f;
+    verts[vert_cluster_ind * 12 + 9] = el.end.x;
+    verts[vert_cluster_ind * 12 + 10] = el.end.y;
+    verts[vert_cluster_ind * 12 + 11] = 0.0f;
+    vert_cluster_ind++;
+  }
+  return true;
 }
 
 

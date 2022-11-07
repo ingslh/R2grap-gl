@@ -1,6 +1,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Transform.h"
-#include "AniInfoManger.h"
+#include "AniInfoManager.h"
 
 using namespace R2grap;
 

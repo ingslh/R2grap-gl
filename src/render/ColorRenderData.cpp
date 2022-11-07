@@ -1,5 +1,5 @@
 #include "ColorRenderData.h"
-#include "AniInfoManger.h"
+#include "AniInfoManager.h"
 #include "LayersInfo.h"
 #include "FillInfo.h"
 
