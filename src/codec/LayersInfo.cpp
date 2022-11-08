@@ -32,9 +32,6 @@ link_(layer["Parent&Link"]),start_time_(layer["startTime"]),out_point_(layer["ou
 {
   
   transform_ = std::make_shared<Transform>(layer["Transform"],true);
-  //transform->SetInandOutPos(index, in_point_, out_point_);
-  //transform->GenerateTransformMat();
-
   auto contents = layer["Contents"].items();
   for(auto& el : contents){
     groups_.emplace_back(std::make_shared<ShapeGroup>(el.value()));

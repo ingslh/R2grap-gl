@@ -50,6 +50,8 @@ struct TransMat{
   float duration;
 };
 
+typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> TransformCurve;
+
 class Transform{
 public:
   Transform(const nlohmann::json& transform, bool IsShapeTransform = false);
@@ -58,20 +60,19 @@ public:
   void GenerateTransformMat();
 
   glm::vec3 GetShapeGrapOffset();
+  bool IsVectorProperty(std::string);
   glm::vec3& GetPosition() { return std::get<t_Vector>(property_values_["Position"]); }
-  KeyframesMap& GetKeyframeData() { return keyframe_data_; }
-  TransMat* GetTransMat(){return &transform_mat_;}
+  const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
+  const TransMat* GetTransMat()const {return &transform_mat_;}
 
 protected:
   void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
 private:
-  bool IsVectorProperty(std::string);
-
   TransformType type_;
   std::map<std::string, std::variant<glm::vec3, float>> property_values_;
   KeyframesMap keyframe_data_;
   TransMat transform_mat_;
-  std::map<std::string, std::vector<std::map<unsigned int, float>>> transform_curve_;
+  TransformCurve transform_curve_;
 };
 
 }

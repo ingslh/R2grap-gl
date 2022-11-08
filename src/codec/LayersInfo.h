@@ -36,6 +36,8 @@ public:
   LayersInfo(const nlohmann::json& layer);
 
   unsigned int GetLayerInd() const {return index_;}
+  float GetLayerInpos() const {return in_point_;}
+  float GetLayerOutpos() const {return out_point_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroup()const{ return groups_;}
   const std::shared_ptr<Transform> GetShapeTransform()const {return transform_;}
 
