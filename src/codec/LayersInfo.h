@@ -2,10 +2,10 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include "Transform.h"
+#include "FillInfo.h"
+#include "PathInfo.h"
 
 namespace R2grap{
-class PathInfo;
-class FillInfo;
 class GroupContents{
 public:
   GroupContents(const nlohmann::json& json);

@@ -23,7 +23,7 @@ public:
   unsigned int GetVertNumByPathInd(unsigned int ind) const;
 
   template<typename T>
-  T& Normalize(const T& pos); 
+ T Normalize(const T& pos); 
 
   unsigned int GetPathsCount() const {return paths_count_;}
   const MultiPathsData& GetMultiPathsData() const {return multi_paths_data_;}

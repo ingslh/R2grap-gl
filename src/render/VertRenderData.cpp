@@ -45,14 +45,14 @@ unsigned int VerticesRenderData::GetVertNumByPathInd(unsigned int ind) const {
 }
 
 template<typename T>
-T& VerticesRenderData::Normalize(const T& pos){
+T VerticesRenderData::Normalize(const T& pos){
   auto width = AniInfoManager::GetIns().GetWidth();
   auto height = AniInfoManager::GetIns().GetHeight();
   if(typeid(T) == typeid(glm::vec2)){
     return glm::vec2((pos.x - width/2) / width, (pos.y - height/2) / height);
   }
   else
-    return glm::vec3((pos.x - width/2) / width, (pos.y - height/2) / height, 0)
+    return glm::vec3((pos.x - width/2) / width, (pos.y - height/2) / height, 0);
 }
 
 bool VerticesRenderData::ConverToOpenglVert(unsigned int path_ind, std::vector<float>& verts){
