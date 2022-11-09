@@ -34,5 +34,4 @@ private:
   std::vector<BezierVertData> bezier_vert_data_;
   unsigned int paths_count_;
 };
-
 }

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 namespace R2grap{
+  
 class ColorRenderData : public R2grap::BaseRenderData{
 public:
   ColorRenderData(const LayersInfo* layer);
@@ -13,7 +14,5 @@ private:
   unsigned int fills_count_;
   std::vector<glm::vec4> multi_fills_data_;
 };
-
-typedef std::shared_ptr<ColorRenderData> ColorRenderDataPtr;
 
 }

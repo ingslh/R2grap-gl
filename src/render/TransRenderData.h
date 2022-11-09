@@ -20,5 +20,5 @@ private:
   KeyframesMap keyframe_mat_;
   std::map<int64_t, unsigned int> opacity_map_;  
 };
-typedef std::shared_ptr<TransformRenderData> TransformRenderDataPtr;
+
 }
