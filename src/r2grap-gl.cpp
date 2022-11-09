@@ -59,7 +59,7 @@ int main()
   // build and compile shaders
   // -------------------------
   //Shader shader("../shader_bezier.vert", "../shader_bezier.frag", "../shader_bezier.geom");
-  Shader shader("shader/r2grap_m.vert", "shader/r2grap_m.frag");
+  Shader shader("/Users/ingslh/Code/R2grap-gl/src/shader/r2grap_m.vert", "/Users/ingslh/Code/R2grap-gl/src/shader/r2grap_m.frag");
 
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------

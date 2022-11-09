@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
 if(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment version")
 endif()
 
 project(R2grap-gl)
@@ -44,7 +44,7 @@ set(RENDER
     src/render/VertRenderData.cpp
 )
 
-set(MAIN src/main.cpp)
+set(MAIN src/r2grap-gl.cpp)
 
 source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})

@@ -60,7 +60,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
       transform_curve[it->first] = signal_curve_line;
     }
   }
-
+  transform_mat_ = new TransMat();
   SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
   GenerateTransformMat(transform_curve, transform);
 }

@@ -1,3 +1,6 @@
 # ignores following folders
 build/
 .vscode
+cmake-build-debug
+.idea
+cmake-build-debug-coverage

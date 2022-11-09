@@ -42,7 +42,7 @@ public:
       else{
         auto delta = 1.0/float(default_segments_);
         for(unsigned int i = 0; i < default_segments_; i++){
-          float t = static_cast<float>(delta * float(i));
+          auto t = static_cast<float>(delta * float(i));
           vec2 p;
           p.x = (1 - t) * (1 - t) * (1 - t) * it.start.x + 3 * t * (1 - t) * (1 - t)* it.out.x + 3 * t*t* (1 - t)* it.in.x + t * t * t * it.end.x;
           p.y = (1 - t) * (1 - t) * (1 - t) * it.start.y + 3 * t * (1 - t) * (1 - t)* it.out.y + 3 * t*t* (1 - t)* it.in.y + t * t * t * it.end.y;

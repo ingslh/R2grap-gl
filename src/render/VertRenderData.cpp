@@ -56,25 +56,8 @@ T VerticesRenderData::Normalize(const T& pos){
 }
 
 bool VerticesRenderData::ConverToOpenglVert(unsigned int path_ind, std::vector<float>& verts){
-  auto vertices = multi_paths_data_[path_ind];
-  verts.resize(12 * vertices.size());
-  auto vert_cluster_ind = 0;
-  for(auto& el : vertices){
-    verts[vert_cluster_ind * 12] = el.start.x;
-    verts[vert_cluster_ind * 12 + 1] = el.start.y;
-    verts[vert_cluster_ind * 12 + 2] = 0.0f;
-    verts[vert_cluster_ind * 12 + 3] = el.out.x;
-    verts[vert_cluster_ind * 12 + 4] = el.out.y;
-    verts[vert_cluster_ind * 12 + 5] = 0.0f;
-    verts[vert_cluster_ind * 12 + 6] = el.in.x;
-    verts[vert_cluster_ind * 12 + 7] = el.in.y;
-    verts[vert_cluster_ind * 12 + 8] = 0.0f;
-    verts[vert_cluster_ind * 12 + 9] = el.end.x;
-    verts[vert_cluster_ind * 12 + 10] = el.end.y;
-    verts[vert_cluster_ind * 12 + 11] = 0.0f;
-    vert_cluster_ind++;
-  }
-  return true;
+    verts = bezier_vert_data_[path_ind].verts;
+    return true;
 }
 
 

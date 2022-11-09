@@ -54,7 +54,7 @@ typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> Transf
 
 class Transform{
 public:
-  Transform(const nlohmann::json& transform, bool IsShapeTransform = false);
+  explicit Transform(const nlohmann::json& transform, bool IsShapeTransform = false);
 
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
   void GenerateTransformMat();

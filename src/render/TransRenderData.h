@@ -16,7 +16,7 @@ protected:
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 private:
-  TransMat* transform_mat_;
+  TransMat* transform_mat_ = nullptr;
   KeyframesMap keyframe_mat_;
   std::map<int64_t, unsigned int> opacity_map_;  
 };

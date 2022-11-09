@@ -18,7 +18,7 @@ struct BezierVertData{
 
 class VerticesRenderData : public BaseRenderData{
 public:
-  VerticesRenderData(const LayersInfo* layer);
+  explicit VerticesRenderData(const LayersInfo* layer);
   bool ConverToOpenglVert(unsigned int ind_path, std::vector<float>& vert_info);
   unsigned int GetVertNumByPathInd(unsigned int ind) const;
 
