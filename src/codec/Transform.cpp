@@ -13,7 +13,8 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform){
 
 //note:not support anchor position's keyframe,can conver to position's keyframe
 void Transform::readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform){
-  if (propname != "Anchor Point" && propname != "Position" && propname != "Scale" && propname != "Rotation" && propname != "Opacity") 
+  if (propname != "Anchor Point" && propname != "Position" && 
+      propname != "Scale" && propname != "Rotation" && propname != "Opacity") 
     return;
   bool keyvalue_is_vector = IsVectorProperty(propname);
   auto cur_property = transform;

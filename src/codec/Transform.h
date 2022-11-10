@@ -13,10 +13,13 @@ enum TransformProp {
   k_Scale,
   k_Rotation,
   k_Opacity,
+  k_Skew,
+  k_SkewAxis,
 };
 
 enum TransformType {
-  t_ShapeTrans = 0,
+  t_None = 0,
+  t_ShapeTrans,
   t_GroupTrans,
 };
 
@@ -48,6 +51,8 @@ struct TransMat{
   float clip_end;
   std::vector<glm::mat4> trans;
   float duration;
+
+  TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()), duration(0){}
 };
 
 typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> TransformCurve;
@@ -55,9 +60,13 @@ typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> Transf
 class Transform{
 public:
   explicit Transform(const nlohmann::json& transform, bool IsShapeTransform = false);
-
-  void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
-  void GenerateTransformMat();
+  Transform() :
+  type_(TransformType::t_None),
+  property_values_(std::map<std::string, std::variant<glm::vec3, float>>()),
+  keyframe_data_(KeyframesMap()),
+  transform_mat_(TransMat()),
+  transform_curve_(TransformCurve())
+  {}
 
   glm::vec3 GetShapeGrapOffset();
   bool IsVectorProperty(std::string);
@@ -66,7 +75,7 @@ public:
   const TransMat* GetTransMat()const {return &transform_mat_;}
 
 protected:
-  void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
+  virtual void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
 private:
   TransformType type_;
   std::map<std::string, std::variant<glm::vec3, float>> property_values_;

@@ -28,6 +28,8 @@ set(CODEC
     src/codec/LayersInfo.cpp
     src/codec/Transform.h
     src/codec/Transform.cpp
+    src/codec/GroupTransform.h
+    src/codec/GroupTransform.cpp
 )
 
 set(RENDER

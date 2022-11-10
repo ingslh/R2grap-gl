@@ -16,7 +16,6 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
     auto final_offset = group->GetTransform()->GetPosition() + shape_offset; 
 
     for(auto& path : paths){
-      multi_paths_data_.clear();
       BezierVertData signal_path_data;
 
       auto bezier_verts = path->GetBezierVertices();
@@ -35,10 +34,7 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
 }
 
 unsigned int VerticesRenderData::GetVertNumByPathInd(unsigned int ind) const { 
-  if(multi_paths_data_.size()){
-    return static_cast<unsigned int>(multi_paths_data_[ind].size()); 
-  }
-  else if(bezier_vert_data_.size()){
+  if(bezier_vert_data_.size()){
     return static_cast<unsigned int>(bezier_vert_data_[ind].verts.size());
   }
   return 0;
