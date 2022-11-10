@@ -1,4 +1,4 @@
-{
+﻿{
   function ReplaceAll(str, substr, newstr) {
     var p = -1; 
     var s = 0; 
@@ -464,8 +464,8 @@
           break;
       }
       if(averageSpeed == 0){
-        berizerIn.y = berizerIn,x;
-        berizerOut.y = berizerOut.x;
+        bezierIn.y = bezierIn.x;
+        bezierOut.y = bezierOut.x;
       }else{
         switch(property.propertyValueType){
           case PropertyValueType.ThreeD_SPATIAL:

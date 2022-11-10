@@ -28,9 +28,6 @@ public:
 
   static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind);
 
-  //static void ConfigureVXOs(const std::vector<std::shared_ptr<RenderContent>>& contents);
-
-  //static void LoopRenderContents(const std::vector<std::shared_ptr<RenderContent>>& contents, const int frames);
 
   LayerData& GetLayerData(){return layer_data_;}
   
