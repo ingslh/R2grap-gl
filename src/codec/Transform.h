@@ -14,11 +14,6 @@ enum TransformType {
   t_GroupTrans,
 };
 
-enum PropertyOrKeyvalueType {
-  t_Vector = 0,
-  t_Scalar,
-};
-
 struct TransMat{
   unsigned int layer_index;
   float clip_start;

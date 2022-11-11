@@ -13,12 +13,15 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform){
     include_propname.push_back("Skew");
     include_propname.push_back("Skew Axis");
   }
-  auto PropertyType = [&](const std::string& proname)-> ProperType {
+  auto PropertyType = [&](const std::string& proname)-> DimensionType {
     auto it = std::find(include_propname.begin(), include_propname.end(), proname);
-    if(it != include_propname.end())
-      return ProperType(it - include_propname.begin());
+    if(it == include_propname.end())
+      return DimensionType::t_NoFind;
+    else if(it - include_propname.begin() > 2)
+      return DimensionType::t_Scalar;
     else
-      return ProperType::t_None;
+      return DimensionType::t_Vector;
+
   };
 
   for (auto& el : transform.items()) {

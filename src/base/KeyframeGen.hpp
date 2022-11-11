@@ -8,22 +8,10 @@
 
 namespace R2grap{
 
-
-enum ProperType{
-  t_None = 0,
-
-  //vector
-  t_AnchorPos,//transform
-  t_Position,
-  t_Scale,
-  t_Color,//fill/stroke
-
-  //scalar
-  t_Rotation,//transform
-  k_Skew,//shape-transform
-  k_SkewAxis,
-  k_StrokeWidth,//stroke
-
+enum DimensionType {
+    t_NoFind = -1,
+    t_Vector,
+    t_Scalar,
 };
 
 template<typename T>
@@ -47,10 +35,10 @@ typedef std::map<std::string, std::variant<VectorKeyFrames, ScalarKeyFrames>> Ke
 class KeyframeGen{
 public:
 
-  KeyframeGen(const std::string& propname, const nlohmann::json& transform, const std::function<ProperType(std::string)>& valueType){
-    if(valueType(propname) == t_None) return;
+  KeyframeGen(const std::string& propname, const nlohmann::json& transform, const std::function<DimensionType(std::string)>& valueType){
+    if(valueType(propname) == t_NoFind) return;
     
-    bool is_vector = (valueType(propname)>0 && valueType(propname) < 5);
+    bool is_vector = (valueType(propname) == t_Vector);
     auto cur_property = transform;
     
     if(cur_property.is_object()){
