@@ -10,8 +10,8 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform){
   type_ = IsShapeTransform ? t_ShapeTrans : t_GroupTrans;
   std::vector<std::string> include_propname  = {"Anchor Point","Position","Scale","Rotation","Opacity"};
   if(type_ == t_GroupTrans){
-    include_propname.push_back("Skew");
-    include_propname.push_back("Skew Axis");
+    include_propname.emplace_back("Skew");
+    include_propname.emplace_back("Skew Axis");
   }
   auto PropertyType = [&](const std::string& proname)-> DimensionType {
     auto it = std::find(include_propname.begin(), include_propname.end(), proname);

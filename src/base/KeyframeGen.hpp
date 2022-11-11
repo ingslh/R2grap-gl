@@ -1,6 +1,8 @@
 #pragma once
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <utility>
 #include <vector>
 #include <glm/glm.hpp>
 #include <variant>
@@ -24,7 +26,7 @@ struct Keyframe{
   float keyTime;
 
   Keyframe(T lastkeyValue_, float lastkeyTime_, std::vector<glm::vec2> outPos_, std::vector<glm::vec2> inPos_, T keyValue_, float keyTime_) :
-    lastkeyValue(lastkeyValue_), lastkeyTime(lastkeyTime_), outPos(outPos_), inPos(inPos_), keyValue(keyValue_), keyTime(keyTime_){}
+    lastkeyValue(lastkeyValue_), lastkeyTime(lastkeyTime_), outPos(std::move(outPos_)), inPos(std::move(inPos_)), keyValue(keyValue_), keyTime(keyTime_){}
 };
 
 typedef std::vector<Keyframe<glm::vec3>> VectorKeyFrames;
@@ -98,9 +100,9 @@ public:
         }
       }
       if(is_vector)
-        keyframe_pair_ = std::shared_ptr<KeyframePair>(new KeyframePair(propname, vector_keyframe));
+        keyframe_pair_ = std::make_shared<KeyframePair>(propname, vector_keyframe);
       else
-        keyframe_pair_ = std::shared_ptr<KeyframePair>(new KeyframePair(propname, scalar_keyframe));
+        keyframe_pair_ = std::make_shared<KeyframePair>(propname, scalar_keyframe);
     }
   }
 
