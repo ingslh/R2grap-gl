@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <variant>
+#include "KeyframeGen.hpp"
 
 namespace R2grap{
 
@@ -28,23 +29,6 @@ enum PropertyOrKeyvalueType {
   t_Scalar,
 };
 
-template<typename T>
-struct Keyframe{
-  T lastkeyValue;
-  float lastkeyTime;
-  std::vector<glm::vec2> outPos;
-  std::vector<glm::vec2> inPos;
-  T keyValue;
-  float keyTime;
-
-  Keyframe(T lastkeyValue_, float lastkeyTime_, std::vector<glm::vec2> outPos_, std::vector<glm::vec2> inPos_, T keyValue_, float keyTime_) :
-    lastkeyValue(lastkeyValue_), lastkeyTime(lastkeyTime_), outPos(outPos_), inPos(inPos_), keyValue(keyValue_), keyTime(keyTime_){}
-};
-
-typedef std::vector<Keyframe<glm::vec3>> VectorKeyFrames;
-typedef std::vector<Keyframe<float>> ScalarKeyFrames;
-typedef std::map<std::string, std::variant<VectorKeyFrames, ScalarKeyFrames>> KeyframesMap;
-
 struct TransMat{
   unsigned int layer_index;
   float clip_start;
@@ -63,25 +47,21 @@ public:
   Transform() :
   type_(TransformType::t_None),
   property_values_(std::map<std::string, std::variant<glm::vec3, float>>()),
-  keyframe_data_(KeyframesMap()),
-  transform_mat_(TransMat()),
-  transform_curve_(TransformCurve())
+  keyframe_data_(KeyframesMap())
   {}
 
   glm::vec3 GetShapeGrapOffset();
   bool IsVectorProperty(std::string);
   glm::vec3& GetPosition() { return std::get<t_Vector>(property_values_["Position"]); }
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
-  const TransMat* GetTransMat()const {return &transform_mat_;}
 
 protected:
-  virtual void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
+  void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
 private:
   TransformType type_;
   std::map<std::string, std::variant<glm::vec3, float>> property_values_;
   KeyframesMap keyframe_data_;
-  TransMat transform_mat_;
-  TransformCurve transform_curve_;
+  //std::map<std::string, std::variant<VectorKeyFrames, ScalarKeyFrames>>
 };
 
 }

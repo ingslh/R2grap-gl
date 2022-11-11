@@ -4,17 +4,20 @@
 #include "Transform.h"
 #include "FillInfo.h"
 #include "PathInfo.h"
+#include "StrokeInfo.h"
 
 namespace R2grap{
 class GroupContents{
 public:
   GroupContents(const nlohmann::json& json);
   const std::vector<std::shared_ptr<PathInfo>>& GetPaths()const {return paths_;}
-  const std::vector<std::shared_ptr<FillInfo>>& GetFills()const { return fills_; }
+  const std::shared_ptr<FillInfo> GetFills()const { return fills_; }
+  const std::shared_ptr<StrokeInfo> GetStroke()const {return stroke_;}
 
 private:
   std::vector<std::shared_ptr<PathInfo>> paths_;
-  std::vector<std::shared_ptr<FillInfo>> fills_;
+  std::shared_ptr<FillInfo> fills_ = nullptr;
+  std::shared_ptr<StrokeInfo> stroke_ = nullptr;
   bool existMergePaths_;
 };
 

@@ -8,7 +8,10 @@ GroupContents::GroupContents(const nlohmann::json& json){
       paths_.emplace_back(std::make_shared<PathInfo>(json[el.key()]));
     }
     else if(el.key().substr(0,4) == "Fill"){
-      fills_.emplace_back(std::make_shared<FillInfo>(json[el.key()]));
+      fills_=std::make_shared<FillInfo>(json[el.key()]);
+    }
+    else if(el.key().substr(0,6) == "Stroke"){
+      stroke_=std::make_shared<StrokeInfo>(json[el.key()]);
     }
     else if (el.key().substr(0, 11) == "Merge Paths") { 
       auto merge_mode = json[el.key()]["Mode"];

@@ -8,12 +8,17 @@ namespace R2grap{
   fills_count_ = 0;
   auto shape_groups = data->GetShapeGroup();
   for(auto& group : shape_groups){
-    auto fills = group->GetContents()->GetFills();
-    fills_count_ += static_cast<unsigned int>(fills.size());
-    for(auto& fill : fills){
-      auto fill_color = fill->GetColor();
+    auto contents = group->GetContents();
+    if(contents->GetFills()){
+      fills_count_ += 1;
+      auto fill_color = contents->GetFills()->GetColor();
       multi_fills_data_.emplace_back(fill_color);
+    }else if(contents->GetStroke()){
+      stroke_count_ += 1;
+      auto stroke_color = contents->GetStroke()->GetColor();
     }
+
+
   }
 }
 }
