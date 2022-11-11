@@ -12,6 +12,7 @@ set(BASE
     src/base/BezierGen.hpp
     src/base/JsonReader.hpp
     src/base/Polygon.hpp
+    src/base/KeyframeGen.hpp
 )
 
 set(SHADER
@@ -114,7 +115,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
 if(WIN32)
   target_compile_definitions(${PROJECT_NAME} PUBLIC _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS)
 else()
-  target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17 -msse4)
+  target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17)
   target_compile_definitions(${PROJECT_NAME} PUBLIC _FILE_OFFSET_BITS=64)
   target_compile_definitions(${PROJECT_NAME} PRIVATE USING_OPENGL_RENDER=1)
 endif()

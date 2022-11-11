@@ -8,18 +8,8 @@
 
 namespace R2grap{
 
-enum TransformProp {
-  k_AnchorPos = 0,
-  k_Position,
-  k_Scale,
-  k_Rotation,
-  k_Opacity,
-  k_Skew,
-  k_SkewAxis,
-};
-
 enum TransformType {
-  t_None = 0,
+  t_NoneTrans = 0,
   t_ShapeTrans,
   t_GroupTrans,
 };
@@ -45,7 +35,7 @@ class Transform{
 public:
   explicit Transform(const nlohmann::json& transform, bool IsShapeTransform = false);
   Transform() :
-  type_(TransformType::t_None),
+  type_(TransformType::t_NoneTrans),
   property_values_(std::map<std::string, std::variant<glm::vec3, float>>()),
   keyframe_data_(KeyframesMap())
   {}
@@ -56,7 +46,7 @@ public:
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 
 protected:
-  void readKeyframeandProperty(const std::string& propname, const nlohmann::json& transform);
+  void ReadProperty(const std::string& propname, const nlohmann::json& transform);
 private:
   TransformType type_;
   std::map<std::string, std::variant<glm::vec3, float>> property_values_;
