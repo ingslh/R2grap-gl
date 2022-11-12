@@ -21,7 +21,6 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform){
       return DimensionType::t_Scalar;
     else
       return DimensionType::t_Vector;
-
   };
 
   for (auto& el : transform.items()) {
