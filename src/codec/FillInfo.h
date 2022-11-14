@@ -46,6 +46,7 @@ public:
   }
 
   const glm::vec4& GetColor() const{return color_;} 
+  const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 
 private:
   unsigned int blend_mode_;
