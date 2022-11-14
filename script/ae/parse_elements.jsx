@@ -20,6 +20,27 @@
       return str
   }
 
+  function roundNumber(num, decimals){
+    if( typeof num == 'number'){
+        return parseFloat(num.toFixed(decimals));
+    }else{
+        return roundArray(num,decimals);
+    }
+}
+
+function roundArray(arr, decimals){
+    var i, len = arr.length;
+    var retArray = [];
+    for( i = 0; i < len ; i += 1){
+        if( typeof arr[i] == 'number'){
+            retArray.push(roundNumber(arr[i],decimals));
+        }else{
+            retArray.push(roundArray(arr[i],decimals));
+        }
+    }
+    return retArray;
+}
+
   function getCurveLength(initPos,endPos, outBezier, inBezier){
     var k, curveSegments = 200;
     var point,lastPoint = null;
@@ -512,19 +533,31 @@
             // some value is readOnly or other type,via check propertyValueType
             if ((cur.propertyValueType != PropertyValueType.NO_VALUE) && cur.propertyValueType != PropertyValueType.CUSTOM_VALUE){
               if (cur.numKeys > 0) {
-
                 jObj[cur.name] = {};
                 jObj[cur.name]["value"] = cur.value;
-                for (var j = 1; j < cur.numKeys; j++) {
-                  out_in_dir = buildSegment(cur, j);
-                  jObj[cur.name]["Curve" + j] = {
-                    "lastkeyValue": cur.keyValue(j),
-                    "lastkeyTime": cur.keyTime(j),
-                    "OutPos": out_in_dir[0],
-                    "InPos": out_in_dir[1],
-                    "keyValue":cur.keyValue(j+1),
-                    "keyTime":cur.keyTime(j+1),
-                  };
+                if(cur.name == "Path"){
+                  for(var j = 1; j < cur.numKeys; j++){
+                    jObj[cur.name]["Curve" + j] = {
+                      "lastkeyValue": cur.valueAtTime(cur.keyTime(j), false).vertices,
+                      "lastkeyTime": cur.keyTime(j),
+                      //"OutPos": out_in_dir[0],
+                      //"InPos": out_in_dir[1],
+                      "keyValue":cur.valueAtTime(cur.keyTime(j + 1), false).vertices,
+                      "keyTime":cur.keyTime(j + 1),
+                    };
+                  }
+                }else{
+                  for (var j = 1; j < cur.numKeys; j++) {
+                    out_in_dir = buildSegment(cur, j);
+                    jObj[cur.name]["Curve" + j] = {
+                      "lastkeyValue": cur.keyValue(j),
+                      "lastkeyTime": cur.keyTime(j),
+                      "OutPos": out_in_dir[0],
+                      "InPos": out_in_dir[1],
+                      "keyValue":cur.keyValue(j+1),
+                      "keyTime":cur.keyTime(j+1),
+                    };
+                  }
                 }
               }else{
                 jObj[cur.name] = cur.value;

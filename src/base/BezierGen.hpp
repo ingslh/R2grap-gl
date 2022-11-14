@@ -14,16 +14,38 @@ struct BezierCluster{
   vec2 end;
 };
 
+class LinearGenerator{
+public:
+  LinearGenerator(const std::vector<vec2>& last_keyframe_vert, unsigned int last_keyframe_time, 
+  const std::vector<vec2>& keyframe_vert, unsigned int keyframe_time){
+    for(auto i = last_keyframe_time; i <= keyframe_time; i++){
+      std::vector<glm::vec2> tmp_verts;
+      for(auto j = 0; j < last_keyframe_vert.size(); j++){
+        tmp_verts.emplace_back(last_keyframe_vert[j] + float((i - last_keyframe_time))/(keyframe_time - last_keyframe_time) * (keyframe_vert[j] - last_keyframe_vert[j]));
+      }
+      linear_map_[i] = tmp_verts;
+    }
+  }
+
+  const std::map<unsigned int, std::vector<glm::vec2>>& GetLinearMap(){return linear_map_;}
+
+private:
+  std::map<unsigned int, std::vector<glm::vec2>> linear_map_;
+};
+
+
 class BezierGenerator{
 public:
   //generate closed curve
-  BezierGenerator(const std::vector<vec2>& vert, const std::vector<vec2>& out, const std::vector<vec2>& in){
+  BezierGenerator(const std::vector<vec2>& vert, const std::vector<vec2>& out, const std::vector<vec2>& in, bool closed){
     auto vert_nums = vert.size();
     std::vector<BezierCluster> cluster_list;
     for(size_t i = 0; i < vert_nums; i++){
       BezierCluster cluster;
       cluster.start = vert[i];
       cluster.out = out[i] + cluster.start;
+
+      if(i == vert_nums -1 && !closed) break;
 
       if(i == vert_nums -1){
         cluster.end = vert[0];

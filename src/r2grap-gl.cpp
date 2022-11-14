@@ -63,14 +63,14 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
+  //JsonReader reader("../assets/test/path_test.json");
   JsonReader reader("../assets/test.json");
   auto layers_count = reader.getLayersCount();
 
   std::vector<std::shared_ptr<RenderContent>> contents;
   for (auto i = 0; i < layers_count; i++) {
     auto layer_info = reader.GetLayersInfo(i).get();
-    auto test = std::make_shared<RenderContent>(layer_info);
-    contents.emplace_back(test);
+    contents.emplace_back(std::make_shared<RenderContent>(layer_info));
   }
 
   auto paths_count = RenderContent::GetRenderPathCount(contents);
