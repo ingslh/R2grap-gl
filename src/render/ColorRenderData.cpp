@@ -4,7 +4,8 @@
 #include "FillInfo.h"
 
 namespace R2grap{
-  ColorRenderData::ColorRenderData(const LayersInfo* data){
+
+ColorRenderData::ColorRenderData(const LayersInfo* data){
   fills_count_ = 0;
   auto shape_groups = data->GetShapeGroup();
   for(auto& group : shape_groups){
@@ -17,8 +18,7 @@ namespace R2grap{
       stroke_count_ += 1;
       auto stroke_color = contents->GetStroke()->GetColor();
     }
-
-
   }
 }
+
 }
