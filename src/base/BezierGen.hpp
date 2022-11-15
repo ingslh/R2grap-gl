@@ -32,9 +32,9 @@ public:
   
   const std::map<unsigned int, T>& GetLinearMapToSignal()const {
     std::map<unsigned int, T> ret;
-    for (auto& el = linear_map_.begin(); el != linear_map_.end(); el++) {
-      if (el->second.size() == 1) {
-        std::pair<unsigned int, T> tmp_pair ((unsigned int)el->first, (T)el->second[0]);
+    for (const auto& el : linear_map_) {
+      if (el.second.size() == 1) {
+        std::pair<unsigned int, T> tmp_pair ((unsigned int)el.first, (T)el.second[0]);
         ret.insert(tmp_pair);
       }
     }

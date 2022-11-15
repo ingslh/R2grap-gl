@@ -37,7 +37,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
             std::vector<float> lastval_list({ el.lastkeyValue }), curval_list({ el.keyValue });
             auto linear_data = std::make_shared<LinearGenerator<float>>(lastval_list, el.lastkeyTime, curval_list, el.keyTime);
             if(!linear_data) continue;
-            auto tmp_map = linear_data->GetLinearMap();
+            auto tmp_map = linear_data->GetLinearMapToSignal();
             tmp_data.trans_opacity.insert(tmp_map.begin(), tmp_map.end());
           }
         }
