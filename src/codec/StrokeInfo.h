@@ -60,6 +60,9 @@ public:
     }
   }
 
+  unsigned int GetMiterLimit() const{return miter_limit_;}
+  unsigned int GetStrokeWidth() const{return stroke_width_;}
+  unsigned int GetOpacity() const{return opacity_;}
   const glm::vec4& GetColor() const{return color_;}
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 

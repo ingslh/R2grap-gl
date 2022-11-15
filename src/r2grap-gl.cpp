@@ -63,8 +63,8 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
-  //JsonReader reader("../assets/test/path_test.json");
-  JsonReader reader("../assets/test.json");
+  JsonReader reader("../assets/test/path_test.json");
+  //JsonReader reader("../assets/test.json");
   auto layers_count = reader.getLayersCount();
 
   std::vector<std::shared_ptr<RenderContent>> contents;

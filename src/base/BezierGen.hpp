@@ -14,12 +14,13 @@ struct BezierCluster{
   vec2 end;
 };
 
+template<typename T>
 class LinearGenerator{
 public:
-  LinearGenerator(const std::vector<vec2>& last_keyframe_vert, unsigned int last_keyframe_time, 
-  const std::vector<vec2>& keyframe_vert, unsigned int keyframe_time){
+  LinearGenerator(const std::vector<T>& last_keyframe_vert, unsigned int last_keyframe_time, 
+  const std::vector<T>& keyframe_vert, unsigned int keyframe_time){
     for(auto i = last_keyframe_time; i <= keyframe_time; i++){
-      std::vector<glm::vec2> tmp_verts;
+      std::vector<T> tmp_verts;
       for(auto j = 0; j < last_keyframe_vert.size(); j++){
         tmp_verts.emplace_back(last_keyframe_vert[j] + float((i - last_keyframe_time))/(keyframe_time - last_keyframe_time) * (keyframe_vert[j] - last_keyframe_vert[j]));
       }
@@ -27,10 +28,21 @@ public:
     }
   }
 
-  const std::map<unsigned int, std::vector<glm::vec2>>& GetLinearMap(){return linear_map_;}
+  const std::map<unsigned int, std::vector<T>>& GetLinearMap()const {return linear_map_;}
+  
+  const std::map<unsigned int, T>& GetLinearMapToSignal()const {
+    std::map<unsigned int, T> ret;
+    for (auto& el = linear_map_.begin(); el != linear_map_.end(); el++) {
+      if (el->second.size() == 1) {
+        std::pair<unsigned int, T> tmp_pair ((unsigned int)el->first, (T)el->second[0]);
+        ret.insert(tmp_pair);
+      }
+    }
+    return ret;
+  }
 
 private:
-  std::map<unsigned int, std::vector<glm::vec2>> linear_map_;
+  std::map<unsigned int, std::vector<T>> linear_map_;
 };
 
 

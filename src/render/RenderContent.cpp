@@ -4,7 +4,7 @@ namespace R2grap{
 
 RenderContent::RenderContent(LayersInfo* layer_info){
   auto layer_contents_path = SRenderDataFactory::GetIns().CreateVerticesData(layer_info);
-  auto layer_contents_fill = SRenderDataFactory::GetIns().CreateColorData(layer_info);
+  auto layer_contents_color = SRenderDataFactory::GetIns().CreateColorData(layer_info);
   auto layer_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(layer_info);
 
   auto trans_mat = layer_contents_trans->GetTransMat();
@@ -21,7 +21,7 @@ RenderContent::RenderContent(LayersInfo* layer_info){
     layer_contents_path->ConverToOpenglVert(i, vert);
     layer_data_.verts.emplace_back(vert);
     layer_data_.triangle_ind.emplace_back(layer_contents_path->GetTriangleIndex(i));
-    layer_data_.color.emplace_back(layer_contents_fill->GetColor(i));
+    layer_data_.color.emplace_back(layer_contents_color->GetColor(i));
   }
 }
 

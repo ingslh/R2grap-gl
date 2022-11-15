@@ -33,7 +33,7 @@ public:
           vec_last_verts.emplace_back(glm::vec2(last_verts[i][0], last_verts[i][1]));
           vec_cur_verts.emplace_back(glm::vec2(cur_verts[i][0], cur_verts[i][1]));
         }
-        auto linear_vert = std::make_shared<LinearGenerator>(vec_last_verts, last_time, vec_cur_verts, cur_time);
+        auto linear_vert = std::make_shared<LinearGenerator<glm::vec2>>(vec_last_verts, last_time, vec_cur_verts, cur_time);
         if (linear_vert) {
           auto tmp_map = linear_vert->GetLinearMap();
           linear_map_.insert(tmp_map.begin(), tmp_map.end());
@@ -44,8 +44,16 @@ public:
     auto bezier_verts = std::make_shared<BezierGenerator>(vertices_, out_pos_vecs_, in_pos_vecs_ ,closed_);
     bezier_verts_ = bezier_verts -> getBezierVerts();
     if(closed_){
-      auto polygon = std::make_shared<PolygonArray>(bezier_verts->getBezierVerts());
+      auto polygon = std::make_shared<PolygonArray>(bezier_verts_);
       tri_index_list_ = mapbox::earcut<unsigned int>(polygon->getVertices());
+    }
+
+    if(closed_){
+      for(auto& el : linear_map_){
+        auto polygon = std::make_shared<PolygonArray>(el.second);
+        auto tri_index_list = mapbox::earcut<unsigned int>(polygon->getVertices());
+        tri_index_map_[el.first] = tri_index_list;
+      }
     }
   }
 
@@ -65,7 +73,8 @@ private:
   std::vector<glm::vec2> bezier_verts_;
   std::vector<unsigned int> tri_index_list_;
 
-  std::map<unsigned int, std::vector<glm::vec2>> linear_map_;
+  std::map<unsigned int, std::vector<glm::vec2>> linear_map_; //first: frame index, second: array of vert
+  std::map<unsigned int, std::vector<unsigned int>> tri_index_map_;//first: frame index, second: array of triangle index
 };
 
 }

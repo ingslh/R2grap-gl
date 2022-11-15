@@ -45,6 +45,7 @@ public:
     }
   }
 
+  unsigned int GetOpacity() const{return opacity_;}
   const glm::vec4& GetColor() const{return color_;} 
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 

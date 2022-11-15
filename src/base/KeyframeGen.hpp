@@ -18,12 +18,12 @@ enum DimensionType {
 
 template<typename T>
 struct Keyframe{
-  T lastkeyValue;
-  float lastkeyTime;
-  std::vector<glm::vec2> outPos;
+  T lastkeyValue;                 //bezier:lastpos_y
+  float lastkeyTime;              //bezier:lastpos_x
+  std::vector<glm::vec2> outPos;  //vector's size is equal to T's dimension
   std::vector<glm::vec2> inPos;
-  T keyValue;
-  float keyTime;
+  T keyValue;                     //bezier:curpos_y
+  float keyTime;                  //bezier:curpos_x
 
   Keyframe(T lastkeyValue_, float lastkeyTime_, std::vector<glm::vec2> outPos_, std::vector<glm::vec2> inPos_, T keyValue_, float keyTime_) :
     lastkeyValue(lastkeyValue_), lastkeyTime(lastkeyTime_), outPos(std::move(outPos_)), inPos(std::move(inPos_)), keyValue(keyValue_), keyTime(keyTime_){}
