@@ -9,14 +9,15 @@ namespace R2grap{
 class TransformRenderData : public BaseRenderData{
 public:
   TransformRenderData(const LayersInfo* layer);
+  TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos);
   TransMat* GetTransMat(){return transform_mat_;}
 
 protected:
-  void GenerateTransformMat(const TransformCurve& transform_curve, std::shared_ptr<Transform> transform);
+  void GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 private:
-
+  void CompTransformCurve(Transform* trans, TransformCurve& curve);
 /*struct TransMat {
     unsigned int layer_index;
     float clip_start;

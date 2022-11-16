@@ -45,6 +45,8 @@ struct GroupData {
   std::vector<PathData> paths;
   FillData fill;
   StrokeData stroke;
+
+  std::vector<glm::mat4> trans;
 };
 
 struct LayerData{
@@ -53,6 +55,7 @@ struct LayerData{
   float end_pos;
   unsigned int link_layer_index;
   std::vector<GroupData> group_data;
+  
   std::vector<glm::mat4> trans;
 
   //old

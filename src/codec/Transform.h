@@ -37,7 +37,7 @@ public:
 
   glm::vec3 GetShapeGrapOffset();
   static bool IsVectorProperty(std::string);
-  glm::vec3& GetPosition() { return std::get<t_Vector>(property_values_["Position"]); }
+  glm::vec3 GetPosition() { return std::get<t_Vector>(property_values_["Position"]); }
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 
 protected:

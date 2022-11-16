@@ -24,6 +24,10 @@ TransformRenderData* RenderDataFactory::CreateTransformData(const LayersInfo* la
   return new TransformRenderData(layer);
 }
 
+TransformRenderData* RenderDataFactory::CreateTransformData(const Transform* trans, unsigned int ind, float inpos, float outpos){
+  return new TransformRenderData(trans, ind, inpos, outpos);
+}
+
 bool RenderDataFactory::ReleaseRenderData(BaseRenderData* data){
   if(!data) return false;
 

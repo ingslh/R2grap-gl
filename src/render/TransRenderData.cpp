@@ -8,9 +8,27 @@ namespace R2grap{
 TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
   auto transform = layer->GetShapeTransform();
   TransformCurve transform_curve;
+  CompTransformCurve(transform.get(),transform_curve);
 
-  for (auto it = keyframe_mat_.begin(); it != keyframe_mat_.end(); it++){
-    if(transform->IsVectorProperty(it->first)){ //vector
+  transform_mat_ = new TransMat();
+  SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
+  GenerateTransformMat(transform_curve, transform.get());
+}
+
+
+TransformRenderData::TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos){
+  auto tmp_trans = const_cast<Transform*>(transform);
+  keyframe_mat_ = transform->GetKeyframeData();
+  transform_mat_ = new TransMat();
+  SetInandOutPos(ind, inpos, outpos);
+  TransformCurve transform_curve;
+  CompTransformCurve(tmp_trans, transform_curve);
+  GenerateTransformMat(transform_curve, tmp_trans);
+}
+
+void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve){
+    for (auto it = keyframe_mat_.begin(); it != keyframe_mat_.end(); it++){
+    if(trans->IsVectorProperty(it->first)){ //vector
       auto vector_keyframes = std::get<t_Vector>(it->second);
       auto start_value =  vector_keyframes[0].lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
@@ -35,7 +53,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
         double_curve_line.front().merge(curve_x);
         double_curve_line.back().merge(curve_y);
       }
-      transform_curve[it->first] = double_curve_line;
+      curve[it->first] = double_curve_line;
     }
     else{ //scalar
       auto scalar_keyframes = std::get<t_Scalar>(it->second);
@@ -57,16 +75,12 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
 
         signal_curve_line[0].merge(curve);//cpp17 support,if old cpp verison can use "signal_curve_line[0].insert(curve.begin(),curve.end());" 
       }
-      transform_curve[it->first] = signal_curve_line;
+      curve[it->first] = signal_curve_line;
     }
   }
-  transform_mat_ = new TransMat();
-  SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
-  GenerateTransformMat(transform_curve, transform);
 }
 
-
-void TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, std::shared_ptr<Transform> transform){
+void TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
   auto position = transform->GetPosition() / reslution - glm::vec3(0.5,0.5,0);
   auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;

@@ -14,6 +14,14 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   layer_data_.end_pos = trans_mat->clip_end;
   layer_data_.trans = trans_mat->trans;
 
+  auto groups = layer_info->GetShapeGroup();
+  for(auto& group : groups){
+    auto trans = group->GetTransform();
+    auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(trans.get(), layer_data_.index, layer_data_.start_pos, layer_data_.end_pos);
+    auto group_trans_mat = group_contents_trans->GetTransMat();
+  }
+
+
   auto path_count = layer_contents_path->GetPathsCount();
   layer_data_.paths_num = path_count;
   for(unsigned int i = 0; i < path_count; i++){
