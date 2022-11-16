@@ -57,11 +57,16 @@ public:
     }
   }
 
+  bool HasKeyframe() { return linear_map_.size(); }
+  bool IsClosed() { return closed_; }
+
   const std::vector<glm::vec2>& GetOutPosVec() const {return out_pos_vecs_;}
   const std::vector<glm::vec2>& GetInPosVec() const {return in_pos_vecs_;}
   const std::vector<glm::vec2>& GetVertices() const {return vertices_;}
   const std::vector<glm::vec2>& GetBezierVertices() const {return bezier_verts_;}
   const std::vector<unsigned int>& GetTriIndexList() const {return tri_index_list_;}
+  const std::map<unsigned int, std::vector<glm::vec2>>& GetLinearMap() const { return linear_map_; }
+  const std::map<unsigned int, std::vector<unsigned int>>& GetTrigIndexMap() const { return tri_index_map_; }
 
 private:
   unsigned int shape_direction_;

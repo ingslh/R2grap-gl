@@ -9,22 +9,27 @@
 namespace R2grap{
 
 struct BezierVertData{
+  unsigned int group_ind;
+  unsigned int path_ind;
+
   std::vector<float> verts;//3-dim
   std::vector<unsigned int> tri_index;//3 int make up a triangle
+
+  std::map<unsigned int, std::vector<float>> linear_verts;
+  std::map<unsigned int, std::vector<unsigned int>> linear_trig;
 };
 
 class VerticesRenderData : public BaseRenderData{
 public:
   explicit VerticesRenderData(const LayersInfo* layer);
-  bool ConverToOpenglVert(unsigned int ind_path, std::vector<float>& vert_info);
-  unsigned int GetVertNumByPathInd(unsigned int ind) const;
-
+  bool GetVertices(unsigned int ind_path, std::vector<float>& vert_info);
+  bool GetVertices(unsigned int group_ind, unsigned int path_ind, std::vector<float>& vert_info);
+  bool GetTriangleIndex(unsigned int ind, std::vector<unsigned int>& trigs);
+  bool GetTriangleIndex(unsigned int group_ind, unsigned int path_ind, std::vector<unsigned int>& trigs);
+  unsigned int GetPathsCount() const { return paths_count_; }
   template<typename T>
- T Normalize(const T& pos); 
+  T Normalize(const T& pos); 
 
-  unsigned int GetPathsCount() const {return paths_count_;}
-  const std::vector<unsigned int>& GetTriangleIndex(int ind) const {return bezier_vert_data_[ind].tri_index;}
-  unsigned int GetTriangleIndexSize(unsigned int ind) const {return static_cast<unsigned int>(bezier_vert_data_[ind].tri_index.size());}
 private:
   std::vector<BezierVertData> bezier_vert_data_;
   unsigned int paths_count_;

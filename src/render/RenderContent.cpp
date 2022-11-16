@@ -18,9 +18,11 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   layer_data_.paths_num = path_count;
   for(unsigned int i = 0; i < path_count; i++){
     std::vector<float> vert;
-    layer_contents_path->ConverToOpenglVert(i, vert);
+    layer_contents_path->GetVertices(i, vert);
     layer_data_.verts.emplace_back(vert);
-    layer_data_.triangle_ind.emplace_back(layer_contents_path->GetTriangleIndex(i));
+    std::vector<unsigned int> trig_index;
+    layer_contents_path->GetTriangleIndex(i, trig_index);
+    layer_data_.triangle_ind.emplace_back(trig_index);
     layer_data_.color.emplace_back(layer_contents_color->GetColor(i));
   }
 }

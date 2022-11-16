@@ -11,7 +11,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
 
   for (auto it = keyframe_mat_.begin(); it != keyframe_mat_.end(); it++){
     if(transform->IsVectorProperty(it->first)){ //vector
-      auto vector_keyframes = std::get<0>(it->second);
+      auto vector_keyframes = std::get<t_Vector>(it->second);
       auto start_value =  vector_keyframes[0].lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
       std::vector<std::map<unsigned int, float>> double_curve_line;
@@ -38,7 +38,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
       transform_curve[it->first] = double_curve_line;
     }
     else{ //scalar
-      auto scalar_keyframes = std::get<1>(it->second);
+      auto scalar_keyframes = std::get<t_Scalar>(it->second);
       auto start_value = it->first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
 
       unsigned int start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
@@ -64,6 +64,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
   SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
   GenerateTransformMat(transform_curve, transform);
 }
+
 
 void TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, std::shared_ptr<Transform> transform){
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);

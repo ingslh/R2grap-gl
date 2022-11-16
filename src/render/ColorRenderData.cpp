@@ -90,11 +90,6 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
     multi_color_data_[i] = color_cache_array;
   }
 
-
-
-
-
-
   /*for(auto& group : shape_groups){
     auto contents = group->GetContents();
     if(contents->GetFills()){
