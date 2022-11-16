@@ -56,8 +56,10 @@ public:
         float keyTime = static_cast<float>(it.value()["keyTime"]) * frameRate;
 
         if(is_vector){
-          auto vector_lastkeyvalue = glm::vec3(lastkeyValue[0], lastkeyValue[1], lastkeyValue[2]);
-          auto vector_keyvalue = glm::vec3(keyValue[0], keyValue[1], keyValue[2]);
+          auto vector_lastkeyvalue = lastkeyValue.size() == 3 ? glm::vec3(lastkeyValue[0], lastkeyValue[1], lastkeyValue[2]) : 
+            glm::vec3(lastkeyValue[0], lastkeyValue[1], 0);
+          auto vector_keyvalue = keyValue.size() == 3 ? glm::vec3(keyValue[0], keyValue[1], keyValue[2]) : 
+            glm::vec3(keyValue[0], keyValue[1], 0);
 
           float out_x, in_x;
           glm::vec3 out_y, in_y;

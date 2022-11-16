@@ -52,8 +52,12 @@ void Transform::ReadProperty(const std::string& propname, const nlohmann::json& 
       property_values_[propname] = glm::vec3(cur_property[0], cur_property[1], 0);
   }
   else if(cur_property.is_object()){//have keyframe ,it's a object
-    if (keyvalue_is_vector)
-      property_values_[propname] = glm::vec3(cur_property["Curve1"]["lastkeyValue"][0], cur_property["Curve1"]["lastkeyValue"][1], cur_property["Curve1"]["lastkeyValue"][2]);
+    if (keyvalue_is_vector) {
+      if(cur_property["Curve1"]["lastkeyValue"].size() == 3)
+        property_values_[propname] = glm::vec3(cur_property["Curve1"]["lastkeyValue"][0], cur_property["Curve1"]["lastkeyValue"][1], cur_property["Curve1"]["lastkeyValue"][2]);
+      else
+        property_values_[propname] = glm::vec3(cur_property["Curve1"]["lastkeyValue"][0], cur_property["Curve1"]["lastkeyValue"][1], 0);
+    }
     else
       property_values_[propname] = cur_property["Curve1"]["lastkeyValue"];
   }

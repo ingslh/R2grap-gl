@@ -30,7 +30,7 @@ public:
 
   const std::map<unsigned int, std::vector<T>>& GetLinearMap()const {return linear_map_;}
   
-  const std::map<unsigned int, T>& GetLinearMapToSignal()const {
+  const std::map<unsigned int, T> GetLinearMapToSignal()const {
     std::map<unsigned int, T> ret;
     for (const auto& el : linear_map_) {
       if (el.second.size() == 1) {
