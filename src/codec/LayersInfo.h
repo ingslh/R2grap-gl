@@ -13,6 +13,7 @@ public:
   const std::vector<std::shared_ptr<PathInfo>>& GetPaths()const {return paths_;}
   const std::shared_ptr<FillInfo> GetFills()const { return fills_; }
   const std::shared_ptr<StrokeInfo> GetStroke()const {return stroke_;}
+  unsigned int GetPathsNum() const { return paths_.size(); }
 
 private:
   std::vector<std::shared_ptr<PathInfo>> paths_;

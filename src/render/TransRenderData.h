@@ -18,7 +18,8 @@ protected:
 
 private:
   void CompTransformCurve(Transform* trans, TransformCurve& curve);
-/*struct TransMat {
+
+  /*struct TransMat {
     unsigned int layer_index;
     float clip_start;
     float clip_end;

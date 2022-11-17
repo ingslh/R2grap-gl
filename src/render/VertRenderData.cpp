@@ -24,6 +24,7 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
       BezierVertData signal_path_data;
       signal_path_data.group_ind = group_index;
       signal_path_data.path_ind = path_index;
+      signal_path_data.closed = path->IsClosed();
 
       auto bezier_verts = path->GetBezierVertices();
 
@@ -105,5 +106,13 @@ bool VerticesRenderData::GetTriangleIndex(unsigned int group_ind, unsigned int p
   return true;
 }
 
+bool VerticesRenderData::GetBezierVertData(unsigned int group_ind, unsigned int path_ind, BezierVertData& vert_data){
+  auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](BezierVertData data) {
+    return (group_ind == data.group_ind && path_ind == data.path_ind);
+  });
+  if (it == bezier_vert_data_.end()) return false;
+  vert_data = bezier_vert_data_[it - bezier_vert_data_.begin()];
+  return true;
+}
 
 }

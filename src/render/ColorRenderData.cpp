@@ -20,6 +20,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
       auto keyframe_map = contents->GetFills()->GetKeyframeData();
       for(auto& it : keyframe_map){
         if(it.first == "Color"){
+          tmp_data.h_ckf = true;
           auto color_keyframes = std::get<VectorKeyFrames>(it.second);
           for(auto& el : color_keyframes){
             auto v4lastvalue = glm::vec4(el.lastkeyValue.x, el.lastkeyValue.y, el.lastkeyValue.z, 1);
@@ -32,6 +33,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
             tmp_data.trans_color.insert(tmp_map.begin(), tmp_map.end());
           }
         }else if(it.first == "Opacity"){
+          tmp_data.h_okf = true;
           auto opacity_keyframe = std::get<ScalarKeyFrames>(it.second);
           for(auto& el:opacity_keyframe){
             std::vector<float> lastval_list({ el.lastkeyValue }), curval_list({ el.keyValue });
@@ -54,6 +56,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
       auto keyframe_map = contents->GetStroke()->GetKeyframeData();
       for(auto& it: keyframe_map){
         if(it.first == "Color"){
+          tmp_data.h_ckf = true;
           auto color_keyframes = std::get<VectorKeyFrames>(it.second);
           for(auto& el : color_keyframes){
             auto v4lastvalue = glm::vec4(el.lastkeyValue.x, el.lastkeyValue.y, el.lastkeyValue.z, 1);
@@ -66,6 +69,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
             tmp_data.trans_color.insert(tmp_map.begin(), tmp_map.end());
           }
         }else if(it.first == "Opacity"){
+          tmp_data.h_okf = true;
           auto opacity_keyframe = std::get<ScalarKeyFrames>(it.second);
           for(auto& el:opacity_keyframe){
             std::vector<float> lastval_list({ el.lastkeyValue }), curval_list({ el.keyValue });
@@ -75,6 +79,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
             tmp_data.trans_opacity.insert(tmp_map.begin(), tmp_map.end());
           }
         }else if(it.first == "Stroke Width"){
+          tmp_data.h_skf = true;
           auto strokewid_keyframe = std::get<ScalarKeyFrames>(it.second);
           for(auto& el: strokewid_keyframe){
             std::vector<float> lastval_list({ el.lastkeyValue }), curval_list({ el.keyValue });

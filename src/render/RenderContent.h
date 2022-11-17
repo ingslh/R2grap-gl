@@ -26,6 +26,10 @@ struct FillData {
   //key is frame index
   std::map<unsigned int, glm::vec4> trans_color;
   std::map<unsigned int, unsigned int> trans_opacity;
+
+  FillData(glm::vec4 color, unsigned int opacity):color(color),opacity(opacity){}
+
+  FillData():color(glm::vec4()){}
 };
 
 struct StrokeData {
@@ -39,14 +43,19 @@ struct StrokeData {
   std::map<unsigned int, unsigned int> trans_opacity;
   std::map<unsigned int, float> trans_stroke_wid;
   std::map<unsigned int, float> trans_miter_limit;
+
+  StrokeData(glm::vec4 color, unsigned int opacity, float stroke_wid):
+    color(color), opacity(opacity), stroke_wid(stroke_wid){}
+
+  StrokeData():color(glm::vec4()){}
 };
 
 struct GroupData {
   std::vector<PathData> paths;
-  FillData fill;
-  StrokeData stroke;
+  std::shared_ptr<FillData> fill = nullptr;
+  std::shared_ptr<StrokeData> stroke = nullptr;
 
-  std::vector<glm::mat4> trans;
+  std::vector<glm::mat4> trans; //Index is frameNum
 };
 
 struct LayerData{
@@ -56,7 +65,7 @@ struct LayerData{
   unsigned int link_layer_index;
   std::vector<GroupData> group_data;
   
-  std::vector<glm::mat4> trans;
+  std::vector<glm::mat4> trans;//Index is frameNum
 
   //old
   unsigned int paths_num;

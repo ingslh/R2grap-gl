@@ -12,6 +12,7 @@ struct BezierVertData{
   unsigned int group_ind;
   unsigned int path_ind;
 
+  bool closed;
   std::vector<float> verts;//3-dim
   std::vector<unsigned int> tri_index;//3 int make up a triangle
 
@@ -26,12 +27,14 @@ public:
   bool GetVertices(unsigned int group_ind, unsigned int path_ind, std::vector<float>& vert_info);
   bool GetTriangleIndex(unsigned int ind, std::vector<unsigned int>& trigs);
   bool GetTriangleIndex(unsigned int group_ind, unsigned int path_ind, std::vector<unsigned int>& trigs);
+  bool GetBezierVertData(unsigned int group_ind, unsigned int path_ind, BezierVertData& vert_data);
+
   unsigned int GetPathsCount() const { return paths_count_; }
   template<typename T>
   T Normalize(const T& pos); 
 
 private:
-  std::vector<BezierVertData> bezier_vert_data_;
+  std::vector<BezierVertData> bezier_vert_data_;//Index is group index
   unsigned int paths_count_;
 };
 }
