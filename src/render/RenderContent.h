@@ -21,7 +21,7 @@ struct PathData {
 
 struct FillData {
   glm::vec4 color;
-  unsigned int opacity;
+  unsigned int opacity = 100;
 
   //key is frame index
   std::map<unsigned int, glm::vec4> trans_color;

@@ -90,7 +90,7 @@ RenderContent::RenderContent(LayersInfo* layer_info){
 
 unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents) {
   unsigned int count = 0;
-  for (auto content : contents) {
+  for (const auto& content : contents) {
     count += content->GetLayerData().paths_num;
   }
   return count;

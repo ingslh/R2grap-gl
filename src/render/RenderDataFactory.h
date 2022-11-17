@@ -9,8 +9,8 @@ namespace R2grap{
 
 class RenderDataFactory{
 public:
-  RenderDataFactory(){};
-  virtual ~RenderDataFactory(){};//auto call derived class destructor func
+  RenderDataFactory()= default;;
+  virtual ~RenderDataFactory()= default;;//auto call derived class destructor func
 
 public:
   VerticesRenderData* CreateVerticesData(const LayersInfo* layer);
@@ -31,7 +31,6 @@ private:
   }
 
   ~SRenderDataFactory(){
-    if(render_data_factory_)
       delete render_data_factory_;
   }
 

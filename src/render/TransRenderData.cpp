@@ -27,16 +27,16 @@ TransformRenderData::TransformRenderData(const Transform* transform, unsigned in
 }
 
 void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve){
-    for (auto it = keyframe_mat_.begin(); it != keyframe_mat_.end(); it++){
-    if(trans->IsVectorProperty(it->first)){ //vector
-      auto vector_keyframes = std::get<t_Vector>(it->second);
+    for (auto & it : keyframe_mat_){
+    if(trans->IsVectorProperty(it.first)){ //vector
+      auto vector_keyframes = std::get<t_Vector>(it.second);
       auto start_value =  vector_keyframes[0].lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
       std::vector<std::map<unsigned int, float>> double_curve_line;
       double_curve_line.resize(2);
 
       for (auto& keyframe : vector_keyframes) {
-        unsigned int bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
         glm::vec2 lastPos_x(keyframe.lastkeyTime, keyframe.lastkeyValue.x);
         glm::vec2 lastPos_y(keyframe.lastkeyTime, keyframe.lastkeyValue.y);
         glm::vec2 outPos_x(keyframe.outPos[0].x, keyframe.outPos[0].y);
@@ -53,18 +53,18 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         double_curve_line.front().merge(curve_x);
         double_curve_line.back().merge(curve_y);
       }
-      curve[it->first] = double_curve_line;
+      curve[it.first] = double_curve_line;
     }
     else{ //scalar
-      auto scalar_keyframes = std::get<t_Scalar>(it->second);
-      auto start_value = it->first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
+      auto scalar_keyframes = std::get<t_Scalar>(it.second);
+      auto start_value = it.first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
 
-      unsigned int start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
+      auto start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
       std::vector<std::map<unsigned int, float>> signal_curve_line;
       signal_curve_line.resize(1);
 
       for (auto& keyframe : scalar_keyframes) {
-        unsigned int bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
         glm::vec2 lastPos(keyframe.lastkeyTime, keyframe.lastkeyValue);
         glm::vec2 curPos(keyframe.keyTime, keyframe.keyValue);
         glm::vec2 inPos(keyframe.inPos[0]);
@@ -73,17 +73,18 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         auto curve = generator.getKeyframeCurveMap();
         start += static_cast<unsigned int>(curve.size());
 
-        signal_curve_line[0].merge(curve);//cpp17 support,if old cpp verison can use "signal_curve_line[0].insert(curve.begin(),curve.end());" 
+        signal_curve_line[0].merge(curve);//cpp17 support,if old cpp verison can use "signal_curve_line[0].insert(curve.begin(),curve.end());"
       }
-      curve[it->first] = signal_curve_line;
+      curve[it.first] = signal_curve_line;
     }
   }
 }
 
-void TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
+bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
   auto position = transform->GetPosition() / reslution - glm::vec3(0.5,0.5,0);
-  auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
+  if(!transform_mat_) return false;
+	auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
   for (unsigned int i = 0; i < frame_lenth; i++){
     glm::mat4 trans = glm::mat4(1.0f);
     if (transform_curve.count("Position")){
@@ -129,6 +130,7 @@ void TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
     }
     transform_mat_->trans.emplace_back(trans);
   }
+	return true;
 }
 
 void TransformRenderData::SetInandOutPos(unsigned int ind, float in_pos, float out_pos) {

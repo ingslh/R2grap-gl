@@ -8,12 +8,12 @@
 namespace R2grap{
 class TransformRenderData : public BaseRenderData{
 public:
-  TransformRenderData(const LayersInfo* layer);
+  explicit TransformRenderData(const LayersInfo* layer);
   TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos);
   TransMat* GetTransMat(){return transform_mat_;}
 
 protected:
-  void GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
+  bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 private:
