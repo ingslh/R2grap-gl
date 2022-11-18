@@ -17,6 +17,27 @@ struct PathData {
   //key is frame index
   std::map<unsigned int, std::vector<float>> trans_verts; 
   std::map<unsigned int, std::vector<unsigned int>> trans_tri_ind;
+
+  //traverse all frames to get the max vector
+  enum PathVecContentType{
+    t_Vertices = 0,
+    t_TriangleIndex,
+  };
+  int GetMaxVectorSize(PathVecContentType type){
+    auto size = type == t_Vertices ? trans_verts.size() : trans_tri_ind.size();
+    if(!size) return -1;
+    int max_vec_size = 0;
+    if(type == PathVecContentType::t_Vertices){
+      for(auto& trans_vert : trans_verts){
+        max_vec_size = trans_vert.second.size() > max_vec_size ? trans_vert.second.size() : max_vec_size;
+      }
+    }else{
+      for(auto& trans_tri : trans_tri_ind){
+        max_vec_size = trans_tri.second.size() > max_vec_size ? trans_tri.second.size() : max_vec_size;
+      }
+    }
+    return max_vec_size;
+  }
 };
 
 struct FillData {
@@ -56,6 +77,8 @@ struct GroupData {
   std::shared_ptr<StrokeData> stroke = nullptr;
 
   std::vector<glm::mat4> trans; //Index is frameNum
+
+  const std::vector<PathData>& GetPathData() const {return paths;}
 };
 
 struct LayerData{
@@ -80,9 +103,14 @@ public:
 
   static unsigned int GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents);
 
-  static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind);
+  //static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind);
 
-  LayerData& GetLayerData(){return layer_data_;}
+  static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind);
+
+  const LayerData& GetLayerData()const {return layer_data_;}
+
+private:
+  const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   
   
 private:

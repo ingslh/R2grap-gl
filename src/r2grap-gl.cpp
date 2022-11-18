@@ -63,7 +63,7 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
-  JsonReader reader("../assets/test/path_test.json");
+  JsonReader reader("../assets/thinking.json");
   //JsonReader reader("../assets/test.json");
   auto layers_count = reader.getLayersCount();
 
@@ -78,31 +78,52 @@ int main()
   unsigned int* VBOs = new unsigned int[paths_count];
   unsigned int* VAOs = new unsigned int[paths_count];
   unsigned int* EBOs = new unsigned int[paths_count];
-
   glGenBuffers(paths_count, VBOs);
   glGenBuffers(paths_count, EBOs);
   glGenVertexArrays(paths_count, VAOs);
+
+  //progress vertsices for VXO
   unsigned int index = 0;
-  for (auto i = 0; i < contents.size(); i++) {
-    for (auto j = 0; j < contents[i]->GetLayerData().paths_num; j++) {
-      auto vert_array = contents[i]->GetLayerData().verts[j];
-      auto out_vert = new float[vert_array.size()];
-      memcpy(out_vert, &vert_array[0], vert_array.size() * sizeof(vert_array[0]));
+  for (auto content_ind = 0; content_ind < contents.size(); content_ind++) {
+    auto group_data = contents[content_ind]->GetLayerData().group_data;
+    for (auto group_ind = 0; group_ind < group_data.size(); group_ind++) {
+      auto path_data = group_data[group_ind].GetPathData();
+      for(auto path_ind = 0; path_ind < path_data.size(); path_ind++){
+        if(!path_data[path_ind].has_keyframe){
+          auto vert_array = path_data[path_ind].verts;
+          auto out_vert = new float[vert_array.size()];
+          memcpy(out_vert, &vert_array[0], vert_array.size() * sizeof(vert_array[0]));
 
-      auto tri_array = contents[i]->GetLayerData().triangle_ind[j];
-      auto out_tri_ind = new unsigned int[tri_array.size()];
-      memcpy(out_tri_ind, &tri_array[0], tri_array.size() * sizeof(tri_array[0]));
+          glBindVertexArray(VAOs[index]);
+          glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
+          glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vert_array.size(), out_vert, GL_STATIC_DRAW);
 
-      glBindVertexArray(VAOs[index]);
-      glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
-      glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vert_array.size(), out_vert, GL_STATIC_DRAW);
+          if(path_data[path_ind].closed){
+            auto tri_array = path_data[path_ind].tri_ind;
+            auto out_tri = new unsigned int[tri_array.size()];
+            memcpy(out_tri, &tri_array[0], tri_array.size() * sizeof(tri_array[0]));
 
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tri_array.size(), out_tri_ind, GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tri_array.size(), out_tri, GL_STATIC_DRAW);
+          }
+          glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+          glEnableVertexAttribArray(0);
+        }
+        else{
+          auto max_verts_size = path_data[path_ind].GetMaxVectorSize(PathData::PathVecContentType::t_Vertices);
+          glBindVertexArray(VAOs[index]);
+          glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
+          glBufferData(GL_ARRAY_BUFFER, sizeof(float) * max_verts_size, NULL, GL_DYNAMIC_DRAW);
 
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-      glEnableVertexAttribArray(0);
-      index++;
+          if(path_data[path_ind].closed){
+            auto max_tri_size = path_data[path_ind].GetMaxVectorSize(PathData::PathVecContentType::t_TriangleIndex);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*max_tri_size, NULL, GL_DYNAMIC_DRAW);
+          }
+        }
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+        glEnableVertexAttribArray(0);
+      }
     }
   }
 
@@ -139,16 +160,51 @@ int main()
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      for (auto i = 0; i < layers_count; i++) {
-        auto layer_data = contents[i]->GetLayerData();
+      for (auto layer_ind = 0; layer_ind < layers_count; layer_ind++) {
+        auto layer_data = contents[layer_ind]->GetLayerData();
         if (layer_data.start_pos  > static_cast<float>(played) || layer_data.end_pos < static_cast<float>(played)) continue;
+        
         glm::mat4 trans_mat = layer_data.trans[played];
-        //glm::mat4 trans_mat = glm::mat4(1.0f);
         shader.setMat4("transform", trans_mat);
-        for (auto j = 0; j < layer_data.paths_num; j++) {
-          shader.setVec4("color", layer_data.color[j]);
-          glBindVertexArray(VAOs[RenderContent::GetPathIndex(contents, i, j)]);
-          glDrawElements(GL_TRIANGLES, layer_data.verts[j].size(), GL_UNSIGNED_INT, 0);
+        
+        auto group_data = layer_data.group_data;
+        for(auto group_ind = 0; group_ind < group_data.size(); group_ind++){
+          if(group_data[group_ind].fill){
+            if(!group_data[group_ind].fill->trans_color.size())
+              shader.setVec4("color", group_data[group_ind].fill->color);
+            else
+              shader.setVec4("color", group_data[group_ind].fill->trans_color[played]);
+          }
+          //need to add stroke
+
+          /******************/
+          auto paths_data = group_data[group_ind].paths; 
+          for(auto path_ind = 0; path_ind < paths_data.size(); path_ind++){
+            auto path = paths_data[path_ind];
+            auto vxo_ind = RenderContent::GetPathIndex(contents, layer_ind, group_ind, path_ind);
+            glBindVertexArray(VAOs[vxo_ind]);
+            if(!path.has_keyframe){
+              if(path.closed)
+                glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
+              else
+                glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+            }else{
+              auto vert_vec = path.trans_verts[played];
+              auto out_vert = new float[vert_vec.size()];
+              memcpy(out_vert, &vert_vec[0], sizeof(float) * vert_vec.size());
+              glBindBuffer(GL_ARRAY_BUFFER, VBOs[vxo_ind]);
+              glBufferSubData(GL_ARRAY_BUFFER, 0 , sizeof(float) * vert_vec.size(), out_vert);
+              if(path.closed){
+                auto trig_vec = path.trans_tri_ind[played];
+                auto out_trig = new unsigned int[trig_vec.size()];
+                memcpy(out_trig, &trig_vec[0], sizeof(unsigned int) * trig_vec.size());
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
+                glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * trig_vec.size(), out_trig);
+                glDrawElements(GL_TRIANGLES, path.trans_verts[played].size(), GL_UNSIGNED_INT, 0);
+              }else
+                glDrawArrays(GL_LINE_STRIP, 0, path.trans_verts[played].size());
+            }
+          }
         }
       }
       played++;

@@ -91,12 +91,15 @@ RenderContent::RenderContent(LayersInfo* layer_info){
 unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents) {
   unsigned int count = 0;
   for (const auto& content : contents) {
-    count += content->GetLayerData().paths_num;
+    auto group_data = content->GetGroupData();
+    for(auto& data : group_data){
+      count += data.paths.size();
+    }
   }
   return count;
 }
 
-unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind) {
+/*unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind) {
   unsigned int index = 0;
   if (layer_ind == 0)
     return path_ind;
@@ -106,6 +109,36 @@ unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<Rende
     }
     return index + path_ind;
   }
+}*/
+
+unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind){
+  auto get_layerpaths_num = [&](unsigned int ind)->int {
+    if(ind > contents.size() - 1) return -1;
+    int paths_num = 0;
+    for(auto i = 0; i < contents.size(); i++){
+      auto layer_data = contents[i]->GetLayerData();
+      auto groups = layer_data.group_data;
+      for(auto j = 0; j < groups.size(); j++){
+        paths_num += groups[j].paths.size();
+      }
+    }
+    return paths_num;
+  };
+  
+  unsigned int ret = 0;
+  if(!layer_ind){
+    for(auto i = 0; i <= layer_ind - 1; i++){
+      ret += get_layerpaths_num(i);
+    }
+  }
+
+  if(!group_ind){
+    for(auto j = 0; j <= group_ind - 1; j++){
+      ret += contents[layer_ind]->GetLayerData().group_data[j].paths.size();
+    }
+  }
+
+  return ret + path_ind;
 }
 
 }
