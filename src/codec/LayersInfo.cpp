@@ -31,9 +31,8 @@ contents_(std::make_shared<GroupContents>(json["Contents"]))
 
 LayersInfo::LayersInfo(const nlohmann::json& layer) :
 index_(layer["index"]),name_(layer["name"]),blend_mode_(layer["blendingMode"]),
-link_(layer["Parent&Link"]),start_time_(layer["startTime"]),out_point_(layer["outPoint"]),in_point_(layer["inPoint"])
+link_(layer["Link"].is_number() ? layer["Link"] : -1),start_time_(layer["startTime"]),out_point_(layer["outPoint"]),in_point_(layer["inPoint"])
 {
-  
   transform_ = std::make_shared<Transform>(layer["Transform"],true);
   auto contents = layer["Contents"].items();
   for(auto& el : contents){

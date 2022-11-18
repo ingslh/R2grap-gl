@@ -363,7 +363,7 @@ function roundArray(arr, decimals){
               "index": layer.index,
               "name": layer.name,
               "blendingMode": layer.blendingMode,
-              "Parent&Link": layer.parent ? layer.parent.index : "",
+              "Link": layer.parent ? layer.parent.index : "",
               "startTime": layer.startTime,
               "outPoint": layer.outPoint,
               "inPoint": layer.inPoint

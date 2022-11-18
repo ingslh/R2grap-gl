@@ -50,7 +50,7 @@ private:
   unsigned int index_;
   std::string name_;
   unsigned int blend_mode_;
-  std::string link_;
+  int link_;
   float start_time_;
   float out_point_;
   float in_point_;

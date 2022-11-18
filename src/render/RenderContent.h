@@ -89,12 +89,6 @@ struct LayerData{
   std::vector<GroupData> group_data;
   
   std::vector<glm::mat4> trans;//Index is frameNum
-
-  //old
-  unsigned int paths_num;
-  std::vector<std::vector<float>> verts;
-  std::vector<std::vector<unsigned int>> triangle_ind;
-  std::vector<glm::vec4> color;
 };
 
 class RenderContent{

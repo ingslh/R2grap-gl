@@ -63,7 +63,7 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
-  JsonReader reader("../assets/thinking.json");
+  JsonReader reader("../assets/test.json");
   //JsonReader reader("../assets/test.json");
   auto layers_count = reader.getLayersCount();
 
@@ -201,8 +201,10 @@ int main()
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
                 glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * trig_vec.size(), out_trig);
                 glDrawElements(GL_TRIANGLES, path.trans_verts[played].size(), GL_UNSIGNED_INT, 0);
+                delete[] out_trig;
               }else
                 glDrawArrays(GL_LINE_STRIP, 0, path.trans_verts[played].size());
+              delete[] out_vert;
             }
           }
         }
