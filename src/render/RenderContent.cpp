@@ -115,13 +115,11 @@ unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<Rende
   auto get_layerpaths_num = [&](unsigned int ind)->int {
     if(ind > contents.size() - 1) return -1;
     int paths_num = 0;
-    for(auto i = 0; i < contents.size(); i++){
-      auto layer_data = contents[i]->GetLayerData();
-      auto groups = layer_data.group_data;
-      for(auto j = 0; j < groups.size(); j++){
-        paths_num += groups[j].paths.size();
-      }
-    }
+		auto layer_data = contents[ind]->GetLayerData();
+		auto groups = layer_data.group_data;
+		for(auto & group : groups){
+        paths_num += group.paths.size();
+		}
     return paths_num;
   };
   

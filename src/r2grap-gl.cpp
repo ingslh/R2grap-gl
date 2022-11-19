@@ -35,7 +35,7 @@ int main()
 
   // glfw window creation
   // --------------------
-  GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "R2grap", NULL, NULL);
   if (window == NULL)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -106,8 +106,6 @@ int main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[index]);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tri_array.size(), out_tri, GL_STATIC_DRAW);
           }
-          glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-          glEnableVertexAttribArray(0);
         }
         else{
           auto max_verts_size = path_data[path_ind].GetMaxVectorSize(PathData::PathVecContentType::t_Vertices);
@@ -123,11 +121,12 @@ int main()
         }
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
         glEnableVertexAttribArray(0);
+				index++;
       }
     }
   }
 
-  glfwSwapInterval(1);// open the vertical synchronization
+  //glfwSwapInterval(1);// open the vertical synchronization
   // draw points
   shader.use();
   glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -188,6 +187,7 @@ int main()
                 glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
               else
                 glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+							glBindVertexArray(0);
             }else{
               auto vert_vec = path.trans_verts[played];
               auto out_vert = new float[vert_vec.size()];
@@ -205,14 +205,15 @@ int main()
               }else
                 glDrawArrays(GL_LINE_STRIP, 0, path.trans_verts[played].size());
               delete[] out_vert;
+							glBindVertexArray(0);
             }
           }
         }
       }
-      played++;
+      played = played > frame_count ? 0 : ++played;
       frames++;
       deltaTime--;
-      if (played > frame_count) played = 0;
+			glfwSwapBuffers(window);
     }
 
     // - Reset after one second
@@ -223,7 +224,7 @@ int main()
     }
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
-    glfwSwapBuffers(window);
+    //glfwSwapBuffers(window);
     glfwPollEvents();
   }
 
