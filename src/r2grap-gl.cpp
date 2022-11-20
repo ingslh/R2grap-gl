@@ -63,7 +63,7 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
-  JsonReader reader("../assets/test.json");
+  JsonReader reader("../assets/thinking.json");
   //JsonReader reader("../assets/test.json");
   auto layers_count = reader.getLayersCount();
 
@@ -126,7 +126,7 @@ int main()
     }
   }
 
-  //glfwSwapInterval(1);// open the vertical synchronization
+  glfwSwapInterval(1);// open the vertical synchronization
   // draw points
   shader.use();
   glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -136,10 +136,19 @@ int main()
   shader.setMat4("view", view);
   shader.setMat4("model", model);
 
-  // draw in wireframe
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-  static double limitFPS = 1.0 / 60.0;
+	glEnable(GL_LINE_SMOOTH);
+	GLfloat sizes[2];
+	GLfloat granularity;
+	glGetFloatv(GL_LINE_WIDTH_RANGE,sizes);
+	GLfloat minLineWidth = sizes[0];
+	GLfloat maxLineWidth = sizes[1];
+	glGetFloatv(GL_LINE_WIDTH_GRANULARITY, &granularity);
+	GLfloat width;
+	glGetFloatv(GL_LINE_WIDTH,&width);
+
+
+  static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
   double lastTime = glfwGetTime(), timer = lastTime;
   double deltaTime = 0, nowTime = 0;
   int frames = 0, played = 0;
@@ -175,18 +184,29 @@ int main()
               shader.setVec4("color", group_data[group_ind].fill->trans_color[played]);
           }
           //need to add stroke
-
+          if(group_data[group_ind].stroke){
+            if(!group_data[group_ind].stroke->trans_color.size())
+              shader.setVec4("color", group_data[group_ind].stroke->color);
+            else  
+              shader.setVec4("color",group_data[group_ind].stroke->trans_color[played]);
+						//auto stroke_width = group_data[group_ind].stroke->stroke_wid;
+						//glLineWidth(stroke_width + 0.5);
+          }
           /******************/
-          auto paths_data = group_data[group_ind].paths; 
+          auto paths_data = group_data[group_ind].paths;
           for(auto path_ind = 0; path_ind < paths_data.size(); path_ind++){
             auto path = paths_data[path_ind];
             auto vxo_ind = RenderContent::GetPathIndex(contents, layer_ind, group_ind, path_ind);
             glBindVertexArray(VAOs[vxo_ind]);
             if(!path.has_keyframe){
-              if(path.closed)
-                glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
-              else
-                glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+              if(path.closed){
+								glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
+								//shader.setVec4("color", glm::vec4(1,0,0,1));
+								//glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+							}
+              else{
+								glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+							}
 							glBindVertexArray(0);
             }else{
               auto vert_vec = path.trans_verts[played];

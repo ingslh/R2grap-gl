@@ -540,10 +540,12 @@ function roundArray(arr, decimals){
                     jObj[cur.name]["Curve" + j] = {
                       "lastkeyValue": cur.valueAtTime(cur.keyTime(j), false).vertices,
                       "lastkeyTime": cur.keyTime(j),
-                      //"OutPos": out_in_dir[0],
-                      //"InPos": out_in_dir[1],
+                      "lastkeyOutPos": cur.valueAtTime(cur.keyTime(j),false).outTangents,
+                      "lastkeyInPos": cur.valueAtTime(cur.keyTime(j),false).InTangents,
                       "keyValue":cur.valueAtTime(cur.keyTime(j + 1), false).vertices,
                       "keyTime":cur.keyTime(j + 1),
+                      "lastkeyOutPos": cur.valueAtTime(cur.keyTime(j+1),false).outTangents,
+                      "lastkeyInPos": cur.valueAtTime(cur.keyTime(j+1),false).InTangents,
                     };
                   }
                 }else{
