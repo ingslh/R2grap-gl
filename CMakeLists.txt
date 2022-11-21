@@ -25,11 +25,13 @@ set(CODEC
     src/codec/AniInfoManager.h
     src/codec/FillInfo.h
     src/codec/PathInfo.h
-	src/codec/StrokeInfo.h
+	  src/codec/StrokeInfo.h
     src/codec/LayersInfo.h
     src/codec/LayersInfo.cpp
     src/codec/Transform.h
     src/codec/Transform.cpp
+    src/codec/LinkLayer.h
+    src/codec/LinkLayer.cpp
 )
 
 set(RENDER

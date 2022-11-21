@@ -8,7 +8,8 @@ namespace R2grap{
 class LinkLayer{
 public:
   LinkLayer(JsonReader* reader);
-  static void UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int link);
+  void UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int ind);
+  
   static const KeyframesMap& GetKeyframeData(unsigned int layer_ind);
   
 

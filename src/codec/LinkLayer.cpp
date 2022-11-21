@@ -12,20 +12,20 @@ LinkLayer::LinkLayer(JsonReader* reader): reader_(reader){
       ite_links.emplace_back(link_ind);
       layer = reader_->GetLayersInfo(link_ind);
     }
+    layers_link_map_[i] = ite_links;
   }
 }
 
-void LinkLayer::UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int link){
-  if(transform->type() != TransformType::t_ShapeTrans || link < 1) return;
+void LinkLayer::UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int ind){
+  auto links_ind = layers_link_map_[ind];
+  for(auto link_ind : links_ind){
+    auto link_transform = reader_->GetLayersInfo(link_ind)->GetShapeTransform();
+    auto pos_offset = link_transform->GetShapeGrapOffset();
 
-  auto link_layer = reader->GetLayersInfo(link - 1);
-  auto link_transform = link_layer->GetShapeTransform();
+    auto rotation = link_transform->GetRotation();
 
-  //set new property
-  auto pos_offset = link_transform->GetShapeGrapOffset();
-  transform->SetPosition(transform->GetPosition() + pos_offset);
-  transform->SetScale(link_transform->GetScale());
-  transform->SetRotation(link_transform->GetRotation());
+
+  }
 }
 
 }

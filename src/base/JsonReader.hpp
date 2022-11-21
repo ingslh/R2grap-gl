@@ -33,9 +33,7 @@ public:
     }
 
     //update transform property by link layer
-    for(auto& layer : layers_){
-      LinkLayer::UpdatePropertyByLink(this, layer->GetShapeTransform(), layer->GetLinkInd());
-    }
+    LinkLayer link_set(this);
   }
 
 
