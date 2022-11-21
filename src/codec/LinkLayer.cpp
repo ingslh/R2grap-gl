@@ -18,14 +18,21 @@ LinkLayer::LinkLayer(JsonReader* reader): reader_(reader){
 
 void LinkLayer::UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int ind){
   auto links_ind = layers_link_map_[ind];
-  for(auto link_ind : links_ind){
-    auto link_transform = reader_->GetLayersInfo(link_ind)->GetShapeTransform();
-    auto pos_offset = link_transform->GetShapeGrapOffset();
+  auto pos_offset = glm::vec3(0,0,0);
+  auto cur_transform = reader_->GetLayersInfo(ind)->GetShapeTransform();
+  for(auto it = links_ind.rbegin(); it != links_ind.rend(); it++){
+    auto link_transform = reader_->GetLayersInfo(*it)->GetShapeTransform();
+    //position
+    auto temp_pos = link_transform->GetPosition() + pos_offset;
+    pos_offset = temp_pos - link_transform->GetAnchorPos();
+    //scale
 
-    auto rotation = link_transform->GetRotation();
-
+    //rotation
+    
+    //opacity
 
   }
+  cur_transform->SetPosition(cur_transform->GetPosition() + pos_offset);
 }
 
 }

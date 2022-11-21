@@ -1,10 +1,10 @@
 #pragma once
-
 #include "Transform.h"
 #include "LayersInfo.h"
+#include "JsonReader.hpp"
 
 namespace R2grap{
-
+class JsonReader;
 class LinkLayer{
 public:
   LinkLayer(JsonReader* reader);

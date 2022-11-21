@@ -49,6 +49,7 @@ public:
   void SetRotation(const float rot){property_values_["Rotation"] = rot;}
   float GetOpacity(){return std::get<t_Scalar>(property_values_["Opacity"]);}
   void SetOpacity(const float opc){property_values_["Opacity"] = opc;}
+  glm::vec3& GetAnchorPos(){return std::get<t_Vector>(property_values_["Anchor Point"]);}
 
   void SetKeyframeMap(const KeyframesMap& map){keyframe_data_ = map;}
 

@@ -5,7 +5,6 @@
 #include "FillInfo.h"
 #include "PathInfo.h"
 #include "StrokeInfo.h"
-#include "JsonReader.hpp"
 
 namespace R2grap{
 class GroupContents{

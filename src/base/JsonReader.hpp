@@ -33,7 +33,7 @@ public:
     }
 
     //update transform property by link layer
-    LinkLayer link_set(this);
+    //LinkLayer link_set(this);
   }
 
 
