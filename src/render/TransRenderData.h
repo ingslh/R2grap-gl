@@ -24,6 +24,7 @@ private:
     float clip_start;
     float clip_end;
     std::vector<glm::mat4> trans;
+    std::vector<glm::mat4> link_trans;
     float duration;
   };*/
   TransMat* transform_mat_ = nullptr;

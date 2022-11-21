@@ -38,8 +38,10 @@ bool RenderDataFactory::ReleaseRenderData(BaseRenderData* data){
     break;
   case rDataType::tColorData:
     SafeDelete<ColorRenderData>(data);
+    break;
   case rDataType::tTransformData:
     SafeDelete<TransformRenderData>(data);
+    break;
   default:
     return false;
   }

@@ -13,6 +13,8 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat
   transform_mat_ = new TransMat();
   SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
   GenerateTransformMat(transform_curve, transform.get());
+
+  //need to get link layer keyframe_mat
 }
 
 

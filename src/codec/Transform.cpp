@@ -6,7 +6,7 @@
 
 using namespace R2grap;
 
-Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform){
+Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform, int link){
   type_ = IsShapeTransform ? t_ShapeTrans : t_GroupTrans;
   std::vector<std::string> include_propname  = {"Anchor Point","Position","Scale","Rotation","Opacity"};
   if(type_ == t_GroupTrans){

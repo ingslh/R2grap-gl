@@ -541,11 +541,11 @@ function roundArray(arr, decimals){
                       "lastkeyValue": cur.valueAtTime(cur.keyTime(j), false).vertices,
                       "lastkeyTime": cur.keyTime(j),
                       "lastkeyOutPos": cur.valueAtTime(cur.keyTime(j),false).outTangents,
-                      "lastkeyInPos": cur.valueAtTime(cur.keyTime(j),false).InTangents,
+                      "lastkeyInPos": cur.valueAtTime(cur.keyTime(j),false).inTangents,
                       "keyValue":cur.valueAtTime(cur.keyTime(j + 1), false).vertices,
                       "keyTime":cur.keyTime(j + 1),
-                      "lastkeyOutPos": cur.valueAtTime(cur.keyTime(j+1),false).outTangents,
-                      "lastkeyInPos": cur.valueAtTime(cur.keyTime(j+1),false).InTangents,
+                      "keyOutPos": cur.valueAtTime(cur.keyTime(j+1),false).outTangents,
+                      "keyInPos": cur.valueAtTime(cur.keyTime(j+1),false).inTangents,
                     };
                   }
                 }else{

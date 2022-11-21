@@ -89,6 +89,7 @@ struct LayerData{
   std::vector<GroupData> group_data;
   
   std::vector<glm::mat4> trans;//Index is frameNum
+  std::vector<glm::mat4> link_trans;
 };
 
 class RenderContent{

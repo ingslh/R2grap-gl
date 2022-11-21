@@ -5,6 +5,7 @@
 #include "FillInfo.h"
 #include "PathInfo.h"
 #include "StrokeInfo.h"
+#include "JsonReader.hpp"
 
 namespace R2grap{
 class GroupContents{
@@ -44,6 +45,7 @@ public:
   float GetLayerOutpos() const {return out_point_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroup()const{ return groups_;}
   const std::shared_ptr<Transform> GetShapeTransform()const {return transform_;}
+  int GetLinkInd() const {return link_;}
 
 
 private:

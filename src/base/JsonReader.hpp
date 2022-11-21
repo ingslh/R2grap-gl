@@ -5,6 +5,7 @@
 #include <iostream>
 #include "LayersInfo.h"
 #include "AniInfoManager.h"
+#include "LinkLayer.h"
 
 namespace R2grap{
 
@@ -30,6 +31,11 @@ public:
         layers_.emplace_back(std::make_shared<LayersInfo>(el_c.value()));
       }
     }
+
+    //update transform property by link layer
+    for(auto& layer : layers_){
+      LinkLayer::UpdatePropertyByLink(this, layer->GetShapeTransform(), layer->GetLinkInd());
+    }
   }
 
 
@@ -44,9 +50,10 @@ public:
       return std::shared_ptr<LayersInfo>(NULL);
   }
 
+  unsigned int GetLayersNum(){return layers_.size();}
+
 private:
   nlohmann::json root_;
-  int layers_count_ = -1;
   std::vector<std::shared_ptr<LayersInfo>> layers_;
 };
 

@@ -10,6 +10,7 @@
 #include "AniInfoManager.h"
 
 #include <iostream>
+//#include <chrono>   
 using namespace R2grap;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -167,7 +168,6 @@ int main()
     while (deltaTime >= 1.0) { // render
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
       for (auto layer_ind = 0; layer_ind < layers_count; layer_ind++) {
         auto layer_data = contents[layer_ind]->GetLayerData();
         if (layer_data.start_pos  > static_cast<float>(played) || layer_data.end_pos < static_cast<float>(played)) continue;
@@ -189,10 +189,7 @@ int main()
               shader.setVec4("color", group_data[group_ind].stroke->color);
             else  
               shader.setVec4("color",group_data[group_ind].stroke->trans_color[played]);
-						//auto stroke_width = group_data[group_ind].stroke->stroke_wid;
-						//glLineWidth(stroke_width + 0.5);
           }
-          /******************/
           auto paths_data = group_data[group_ind].paths;
           for(auto path_ind = 0; path_ind < paths_data.size(); path_ind++){
             auto path = paths_data[path_ind];
@@ -201,8 +198,6 @@ int main()
             if(!path.has_keyframe){
               if(path.closed){
 								glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
-								//shader.setVec4("color", glm::vec4(1,0,0,1));
-								//glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
 							}
               else{
 								glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
@@ -210,6 +205,7 @@ int main()
 							glBindVertexArray(0);
             }else{
               auto vert_vec = path.trans_verts[played];
+              if (!vert_vec.size()) continue;
               auto out_vert = new float[vert_vec.size()];
               memcpy(out_vert, &vert_vec[0], sizeof(float) * vert_vec.size());
               glBindBuffer(GL_ARRAY_BUFFER, VBOs[vxo_ind]);
@@ -235,6 +231,8 @@ int main()
       deltaTime--;
 			glfwSwapBuffers(window);
     }
+
+
 
     // - Reset after one second
     if (glfwGetTime() - timer > 1.0) {
