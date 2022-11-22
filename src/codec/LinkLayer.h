@@ -1,16 +1,15 @@
 #pragma once
 #include "Transform.h"
 #include "LayersInfo.h"
-#include "JsonReader.hpp"
+#include "JsonReader.h"
 
 namespace R2grap{
 class JsonReader;
 class LinkLayer{
 public:
   LinkLayer(JsonReader* reader);
-  void UpdatePropertyByLink(JsonReader* reader, const std::shared_ptr<Transform>& transform, unsigned int ind);
-  
-  static const KeyframesMap& GetKeyframeData(unsigned int layer_ind);
+  void UpdatePropertyByLink(unsigned int ind);
+
   
 
 

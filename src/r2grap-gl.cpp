@@ -4,7 +4,7 @@
 
 #include <camera.h>
 #include <shader_g.h>
-#include "JsonReader.hpp"
+#include "JsonReader.h"
 #include "RenderDataFactory.h"
 #include "RenderContent.h"
 #include "AniInfoManager.h"

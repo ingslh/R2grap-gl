@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(BASE
     src/base/BezierGen.hpp
-    src/base/JsonReader.hpp
     src/base/Polygon.hpp
     src/base/KeyframeGen.hpp
 )
@@ -32,6 +31,8 @@ set(CODEC
     src/codec/Transform.cpp
     src/codec/LinkLayer.h
     src/codec/LinkLayer.cpp
+    src/codec/JsonReader.h
+    src/codec/JsonReader.cpp
 )
 
 set(RENDER
