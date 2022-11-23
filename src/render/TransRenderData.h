@@ -11,6 +11,7 @@ public:
   explicit TransformRenderData(const LayersInfo* layer);
   TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos);
   TransMat* GetTransMat(){return transform_mat_;}
+  void GenerateTransformMat();
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
@@ -24,7 +25,6 @@ private:
     float clip_start;
     float clip_end;
     std::vector<glm::mat4> trans;
-    std::vector<glm::mat4> link_trans;
     float duration;
   };*/
   TransMat* transform_mat_ = nullptr;
@@ -39,7 +39,9 @@ private:
     float keyTime;                  //bezier:curpos_x
   };*/
   KeyframesMap keyframe_mat_;
-  std::map<int64_t, unsigned int> opacity_map_;  
+  TransformCurve transform_curve_;//the temp data, need to merge with parent's curve
+  std::map<int64_t, unsigned int> opacity_map_;
+  std::shared_ptr<LayersInfo> layer_ = nullptr;  
 };
 
 }

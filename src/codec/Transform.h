@@ -19,10 +19,9 @@ struct TransMat{
   float clip_start;
   float clip_end;
   std::vector<glm::mat4> trans;
-  std::vector<glm::mat4> link_trans;
   float duration;
 
-  TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()), duration(0){}
+  TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()),duration(0){}
 };
 
 typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> TransformCurve;

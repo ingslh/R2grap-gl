@@ -26,6 +26,7 @@ JsonReader::JsonReader(const std::string& path){
   for (auto i = 0; i < layers_.size(); i++) {
     link_set.UpdatePropertyByLink(i);
   }
+  AniInfoManager::GetIns().SetLayersLinkMap(link_set.GetLinkMap());
 }
 
 unsigned int JsonReader::getLayersCount(){

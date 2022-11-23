@@ -13,7 +13,6 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   layer_data_.start_pos = trans_mat->clip_start;
   layer_data_.end_pos = trans_mat->clip_end;
   layer_data_.trans = trans_mat->trans;
-  layer_data_.link_trans = trans_mat->link_trans;
 
   auto groups = layer_info->GetShapeGroup();
   for(auto& group : groups){
@@ -71,8 +70,6 @@ RenderContent::RenderContent(LayersInfo* layer_info){
       }
       group_data.paths.emplace_back(path_data);
     }
-
-
     layer_data_.group_data.emplace_back(group_data);
   }
 }

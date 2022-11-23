@@ -5,16 +5,21 @@
 
 namespace R2grap{
 
-TransformRenderData::TransformRenderData(const LayersInfo* layer) : keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
+TransformRenderData::TransformRenderData(const LayersInfo* layer) : 
+keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(std::make_shared<LayersInfo>(layer)){
   auto transform = layer->GetShapeTransform();
-  TransformCurve transform_curve;
-  CompTransformCurve(transform.get(),transform_curve);
+  CompTransformCurve(transform.get(), transform_curve_);
 
+  //need to get link layer TransformCurve
+
+}
+
+void TransformRenderData::GenerateTransformMat(){
+  if(!layer_) return;
+  auto transform = layer_->GetShapeTransform();
   transform_mat_ = new TransMat();
-  SetInandOutPos(layer->GetLayerInd(), layer->GetLayerInpos(), layer->GetLayerOutpos());
-  GenerateTransformMat(transform_curve, transform.get());
-
-  //need to get link layer keyframe_mat
+  SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
+  GenerateTransformMat(transform_curve_, transform.get());
 }
 
 
@@ -29,7 +34,8 @@ TransformRenderData::TransformRenderData(const Transform* transform, unsigned in
 }
 
 void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve){
-    for (auto & it : keyframe_mat_){
+  curve.clear();
+  for (auto & it : keyframe_mat_){
     if(trans->IsVectorProperty(it.first)){ //vector
       auto vector_keyframes = std::get<t_Vector>(it.second);
       auto start_value =  vector_keyframes[0].lastkeyValue;
@@ -86,6 +92,8 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
   auto position = transform->GetPosition() / reslution - glm::vec3(0.5,0.5,0);
   if(!transform_mat_) return false;
+  transform_mat_->trans.clear();
+
 	auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
   for (unsigned int i = 0; i < frame_lenth; i++){
     glm::mat4 trans = glm::mat4(1.0f);
