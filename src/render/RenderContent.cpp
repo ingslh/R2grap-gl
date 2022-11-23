@@ -3,16 +3,16 @@
 namespace R2grap{
 
 RenderContent::RenderContent(LayersInfo* layer_info){
-  auto layer_contents_path = SRenderDataFactory::GetIns().CreateVerticesData(layer_info);
-  auto layer_contents_color = SRenderDataFactory::GetIns().CreateColorData(layer_info);
-  auto layer_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(layer_info); //shape transform
+  layer_contents_path_ = SRenderDataFactory::GetIns().CreateVerticesData(layer_info);
+  layer_contents_color_ = SRenderDataFactory::GetIns().CreateColorData(layer_info);
+  layer_contents_trans_ = SRenderDataFactory::GetIns().CreateTransformData(layer_info); //shape transform
 
-  auto trans_mat = layer_contents_trans->GetTransMat();
+  //auto trans_mat = layer_contents_trans->GetTransMat();
 
   layer_data_.index = layer_info->GetLayerInd();
-  layer_data_.start_pos = trans_mat->clip_start;
-  layer_data_.end_pos = trans_mat->clip_end;
-  layer_data_.trans = trans_mat->trans;
+  //layer_data_.start_pos = trans_mat->clip_start;
+  //layer_data_.end_pos = trans_mat->clip_end;
+  //layer_data_.trans = trans_mat->trans;
 
   auto groups = layer_info->GetShapeGroup();
   for(auto& group : groups){
@@ -25,7 +25,7 @@ RenderContent::RenderContent(LayersInfo* layer_info){
 
     auto group_it = std::find(groups.begin(), groups.end(), group);
     unsigned int group_index = group_it - groups.begin();
-    auto color_infos = layer_contents_color->GetColor(group_index);
+    auto color_infos = layer_contents_color_->GetColor(group_index);
 
     for(auto& color_info : color_infos){
       if(color_info.type == ColorDataType::t_cStroke){
@@ -51,7 +51,7 @@ RenderContent::RenderContent(LayersInfo* layer_info){
     auto path_num = group->GetContents()->GetPathsNum();
     for(auto i = 0; i < path_num; i++){
       BezierVertData vert_data;
-      layer_contents_path->GetBezierVertData(group_index, i, vert_data);
+      layer_contents_path_->GetBezierVertData(group_index, i, vert_data);
       PathData path_data;
       path_data.closed = vert_data.closed;
       path_data.has_keyframe = vert_data.linear_verts.size();
@@ -85,17 +85,30 @@ unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr
   return count;
 }
 
-/*unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind) {
-  unsigned int index = 0;
-  if (layer_ind == 0)
-    return path_ind;
-  else {
-    for (auto i = 0; i <= layer_ind - 1; i++) {
-      index += contents[i]->GetLayerData().paths_num;
+void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents){
+  auto add_trans_curve = [&](TransformCurve& curve1, TransformCurve& curve2)->TransformCurve{
+    if(!curve1.size()) return curve2;
+    for(auto& el : curve2){
+      if(curve1.count(el.first) == 0){
+        curve1[el.first] = el.second;
+      }else{
+        
+      }
     }
-    return index + path_ind;
+    return curve1;
+  };
+  
+  
+  auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
+  for(auto i = 0; i < contents.size(); i++){
+    auto trans_render_data = contents[i]->GetTransRenderData()->GetTransCurve();
+    auto link_layers = link_map[i];
+    for(auto it = link_layers.rbegin(); it != link_layers.rend(); it++){
+      auto link_trans_data = contents[*it]->GetTransRenderData()->GetTransCurve();
+      
+    }
   }
-}*/
+}
 
 unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind){
   auto get_layerpaths_num = [&](unsigned int ind)->int {

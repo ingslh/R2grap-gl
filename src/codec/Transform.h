@@ -24,6 +24,7 @@ struct TransMat{
   TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()),duration(0){}
 };
 
+//property name___dim num___frame num____property value
 typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> TransformCurve;
 
 class Transform{
@@ -37,7 +38,6 @@ public:
 
   glm::vec3 GetShapeGrapOffset();
   static bool IsVectorProperty(std::string);
-
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 
   glm::vec3& GetPosition()  { return std::get<t_Vector>(property_values_["Position"]); }
@@ -51,7 +51,6 @@ public:
   glm::vec3& GetAnchorPos(){return std::get<t_Vector>(property_values_["Anchor Point"]);}
 
   void SetKeyframeMap(const KeyframesMap& map){keyframe_data_ = map;}
-
   TransformType type(){return type_;}
 
 protected:

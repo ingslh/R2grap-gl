@@ -12,6 +12,7 @@ public:
   TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos);
   TransMat* GetTransMat(){return transform_mat_;}
   void GenerateTransformMat();
+  const TransformCurve& GetTransCurve()const {return transform_curve_;}
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);

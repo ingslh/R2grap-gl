@@ -97,18 +97,22 @@ public:
 
   static unsigned int GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents);
 
-  //static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int path_ind);
-
   static unsigned int GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind);
+
+  static void UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents);
 
   const LayerData& GetLayerData()const {return layer_data_;}
 
 private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
+  TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
   
   
 private:
   LayerData layer_data_;
+  VerticesRenderDataPtr layer_contents_path_;
+  ColorRenderDataPtr layer_contents_color_;
+  TransformRenderDataPtr layer_contents_trans_;
 };
 
 }
