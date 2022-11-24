@@ -13,6 +13,7 @@ public:
   TransMat* GetTransMat(){return transform_mat_;}
   void GenerateTransformMat();
   const TransformCurve& GetTransCurve()const {return transform_curve_;}
+  void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);

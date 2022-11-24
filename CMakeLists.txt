@@ -12,6 +12,7 @@ set(BASE
     src/base/BezierGen.hpp
     src/base/Polygon.hpp
     src/base/KeyframeGen.hpp
+    src/base/TransComp.hpp
 )
 
 set(SHADER

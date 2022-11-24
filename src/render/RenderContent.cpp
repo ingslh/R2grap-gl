@@ -1,4 +1,5 @@
 #include "RenderContent.h"
+#include "TransComp.hpp"
 
 namespace R2grap{
 
@@ -92,21 +93,40 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
       if(curve1.count(el.first) == 0){
         curve1[el.first] = el.second;
       }else{
-        
+        auto trans1 = curve1[el.first];
+        auto trans2 = el.second;
+        if(trans1.size() != trans2.size()) continue;
+        for(auto i = 0; i < trans1.size(); i++){
+          auto map1 = trans1[i];
+          auto map2 = trans2[i];
+          if(TransComp::adjustMaps(map1,map2)){
+            if(el.first == "Position" || el.first == "Rotation")
+              TransComp::MapaddMap(map1,map2);
+            else if(el.first == "Scale"){
+              TransComp::MapmultiplyMap(map1,map2);
+              TransComp::MapdivideNum(map1,float(100));
+            }
+          }
+          trans1[i] = map1;
+        }
+        curve1[el.first] = trans1;
       }
     }
     return curve1;
   };
   
-  
   auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
   for(auto i = 0; i < contents.size(); i++){
     auto trans_render_data = contents[i]->GetTransRenderData()->GetTransCurve();
     auto link_layers = link_map[i];
+    TransformCurve tmp_curve;
     for(auto it = link_layers.rbegin(); it != link_layers.rend(); it++){
       auto link_trans_data = contents[*it]->GetTransRenderData()->GetTransCurve();
-      
+      tmp_curve = add_trans_curve(tmp_curve, link_trans_data); 
     }
+    trans_render_data = add_trans_curve(trans_render_data, tmp_curve);
+    contents[i]->GetTransRenderData()->SetTransCurve(trans_render_data);
+    contents[i]->GetTransRenderData()->GenerateTransformMat();
   }
 }
 
