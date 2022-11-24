@@ -37,7 +37,7 @@ std::shared_ptr<LayersInfo> JsonReader::GetLayersInfo(unsigned int ind){
   if(ind < layers_.size() && layers_.size())
     return layers_[ind];
   else
-    return std::shared_ptr<LayersInfo>(NULL);
+    return nullptr;
 }
 
 

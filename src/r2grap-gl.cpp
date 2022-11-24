@@ -37,7 +37,7 @@ int main()
   // glfw window creation
   // --------------------
   GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "R2grap", NULL, NULL);
-  if (window == NULL)
+  if (window == nullptr)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -73,6 +73,7 @@ int main()
     auto layer_info = reader.GetLayersInfo(i).get();
     contents.emplace_back(std::make_shared<RenderContent>(layer_info));
   }
+	RenderContent::UpdateTransRenderData(contents);
 
   auto paths_count = RenderContent::GetRenderPathCount(contents);
 

@@ -103,6 +103,11 @@ public:
 
   const LayerData& GetLayerData()const {return layer_data_;}
 
+	void SetLayerData(TransMat* trans_mat){
+		layer_data_.start_pos = trans_mat->clip_start;
+		layer_data_.end_pos = trans_mat->clip_end;
+		layer_data_.trans = trans_mat->trans;
+	}
 private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}

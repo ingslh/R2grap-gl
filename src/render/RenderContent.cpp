@@ -127,6 +127,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     trans_render_data = add_trans_curve(trans_render_data, tmp_curve);
     contents[i]->GetTransRenderData()->SetTransCurve(trans_render_data);
     contents[i]->GetTransRenderData()->GenerateTransformMat();
+		contents[i]->SetLayerData(contents[i]->GetTransRenderData()->GetTransMat());
   }
 }
 
