@@ -43,7 +43,7 @@ private:
   KeyframesMap keyframe_mat_;
   TransformCurve transform_curve_;//the temp data, need to merge with parent's curve
   std::map<int64_t, unsigned int> opacity_map_;
-  std::shared_ptr<LayersInfo> layer_ = nullptr;  
+  LayersInfo* layer_ = nullptr;
 };
 
 }

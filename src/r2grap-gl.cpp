@@ -94,7 +94,7 @@ int main()
         if(!path_data[path_ind].has_keyframe){
           auto vert_array = path_data[path_ind].verts;
           auto out_vert = new float[vert_array.size()];
-          memcpy(out_vert, &vert_array[0], vert_array.size() * sizeof(vert_array[0]));
+          memcpy(out_vert, &vert_array[0], sizeof(float) * vert_array.size());
 
           glBindVertexArray(VAOs[index]);
           glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
@@ -201,7 +201,7 @@ int main()
 								glDrawElements(GL_TRIANGLES, path.verts.size(), GL_UNSIGNED_INT, 0);
 							}
               else{
-								glDrawArrays(GL_LINE_STRIP, 0, path.verts.size());
+								glDrawArrays(GL_LINE_STRIP, 0, path.verts.size() / 3);
 							}
 							glBindVertexArray(0);
             }else{
@@ -220,7 +220,7 @@ int main()
                 glDrawElements(GL_TRIANGLES, path.trans_verts[played].size(), GL_UNSIGNED_INT, 0);
                 delete[] out_trig;
               }else
-                glDrawArrays(GL_LINE_STRIP, 0, path.trans_verts[played].size());
+                glDrawArrays(GL_LINE_STRIP, 0, path.trans_verts[played].size() / 3);
               delete[] out_vert;
 							glBindVertexArray(0);
             }

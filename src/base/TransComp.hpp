@@ -42,7 +42,7 @@ bool adjustMaps(std::map<Tk,Tv>& map1, std::map<Tk,Tv>& map2){
       it--;
     }
   }
-  return map1.size() == map2.size()
+  return map1.size() == map2.size();
 }
 
 template<typename Tk, typename Tv>

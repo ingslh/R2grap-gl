@@ -5,9 +5,10 @@
 
 namespace R2grap{
 
-TransformRenderData::TransformRenderData(const LayersInfo* layer) : 
-keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(std::make_shared<LayersInfo>(layer)){
-  auto transform = layer->GetShapeTransform();
+TransformRenderData::TransformRenderData(const LayersInfo* layer) :
+keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
+  layer_ = const_cast<LayersInfo*>(layer);
+	auto transform = layer->GetShapeTransform();
   CompTransformCurve(transform.get(), transform_curve_);
 
   //need to get link layer TransformCurve
