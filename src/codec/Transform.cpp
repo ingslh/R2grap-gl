@@ -31,8 +31,8 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform, int
     if(pair != nullptr){
       keyframe_data_[pair->first] = pair->second;
     }
-
   }
+	SetOriginalProerty();
 }
 
 //note:not support anchor position's keyframe,can conver to position's keyframe

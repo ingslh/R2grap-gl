@@ -87,29 +87,46 @@ unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr
 }
 
 void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents){
-  auto add_trans_curve = [&](TransformCurve& curve1, TransformCurve& curve2)->TransformCurve{
-    if(!curve1.size()) return curve2;
+  auto add_trans_curve = [&](TransformCurve& curve1, TransformCurve& curve2 ,bool front_insert)->TransformCurve{
     for(auto& el : curve2){
       if(curve1.count(el.first) == 0){
         curve1[el.first] = el.second;
       }else{
-        auto trans1 = curve1[el.first];
-        auto trans2 = el.second;
-        if(trans1.size() != trans2.size()) continue;
-        for(auto i = 0; i < trans1.size(); i++){
-          auto map1 = trans1[i];
-          auto map2 = trans2[i];
-          if(TransComp::adjustMaps(map1,map2)){
-            if(el.first == "Position" || el.first == "Rotation")
-              TransComp::MapaddMap(map1,map2);
-            else if(el.first == "Scale"){
-              TransComp::MapmultiplyMap(map1,map2);
-              TransComp::MapdivideNum(map1,float(100));
+        if(el.first == "Rotation"){
+          auto trans1 = std::get<1>(curve1[el.first]);
+          auto trans2 = std::get<1>(el.second);
+          /*for(auto& rot_curve : trans2){
+            auto it = std::find_if(trans1.begin(),trans1.end(),[&](const R2grap::RotationCurve& trans1_rot_curve){
+              return trans1_rot_curve.layer_ind == rot_curve.layer_ind;
+            });
+            if(it == trans1.end()){
             }
+          }*/
+          if(front_insert){
+            trans1.insert(trans1.begin(),trans2.begin(),trans2.end());
+          }else{
+            trans1.insert(trans1.end(),trans2.begin(),trans2.end());
           }
-          trans1[i] = map1;
+          curve1[el.first] = trans1;
+        }else{
+          auto trans1 = std::get<0>(curve1[el.first]);
+          auto trans2 = std::get<0>(el.second);
+          if(trans1.size() != trans2.size()) continue;
+          for(auto i = 0; i < trans1.size(); i++){
+            auto map1 = trans1[i];
+            auto map2 = trans2[i];
+            if(TransComp::adjustMaps(map1,map2)){
+              if(el.first == "Position")
+                TransComp::MapaddMap(map1,map2);
+              else if(el.first == "Scale"){
+                TransComp::MapmultiplyMap(map1,map2);
+                TransComp::MapdivideNum(map1,float(100));
+              }
+            }
+            trans1[i] = map1;
+          }
+          curve1[el.first] = trans1;
         }
-        curve1[el.first] = trans1;
       }
     }
     return curve1;
@@ -117,15 +134,16 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
   
   auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
   for(auto i = 0; i < contents.size(); i++){
-    auto trans_render_data = contents[i]->GetTransRenderData()->GetTransCurve();
+    auto trans_render_data = contents[i]->GetTransRenderData()->GetOrigTransCurve();
     auto link_layers = link_map[i];
     TransformCurve tmp_curve;
     for(auto it = link_layers.rbegin(); it != link_layers.rend(); it++){
-      auto link_trans_data = contents[*it]->GetTransRenderData()->GetTransCurve();
-      tmp_curve = add_trans_curve(tmp_curve, link_trans_data); 
+      auto link_trans_data = contents[*it]->GetTransRenderData()->GetOrigTransCurve();
+      tmp_curve = add_trans_curve(tmp_curve, link_trans_data, false); 
     }
-    trans_render_data = add_trans_curve(trans_render_data, tmp_curve);
-    contents[i]->GetTransRenderData()->SetTransCurve(trans_render_data);
+    trans_render_data = add_trans_curve(trans_render_data, tmp_curve, true);
+
+		contents[i]->GetTransRenderData()->SetTransCurve(trans_render_data);
     contents[i]->GetTransRenderData()->GenerateTransformMat();
 		contents[i]->SetLayerData(contents[i]->GetTransRenderData()->GetTransMat());
   }

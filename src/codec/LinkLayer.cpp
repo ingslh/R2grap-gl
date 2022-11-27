@@ -25,16 +25,17 @@ void LinkLayer::UpdatePropertyByLink(unsigned int ind){
   for(auto it = links_ind.rbegin(); it != links_ind.rend(); it++){
     auto link_transform = reader_->GetLayersInfo(*it)->GetShapeTransform();
     //position
-    auto temp_pos = link_transform->GetPosition() + pos_offset;
+    auto temp_pos = link_transform->GetOrigPosition() + pos_offset;
     pos_offset = temp_pos - link_transform->GetAnchorPos();
     //scale
     scale *= link_transform->GetScale()/glm::vec3(100);
     //rotation
     rotation += link_transform->GetRotation(); 
   }
-  cur_transform->SetPosition(cur_transform->GetPosition() + pos_offset);
+  cur_transform->SetPosition(cur_transform->GetOrigPosition() + pos_offset);
   cur_transform->SetScale(scale * glm::vec3(100));
   cur_transform->SetRotation(rotation);
+  AniInfoManager::GetIns().SetLayerTransform(ind, cur_transform);
 }
 
 }

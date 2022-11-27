@@ -9,7 +9,7 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) :
 keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
   layer_ = const_cast<LayersInfo*>(layer);
 	auto transform = layer->GetShapeTransform();
-  CompTransformCurve(transform.get(), transform_curve_);
+  CompTransformCurve(transform.get(), transform_curve_, layer_->GetLayerInd());
 
   //need to get link layer TransformCurve
 
@@ -34,7 +34,7 @@ TransformRenderData::TransformRenderData(const Transform* transform, unsigned in
   GenerateTransformMat(transform_curve, tmp_trans);
 }
 
-void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve){
+void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve, int ind){
   curve.clear();
   for (auto & it : keyframe_mat_){
     if(trans->IsVectorProperty(it.first)){ //vector
@@ -67,26 +67,48 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
     else{ //scalar
       auto scalar_keyframes = std::get<t_Scalar>(it.second);
       auto start_value = it.first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
+			//auto start_value = scalar_keyframes[0].lastkeyValue;
 
       auto start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
-      std::vector<std::map<unsigned int, float>> signal_curve_line;
-      signal_curve_line.resize(1);
+			if(it.first != "Rotation"){
+				std::vector<SigDimCurve> signal_curve_line;
+				signal_curve_line.resize(1);
 
-      for (auto& keyframe : scalar_keyframes) {
-        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
-        glm::vec2 lastPos(keyframe.lastkeyTime, keyframe.lastkeyValue);
-        glm::vec2 curPos(keyframe.keyTime, keyframe.keyValue);
-        glm::vec2 inPos(keyframe.inPos[0]);
-        glm::vec2 outPos(keyframe.outPos[0]);
-        BezierGenerator generator(lastPos, outPos, inPos, curPos, bezier_duration, start, start_value);
-        auto curve = generator.getKeyframeCurveMap();
-        start += static_cast<unsigned int>(curve.size());
+				for (auto& keyframe : scalar_keyframes) {
+					auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+					glm::vec2 lastPos(keyframe.lastkeyTime, keyframe.lastkeyValue);
+					glm::vec2 curPos(keyframe.keyTime, keyframe.keyValue);
+					glm::vec2 inPos(keyframe.inPos[0]);
+					glm::vec2 outPos(keyframe.outPos[0]);
+					BezierGenerator generator(lastPos, outPos, inPos, curPos, bezier_duration, start, start_value);
+					auto curve = generator.getKeyframeCurveMap();
+					start += static_cast<unsigned int>(curve.size());
 
-        signal_curve_line[0].merge(curve);//cpp17 support,if old cpp verison can use "signal_curve_line[0].insert(curve.begin(),curve.end());"
-      }
-      curve[it.first] = signal_curve_line;
+					signal_curve_line[0].merge(curve);//cpp17 support,if old cpp verison can use "signal_curve_line[0].insert(curve.begin(),curve.end());"
+				}
+				curve[it.first] = signal_curve_line;
+			}else{
+				std::vector<RotationCurve> rot_curve_line;
+        rot_curve_line.resize(1);
+
+        for(auto& keyframe : scalar_keyframes){
+          auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+					glm::vec2 lastPos(keyframe.lastkeyTime, keyframe.lastkeyValue);
+					glm::vec2 curPos(keyframe.keyTime, keyframe.keyValue);
+					glm::vec2 inPos(keyframe.inPos[0]);
+					glm::vec2 outPos(keyframe.outPos[0]);
+					BezierGenerator generator(lastPos, outPos, inPos, curPos, bezier_duration, start, start_value);
+					auto curve = generator.getKeyframeCurveMap();
+					start += static_cast<unsigned int>(curve.size());
+
+          rot_curve_line[0].rot_value_map_.merge(curve);
+          rot_curve_line[0].layer_ind = ind;
+        }
+        curve[it.first] = rot_curve_line;
+			}
     }
   }
+	orig_transform_curve_ = curve;
 }
 
 bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
@@ -102,40 +124,51 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
       std::vector<float> offset;
       offset.resize(2);
       for (auto j = 0; j < offset.size(); j++) {
-        if(i < transform_curve.at("Position")[j].begin()->first)
-          offset[j] = transform_curve.at("Position")[j].begin()->second;
-        else if( i > transform_curve.at("Position")[j].rbegin()->first)
-          offset[j] = transform_curve.at("Position")[j].rbegin()->second;
+        auto pos_curve = std::get<0>(transform_curve.at("Position"));
+        if(i < pos_curve[j].begin()->first)
+          offset[j] = pos_curve[j].begin()->second;
+        else if( i > pos_curve[j].rbegin()->first)
+          offset[j] = pos_curve[j].rbegin()->second;
         else
-          offset[j] = transform_curve.at("Position")[j].at(i);
+          offset[j] = pos_curve[j].at(i);
       }
       trans = glm::translate(trans, glm::vec3(offset.front()/reslution.x, offset.back()/reslution.y, 0));
     }
 
     if (transform_curve.count("Rotation")) {
       float rot;
-      if (i < transform_curve.at("Rotation").front().begin()->first)
-        rot = transform_curve.at("Rotation").front().begin()->second;
-      else if(i > transform_curve.at("Rotation").front().rbegin()->first)
-        rot = transform_curve.at("Rotation").front().rbegin()->second;
-      else
-        rot = transform_curve.at("Rotation").front().at(i);
-      auto t1 = glm::translate(glm::mat4(1), -glm::vec3(position.x, position.y, 0));
-      auto r = glm::rotate(glm::mat4(1), glm::radians(-rot), glm::vec3(0, 0, 1.0));//ae use left-hand CS ,but opengl us right-hand CS(coordinate system)
-      auto t2 = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 0));
-      trans = trans * t2 * r * t1;
+      auto rot_curves = std::get<1>(transform_curve.at("Rotation"));
+			glm::mat4 rot_trans = glm::mat4(1.0f);
+      for(auto& rot_curve : rot_curves){
+        auto link_ind = rot_curve.layer_ind;
+        auto pos = AniInfoManager::GetIns().GetTransPos(link_ind);
+        if (i < rot_curve.rot_value_map_.begin()->first)
+          rot = rot_curve.rot_value_map_.begin()->second;
+        else if(i > rot_curve.rot_value_map_.rbegin()->first)
+          rot = rot_curve.rot_value_map_.rbegin()->second;
+        else
+          rot = rot_curve.rot_value_map_.at(i);
+        
+        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(position.x, position.y, 0));
+        auto r = glm::rotate(glm::mat4(1), glm::radians(rot), glm::vec3(0, 0, 1.0));
+        auto t2 = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 0));
+        trans = trans * t2 * r * t1;
+				//rot_trans = t2 * r * t1 * rot_trans;
+      }
+			//trans = trans * rot_trans;
     }
 
     if (transform_curve.count("Scale")) {
       std::vector<float> scale;
       scale.resize(2);
       for (auto j = 0; j < scale.size(); j++) {
-        if (i < transform_curve.at("Scale")[j].begin()->first)
-          scale[j] = transform_curve.at("Scale")[j].begin()->second;
-        else if (i > transform_curve.at("Scale")[j].rbegin()->first)
-          scale[j] = transform_curve.at("Scale")[j].rbegin()->second;
+        auto scale_curve = std::get<0>(transform_curve.at("Scale"));
+        if (i < scale_curve[j].begin()->first)
+          scale[j] = scale_curve[j].begin()->second;
+        else if (i > scale_curve[j].rbegin()->first)
+          scale[j] = scale_curve[j].rbegin()->second;
         else
-          scale[j] = transform_curve.at("Scale")[j].at(i);
+          scale[j] = scale_curve[j].at(i);
       }
       trans = glm::scale(trans, glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
     }

@@ -23,6 +23,7 @@ set(SHADER
 
 set(CODEC
     src/codec/AniInfoManager.h
+    src/codec/AniInfoManager.cpp
     src/codec/FillInfo.h
     src/codec/PathInfo.h
 	  src/codec/StrokeInfo.h

@@ -1,7 +1,17 @@
 #pragma once
 #include <nlohmann/json.hpp>
+#include <glm/glm.hpp>
 
 namespace R2grap{
+
+struct TransformPorperty{
+  glm::vec2 position;
+  glm::vec2 scale;
+  float rotation;
+  float opacity;
+};
+
+class Transform;
 class AniInfoManager{
 public:
   static AniInfoManager& GetIns(){
@@ -21,6 +31,10 @@ public:
     layers_link_map_ = link_map;
   }
 
+  void SetLayerTransform(unsigned int ind, std::shared_ptr<Transform> transform);
+
+  glm::vec2 GetTransPos(unsigned int ind)const {return layers_transform_map_.at(ind).position;}
+
   unsigned int GetWidth()const {return width_;}
   unsigned int GetHeight()const {return height_;}
   unsigned int GetFrameRate()const {return frame_rate_;}
@@ -35,5 +49,6 @@ private:
   unsigned int duration_;
   unsigned int layers_num_;
   std::map<unsigned int, std::vector<unsigned int>> layers_link_map_;
+  std::map<unsigned int, TransformPorperty> layers_transform_map_;
 };
 }

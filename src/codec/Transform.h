@@ -24,8 +24,15 @@ struct TransMat{
   TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()),duration(0){}
 };
 
-//property name___dim num___frame num____property value
-typedef std::map<std::string, std::vector<std::map<unsigned int, float>>> TransformCurve;
+struct RotationCurve{
+		unsigned int layer_ind;
+		std::map<unsigned int, float> rot_value_map_;
+};
+
+//property name___dim num___frame num____property value  (not rotation)
+//property name___link layers index__frame num __property value  (rotation)
+typedef std::map<unsigned int, float> SigDimCurve;
+typedef std::map<std::string, std::variant<std::vector<SigDimCurve>, std::vector<RotationCurve>>> TransformCurve;
 
 class Transform{
 public:
@@ -40,6 +47,7 @@ public:
   static bool IsVectorProperty(std::string);
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
 
+	glm::vec3& GetOrigPosition(){return std::get<t_Vector>(original_property_values_["Position"]);}
   glm::vec3& GetPosition()  { return std::get<t_Vector>(property_values_["Position"]); }
   void SetPosition(const glm::vec3& pos){property_values_["Position"] = pos;}
   glm::vec3& GetScale() {return std::get<t_Vector>(property_values_["Scale"]);}
@@ -55,9 +63,11 @@ public:
 
 protected:
   void ReadProperty(const std::string& propname, const nlohmann::json& transform);
+	void SetOriginalProerty(){original_property_values_ = property_values_;}
 private:
   TransformType type_;
   std::map<std::string, std::variant<glm::vec3, float>> property_values_;
+	std::map<std::string, std::variant<glm::vec3, float>> original_property_values_;
   KeyframesMap keyframe_data_;
   //std::map<std::string, std::variant<VectorKeyFrames, ScalarKeyFrames>>
 };

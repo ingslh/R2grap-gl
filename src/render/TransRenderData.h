@@ -13,6 +13,7 @@ public:
   TransMat* GetTransMat(){return transform_mat_;}
   void GenerateTransformMat();
   const TransformCurve& GetTransCurve()const {return transform_curve_;}
+	const TransformCurve& GetOrigTransCurve()const {return orig_transform_curve_;}
   void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
 
 protected:
@@ -20,7 +21,7 @@ protected:
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 private:
-  void CompTransformCurve(Transform* trans, TransformCurve& curve);
+  void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
 
   /*struct TransMat {
     unsigned int layer_index;
@@ -42,6 +43,7 @@ private:
   };*/
   KeyframesMap keyframe_mat_;
   TransformCurve transform_curve_;//the temp data, need to merge with parent's curve
+	TransformCurve orig_transform_curve_;
   std::map<int64_t, unsigned int> opacity_map_;
   LayersInfo* layer_ = nullptr;
 };
