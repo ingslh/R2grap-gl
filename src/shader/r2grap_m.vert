@@ -8,6 +8,6 @@ uniform mat4 transform;
 
 void main()
 {
-  vec4 vert = projection * view * model * transform *vec4(aPos.x, aPos.y, aPos.z, 1.0); 
+  vec4 vert = projection * view * model * transform * vec4(aPos.x, aPos.y, aPos.z, 1.0); 
   gl_Position = vec4(vert.x, -vert.y, vert.z, 1.0); 
 }

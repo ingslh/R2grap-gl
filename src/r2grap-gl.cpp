@@ -178,6 +178,9 @@ int main()
         
         auto group_data = layer_data.group_data;
         for(auto group_ind = 0; group_ind < group_data.size(); group_ind++){
+          auto group_trans_mat = group_data[group_ind].trans[played];
+          //shader.setMat4("gp_transform", group_trans_mat);
+
           if(group_data[group_ind].fill){
             if(!group_data[group_ind].fill->trans_color.size())
               shader.setVec4("color", group_data[group_ind].fill->color);

@@ -11,8 +11,8 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   //auto trans_mat = layer_contents_trans->GetTransMat();
 
   layer_data_.index = layer_info->GetLayerInd();
-  //layer_data_.start_pos = trans_mat->clip_start;
-  //layer_data_.end_pos = trans_mat->clip_end;
+  layer_data_.start_pos = layer_info->GetLayerInpos();
+  layer_data_.end_pos = layer_info->GetLayerOutpos();
   //layer_data_.trans = trans_mat->trans;
 
   auto groups = layer_info->GetShapeGroup();
@@ -95,13 +95,6 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
         if(el.first == "Rotation"){
           auto trans1 = std::get<1>(curve1[el.first]);
           auto trans2 = std::get<1>(el.second);
-          /*for(auto& rot_curve : trans2){
-            auto it = std::find_if(trans1.begin(),trans1.end(),[&](const R2grap::RotationCurve& trans1_rot_curve){
-              return trans1_rot_curve.layer_ind == rot_curve.layer_ind;
-            });
-            if(it == trans1.end()){
-            }
-          }*/
           if(front_insert){
             trans1.insert(trans1.begin(),trans2.begin(),trans2.end());
           }else{

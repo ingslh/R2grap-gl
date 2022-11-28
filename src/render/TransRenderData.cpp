@@ -118,13 +118,17 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
   transform_mat_->trans.clear();
 
 	auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
+
+  if (transform_curve.count("Scale"))
+    auto scale_curve = std::get<0>(transform_curve.at("Scale"));
+
   for (unsigned int i = 0; i < frame_lenth; i++){
     glm::mat4 trans = glm::mat4(1.0f);
     if (transform_curve.count("Position")){
       std::vector<float> offset;
       offset.resize(2);
+      auto pos_curve = std::get<0>(transform_curve.at("Position"));
       for (auto j = 0; j < offset.size(); j++) {
-        auto pos_curve = std::get<0>(transform_curve.at("Position"));
         if(i < pos_curve[j].begin()->first)
           offset[j] = pos_curve[j].begin()->second;
         else if( i > pos_curve[j].rbegin()->first)
@@ -160,8 +164,8 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
     if (transform_curve.count("Scale")) {
       std::vector<float> scale;
       scale.resize(2);
+      auto scale_curve = std::get<0>(transform_curve.at("Scale"));
       for (auto j = 0; j < scale.size(); j++) {
-        auto scale_curve = std::get<0>(transform_curve.at("Scale"));
         if (i < scale_curve[j].begin()->first)
           scale[j] = scale_curve[j].begin()->second;
         else if (i > scale_curve[j].rbegin()->first)
@@ -169,6 +173,8 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
         else
           scale[j] = scale_curve[j].at(i);
       }
+      //auto property_scale = transform->GetScale();
+      //trans = glm::scale(trans, glm::vec3((property_scale.x + scale.front())/100, (property_scale.y + scale.back())/100, 1.0));
       trans = glm::scale(trans, glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
     }
     transform_mat_->trans.emplace_back(trans);
