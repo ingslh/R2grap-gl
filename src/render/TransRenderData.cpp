@@ -102,7 +102,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
 					start += static_cast<unsigned int>(curve.size());
 
           rot_curve_line[0].rot_value_map_.merge(curve);
-          rot_curve_line[0].layer_ind = ind;
+          rot_curve_line[0].layer_ind = ind - 1;
         }
         curve[it.first] = rot_curve_line;
 			}
@@ -141,7 +141,8 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
 			glm::mat4 rot_trans = glm::mat4(1.0f);
       for(auto& rot_curve : rot_curves){
         auto link_ind = rot_curve.layer_ind;
-        auto pos = AniInfoManager::GetIns().GetTransPos(link_ind);
+        auto pos_v2 = AniInfoManager::GetIns().GetTransPos(link_ind);
+        auto pos_v3 = glm::vec3(pos_v2.x, pos_v2.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
         if (i < rot_curve.rot_value_map_.begin()->first)
           rot = rot_curve.rot_value_map_.begin()->second;
         else if(i > rot_curve.rot_value_map_.rbegin()->first)
@@ -149,13 +150,11 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
         else
           rot = rot_curve.rot_value_map_.at(i);
         
-        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(position.x, position.y, 0));
+        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(pos_v3.x, pos_v3.y, 0));
         auto r = glm::rotate(glm::mat4(1), glm::radians(rot), glm::vec3(0, 0, 1.0));
-        auto t2 = glm::translate(glm::mat4(1), glm::vec3(position.x, position.y, 0));
+        auto t2 = glm::translate(glm::mat4(1), glm::vec3(pos_v3.x, pos_v3.y, 0));
         trans = trans * t2 * r * t1;
-				//rot_trans = t2 * r * t1 * rot_trans;
       }
-			//trans = trans * rot_trans;
     }
 
     if (transform_curve.count("Scale")) {
