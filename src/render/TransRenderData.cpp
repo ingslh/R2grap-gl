@@ -31,7 +31,8 @@ TransformRenderData::TransformRenderData(const Transform* transform, unsigned in
   SetInandOutPos(ind, inpos, outpos);
   TransformCurve transform_curve;
   CompTransformCurve(tmp_trans, transform_curve);
-  GenerateTransformMat(transform_curve, tmp_trans);
+  if(tmp_trans->type() == t_ShapeTrans)
+    GenerateTransformMat(transform_curve, tmp_trans);
 }
 
 void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve, int ind){
@@ -173,9 +174,28 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
         else
           scale[j] = scale_curve[j].at(i);
       }
-      //auto property_scale = transform->GetScale();
-      //trans = glm::scale(trans, glm::vec3((property_scale.x + scale.front())/100, (property_scale.y + scale.back())/100, 1.0));
-      trans = glm::scale(trans, glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
+      auto start_pos = transform->GetPosition();
+      glm::mat4 t1, t2, s;
+      unsigned int t;
+      if (transform_curve.count("Position")) {
+        if (i < std::get<0>(transform_curve.at("Position")).front().begin()->first)
+          t = std::get<0>(transform_curve.at("Position")).front().begin()->first;
+        else if (i > std::get<0>(transform_curve.at("Position")).front().rbegin()->first)
+          t = std::get<0>(transform_curve.at("Position")).front().rbegin()->first;
+        else
+          t = i;
+        auto cur_pos = glm::vec3(std::get<0>(transform_curve.at("Position"))[0].at(t), std::get<0>(transform_curve.at("Position"))[1].at(t), 0.0);
+        cur_pos = (start_pos + cur_pos) / reslution - glm::vec3(0.5, 0.5, 0);
+        t1 = glm::translate(glm::mat4(1), -glm::vec3(cur_pos));
+        s = glm::scale(glm::mat4(1), glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
+        t2 = glm::translate(glm::mat4(1), glm::vec3(cur_pos));
+      }else {
+        start_pos = start_pos / reslution - glm::vec3(0.5, 0.5, 0);
+        t1 = glm::translate(glm::mat4(1), -glm::vec3(start_pos));
+        s = glm::scale(glm::mat4(1), glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
+        t2 = glm::translate(glm::mat4(1), glm::vec3(start_pos));
+      }
+      trans = trans * t2 * s * t1;
     }
     transform_mat_->trans.emplace_back(trans);
   }
