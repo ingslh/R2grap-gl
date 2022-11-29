@@ -149,11 +149,10 @@ int main()
 	glGetFloatv(GL_LINE_WIDTH,&width);
 
 
-  //static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
-  static double limitFPS = 1.0 / 3;
+  static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
   double lastTime = glfwGetTime(), timer = lastTime;
   double deltaTime = 0, nowTime = 0;
-  int frames = 0, played = 125;
+  int frames = 0, played = 0;
 
   auto frame_count = AniInfoManager::GetIns().GetDuration() * AniInfoManager::GetIns().GetFrameRate();
 
@@ -169,7 +168,7 @@ int main()
     while (deltaTime >= 1.0) { // render
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      for (auto layer_ind = 0; layer_ind < 1; layer_ind++) {
+      for (auto layer_ind = 0; layer_ind < layers_count; layer_ind++) {
         auto layer_data = contents[layer_ind]->GetLayerData();
         if (layer_data.start_pos  > static_cast<float>(played) || layer_data.end_pos < static_cast<float>(played)) continue;
         
@@ -230,7 +229,7 @@ int main()
           }
         }
       }
-      played = played > 135 ? 125 : ++played;
+      played = played > frame_count ? 0 : ++played;
       frames++;
       deltaTime--;
 			glfwSwapBuffers(window);
