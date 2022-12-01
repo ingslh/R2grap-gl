@@ -13,6 +13,7 @@ set(BASE
     src/base/Polygon.hpp
     src/base/KeyframeGen.hpp
     src/base/TransComp.hpp
+	src/base/JsonReader.hpp
 )
 
 set(SHADER

@@ -48,7 +48,7 @@ public:
 
 
 private:
-  unsigned int index_;
+  unsigned int index_; // note : form 1 to count, not 0
   std::string name_;
   unsigned int blend_mode_;
   int link_;

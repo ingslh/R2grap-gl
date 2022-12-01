@@ -19,6 +19,7 @@ JsonReader::JsonReader(const std::string& path){
     auto layers = root_[root_.begin().key()]["layers"];
     for (auto& el_c : layers.items()) {
       layers_.emplace_back(std::make_shared<LayersInfo>(el_c.value()));
+      AniInfoManager::GetIns().AppendLayerInandOut(layers_.back()->GetLayerInd() - 1, layers_.back()->GetLayerInpos(), layers_.back()->GetLayerOutpos());
     }
   }
   //update transform property by link layer

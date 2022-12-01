@@ -4,6 +4,8 @@
 #include <vector>
 #include "Polygon.hpp"
 #include "BezierGen.hpp"
+#include "JsonConver.hpp"
+#include "AniInfoManager.h"
 
 namespace R2grap{
 class PathInfo{
@@ -24,16 +26,25 @@ public:
       auto curves = json["Path"];
       auto frameRate = AniInfoManager::GetIns().GetFrameRate();
       for(auto& el : curves.items()){
-        auto last_verts = el.value()["lastkeyValue"];
-        float last_time = round(float(el.value()["lastkeyTime"]) * 100)/100 * frameRate;
-        auto cur_verts = el.value()["keyValue"];
-        float cur_time = round(float(el.value()["keyTime"])*100)/100 * frameRate; 
-        std::vector<glm::vec2> vec_last_verts, vec_cur_verts;
-        for(auto i =0 ; i < last_verts.size(); i++){
-          vec_last_verts.emplace_back(glm::vec2(last_verts[i][0], last_verts[i][1]));
-          vec_cur_verts.emplace_back(glm::vec2(cur_verts[i][0], cur_verts[i][1]));
-        }
-        auto linear_vert = std::make_shared<LinearGenerator<glm::vec2>>(vec_last_verts, last_time, vec_cur_verts, cur_time);
+        float last_time = round(float(el.value()["lastkeyTime"]) * 100) / 100 * frameRate;
+        auto last_start_pos = el.value()["lastkeyValue"][0];
+        auto last_end_pos = el.value()["lastkeyValue"][1];
+        auto last_out_dir = el.value()["lastkeyOutPos"][0];
+        auto last_in_dir = el.value()["lastkeyInPos"][1];
+        BezierCluster last_curve_cluster{ jsonconver::json_to<vec2>(last_start_pos) , jsonconver::json_to<vec2>(last_out_dir),
+                                        jsonconver::json_to<vec2>(last_in_dir) , jsonconver::json_to<vec2>(last_end_pos) };
+        auto last_curve = std::make_shared<BezierGenerator>(last_curve_cluster)->getBezierVerts();
+        
+        float cur_time = round(float(el.value()["keyTime"]) * 100) / 100 * frameRate;
+        auto cur_start_pos = el.value()["keyValue"][0]; 
+        auto cur_end_pos = el.value()["keyValue"][1];
+        auto cur_out_dir = el.value()["keyOutPos"][0];
+        auto cur_in_dir = el.value()["keyInPos"][1];
+        BezierCluster cur_curve_cluster{ jsonconver::json_to<vec2>(cur_start_pos), jsonconver::json_to<vec2>(cur_out_dir),
+                                        jsonconver::json_to<vec2>(cur_in_dir), jsonconver::json_to<vec2>(cur_end_pos) };
+        auto cur_curve = std::make_shared<BezierGenerator>(cur_curve_cluster)->getBezierVerts();
+
+        auto linear_vert = std::make_shared<LinearGenerator<glm::vec2>>(last_curve, last_time, cur_curve, cur_time);
         if (linear_vert) {
           auto tmp_map = linear_vert->GetLinearMap();
           linear_map_.insert(tmp_map.begin(), tmp_map.end());

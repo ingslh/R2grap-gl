@@ -86,6 +86,17 @@ public:
     }
   }
 
+  BezierGenerator(const BezierCluster& cluster) {
+    auto delta = 1.0 / float(default_segments_);
+    for (unsigned int i = 0; i <= default_segments_; i++) {
+      auto t = static_cast<float>(delta * float(i));
+      vec2 p;
+      p.x = (1 - t) * (1 - t) * (1 - t) * cluster.start.x + 3 * t * (1 - t) * (1 - t)* cluster.out.x + 3 * t*t* (1 - t)* cluster.in.x + t * t * t * cluster.end.x;
+      p.y = (1 - t) * (1 - t) * (1 - t) * cluster.start.y + 3 * t * (1 - t) * (1 - t)* cluster.out.y + 3 * t*t* (1 - t)* cluster.in.y + t * t * t * cluster.end.y;
+      bezier_verts_.emplace_back(p);
+    }
+  }
+
   BezierGenerator(const BezierCluster& cluster, unsigned int segments, unsigned int start, float start_value){
     vec2 curPos = cluster.end, outPos = cluster.out, inPos = cluster.in, lastPos = cluster.start;
     for (unsigned int i = start; i <= segments + start; i++) {

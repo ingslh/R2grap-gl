@@ -38,6 +38,10 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
         signal_path_data.tri_index = path->GetTriIndexList();
 
       if (path->HasKeyframe()) {
+        unsigned int layer_ind = data->GetLayerInd() - 1;
+        unsigned int inpos = 0, outpos = 0;
+        AniInfoManager::GetIns().GetLayerInandOutPos(layer_ind, inpos, outpos);
+
         auto linear_map = path->GetLinearMap();
 
         for (auto& el : linear_map) {
@@ -50,6 +54,13 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
             tmp_float_arr.emplace_back(0);
           }
           signal_path_data.linear_verts[el.first] = tmp_float_arr;
+        }
+        auto tmp_path_data = signal_path_data.linear_verts;
+        for (auto i = inpos; i <= outpos; i++) {
+          if (!tmp_path_data.count(i) && i < tmp_path_data.begin()->first)
+            signal_path_data.linear_verts[i] = tmp_path_data.begin()->second;
+          else if (!tmp_path_data.count(i) && i > tmp_path_data.rbegin()->first)
+            signal_path_data.linear_verts[i] = tmp_path_data.rbegin()->second;
         }
       }
 
@@ -111,6 +122,7 @@ bool VerticesRenderData::GetBezierVertData(unsigned int group_ind, unsigned int 
   });
   if (it == bezier_vert_data_.end()) return false;
   vert_data = bezier_vert_data_[it - bezier_vert_data_.begin()];
+
   return true;
 }
 

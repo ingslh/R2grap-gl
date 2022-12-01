@@ -19,19 +19,11 @@ public:
     return kManager;
   }
 
-  void SetBasicInfo(nlohmann::json& json){
-    width_ = json["width"];
-    height_ = json["height"];
-    frame_rate_ = json["frameRate"];
-    duration_ = json["duration"];
-    layers_num_ = json["numLayers"];
-  }
+  void SetBasicInfo(nlohmann::json& json);
 
-  void SetLayersLinkMap(const std::map<unsigned int, std::vector<unsigned int>>& link_map){
-    layers_link_map_ = link_map;
-  }
-
+  void SetLayersLinkMap(const std::map<unsigned int, std::vector<unsigned int>>& link_map);
   void SetLayerTransform(unsigned int ind, std::shared_ptr<Transform> transform);
+  void AppendLayerInandOut(unsigned int ind, unsigned int in, unsigned int out);
 
   glm::vec2 GetTransPos(unsigned int ind)const {return layers_transform_map_.at(ind).position;}
 
@@ -41,6 +33,7 @@ public:
   unsigned int GetDuration()const {return duration_;}
   unsigned int GetLayersNum()const {return layers_num_;}
   std::map<unsigned int, std::vector<unsigned int>> GetLayersLinkMap() const{return layers_link_map_;}
+  void GetLayerInandOutPos(const unsigned int ind, unsigned int& in, unsigned int& out);
 
 private:
   unsigned int width_;
@@ -50,5 +43,6 @@ private:
   unsigned int layers_num_;
   std::map<unsigned int, std::vector<unsigned int>> layers_link_map_;
   std::map<unsigned int, TransformPorperty> layers_transform_map_;
+  std::map<unsigned int, std::pair<unsigned int, unsigned int>> layers_inout_map_;
 };
 }
