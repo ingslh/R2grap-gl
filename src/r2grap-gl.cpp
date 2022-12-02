@@ -172,13 +172,13 @@ int main()
         auto layer_data = contents[layer_ind]->GetLayerData();
         if (layer_data.start_pos  > static_cast<float>(played) || layer_data.end_pos < static_cast<float>(played)) continue;
         
-        glm::mat4 trans_mat = layer_data.trans[played];
-        shader.setMat4("transform", trans_mat);
+        //glm::mat4 trans_mat = layer_data.trans[played];
+        //shader.setMat4("transform", trans_mat);
         
         auto group_data = layer_data.group_data;
         for(auto group_ind = 0; group_ind < group_data.size(); group_ind++){
-          //auto group_trans_mat = group_data[group_ind].trans[played];
-          //shader.setMat4("gp_transform", group_trans_mat);
+          auto group_trans_mat = group_data[group_ind].trans[played];
+          shader.setMat4("transform", group_trans_mat);
 
           if(group_data[group_ind].fill){
             if(!group_data[group_ind].fill->trans_color.size())

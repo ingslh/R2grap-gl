@@ -8,24 +8,21 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   layer_contents_color_ = SRenderDataFactory::GetIns().CreateColorData(layer_info);
   layer_contents_trans_ = SRenderDataFactory::GetIns().CreateTransformData(layer_info); //shape transform
 
-  //auto trans_mat = layer_contents_trans->GetTransMat();
-
   layer_data_.index = layer_info->GetLayerInd();
   layer_data_.start_pos = layer_info->GetLayerInpos();
   layer_data_.end_pos = layer_info->GetLayerOutpos();
-  //layer_data_.trans = trans_mat->trans;
 
-  auto groups = layer_info->GetShapeGroup();
-  for(auto& group : groups){
+  shape_groups_ = layer_info->GetShapeGroup();
+  for(auto& group : shape_groups_){
     GroupData group_data;
-    auto trans = group->GetTransform();
-    //group transform
-    auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(trans.get(), layer_data_.index, layer_data_.start_pos, layer_data_.end_pos);
-    auto group_trans_mat = group_contents_trans->GetTransMat()->trans;
-    group_data.trans = group_trans_mat;
 
-    auto group_it = std::find(groups.begin(), groups.end(), group);
-    unsigned int group_index = group_it - groups.begin();
+    /*auto trans = group->GetTransform();
+    //group transform
+    auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(trans.get(), layer_data_.index, layer_data_.start_pos, layer_data_.end_pos, layer_contents_trans_);
+    auto group_trans_mat = group_contents_trans->GetTransMat()->trans;
+    group_data.trans = group_trans_mat;*/
+
+    unsigned int group_index = std::find(shape_groups_.begin(), shape_groups_.end(), group) - shape_groups_.begin();
     auto color_infos = layer_contents_color_->GetColor(group_index);
 
     for(auto& color_info : color_infos){
@@ -127,7 +124,8 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
   
   auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
   for(auto i = 0; i < contents.size(); i++){
-    auto trans_render_data = contents[i]->GetTransRenderData()->GetOrigTransCurve();
+    auto render_content = contents[i];
+    auto trans_render_data = render_content->GetTransRenderData()->GetOrigTransCurve();
     auto link_layers = link_map[i];
     TransformCurve tmp_curve;
     for(auto it = link_layers.rbegin(); it != link_layers.rend(); it++){
@@ -136,9 +134,26 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     }
     trans_render_data = add_trans_curve(trans_render_data, tmp_curve, true);
 
-		contents[i]->GetTransRenderData()->SetTransCurve(trans_render_data);
-    contents[i]->GetTransRenderData()->GenerateTransformMat();
-		contents[i]->SetLayerData(contents[i]->GetTransRenderData()->GetTransMat());
+    render_content->GetTransRenderData()->SetTransCurve(trans_render_data);
+    render_content->GetTransRenderData()->GenerateTransformMat();
+    render_content->SetLayerData(render_content->GetTransRenderData()->GetTransMat());
+
+
+
+    auto groups = render_content->GetShapeGroups();
+    for (auto j = 0; j < groups.size(); j++) {
+      auto group = groups[j];
+      auto layer_ind = render_content->GetLayerData().index;
+      auto start_pos = render_content->GetLayerData().start_pos;
+      auto end_pos = render_content->GetLayerData().end_pos;
+
+      auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), layer_ind, start_pos, end_pos);
+      auto group_curve = group_contents_trans->GetOrigTransCurve();
+      group_curve = add_trans_curve(group_curve, trans_render_data, true);
+      group_contents_trans->SetTransCurve(group_curve);
+      group_contents_trans->GenerateTransformMat();
+      render_content->SetGroupData(j, group_contents_trans->GetTransMat());
+    }
   }
 }
 

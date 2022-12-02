@@ -5,9 +5,8 @@
 
 namespace R2grap{
 
-TransformRenderData::TransformRenderData(const LayersInfo* layer) :
-keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
-  layer_ = const_cast<LayersInfo*>(layer);
+TransformRenderData::TransformRenderData(const LayersInfo* layer) : //shape-layer transform 
+keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(const_cast<LayersInfo*>(layer)){
 	auto transform = layer->GetShapeTransform();
   CompTransformCurve(transform.get(), transform_curve_, layer_->GetLayerInd());
 
@@ -15,25 +14,30 @@ keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()){
 
 }
 
-void TransformRenderData::GenerateTransformMat(){
-  if(!layer_) return;
-  auto transform = layer_->GetShapeTransform();
-  transform_mat_ = new TransMat();
-  SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
-  GenerateTransformMat(transform_curve_, transform.get());
-}
-
-
-TransformRenderData::TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos){
-  auto tmp_trans = const_cast<Transform*>(transform);
-  keyframe_mat_ = transform->GetKeyframeData();
+TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int ind, float inpos, float outpos) :
+  keyframe_mat_(shape_group->GetTransform()->GetKeyframeData()), group_(const_cast<ShapeGroup*>(shape_group)) {//group transform 
+  auto transform = shape_group->GetTransform();
   transform_mat_ = new TransMat();
   SetInandOutPos(ind, inpos, outpos);
-  TransformCurve transform_curve;
-  CompTransformCurve(tmp_trans, transform_curve);
-  if(tmp_trans->type() == t_ShapeTrans)
-    GenerateTransformMat(transform_curve, tmp_trans);
+  CompTransformCurve(transform.get(), transform_curve_, ind);//gengerate origial transform curve
+
+  //GenerateTransformMat(transform_curve, tmp_trans);
+  //need to get parent's transform_curve
 }
+
+void TransformRenderData::GenerateTransformMat(){
+  if (layer_) {
+    auto transform = layer_->GetShapeTransform();
+    transform_mat_ = new TransMat();
+    SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
+    GenerateTransformMat(transform_curve_, transform.get());
+  }
+  else if (group_) {
+    auto transform = group_->GetTransform();
+    GenerateTransformMat(transform_curve_, transform.get());
+  }
+}
+
 
 void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve, int ind){
   curve.clear();
@@ -102,8 +106,8 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
 					auto curve = generator.getKeyframeCurveMap();
 					start += static_cast<unsigned int>(curve.size());
 
-          rot_curve_line[0].rot_value_map_.merge(curve);
-          rot_curve_line[0].layer_ind = ind - 1;
+          rot_curve_line.front().rot_value_map_.merge(curve);
+          rot_curve_line.front().layer_ind = ind - 1;
         }
         curve[it.first] = rot_curve_line;
 			}

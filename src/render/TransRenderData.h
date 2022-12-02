@@ -1,4 +1,5 @@
 #pragma once
+#include "RenderDataFactory.h"
 #include "BaseRenderData.h"
 #include "LayersInfo.h"
 #include "Transform.h"
@@ -8,13 +9,14 @@
 namespace R2grap{
 class TransformRenderData : public BaseRenderData{
 public:
-  explicit TransformRenderData(const LayersInfo* layer);
-  TransformRenderData(const Transform* transform, unsigned int ind, float inpos, float outpos);
+  TransformRenderData(const LayersInfo* layer);
+  TransformRenderData(const ShapeGroup* shape_group, unsigned int ind, float inpos, float outpos);
   TransMat* GetTransMat(){return transform_mat_;}
   void GenerateTransformMat();
   const TransformCurve& GetTransCurve()const {return transform_curve_;}
 	const TransformCurve& GetOrigTransCurve()const {return orig_transform_curve_;}
   void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
+  //void SetParentTrans(TransformRenderData* parent_ptr) { parent_ptr_ = std::shared_ptr<TransformRenderData>(parent_ptr); }
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
@@ -46,6 +48,8 @@ private:
 	TransformCurve orig_transform_curve_;
   std::map<int64_t, unsigned int> opacity_map_;
   LayersInfo* layer_ = nullptr;
+  ShapeGroup* group_ = nullptr;
+  //std::shared_ptr<TransformRenderData> parent_ptr_ = nullptr;
 };
 
 }

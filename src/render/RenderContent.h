@@ -89,6 +89,8 @@ struct LayerData{
   std::vector<GroupData> group_data;
   
   std::vector<glm::mat4> trans;//Index is frameNum
+
+  const std::vector<GroupData>& GetGroupData() const { return group_data; }
 };
 
 class RenderContent{
@@ -108,9 +110,15 @@ public:
 		layer_data_.end_pos = trans_mat->clip_end;
 		layer_data_.trans = trans_mat->trans;
 	}
+
+  void SetGroupData(unsigned int i, TransMat* trans_mat) {
+    layer_data_.group_data[i].trans = trans_mat->trans;
+  }
+
 private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
+  const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroups()const { return shape_groups_; }
   
   
 private:
@@ -118,6 +126,7 @@ private:
   VerticesRenderDataPtr layer_contents_path_;
   ColorRenderDataPtr layer_contents_color_;
   TransformRenderDataPtr layer_contents_trans_;
+  std::vector<std::shared_ptr<ShapeGroup>> shape_groups_;
 };
 
 }
