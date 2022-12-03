@@ -23,7 +23,7 @@ struct JsonToTraits<glm::vec2>{
 
 template<typename T, typename JT = JsonToTraits<T>>
 T json_to(const nlohmann::json json){
-  using JsontoType = JT::JsontoType;
+  using JsontoType = typename JT::JsontoType;
   JsontoType ret = JT::zero;
   if(typeid(T) == typeid(glm::vec2)){
     ret = glm::vec2(json[0].get<float>(), json[1].get<float>());

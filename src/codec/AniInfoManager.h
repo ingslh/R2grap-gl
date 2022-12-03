@@ -5,6 +5,7 @@
 namespace R2grap{
 
 struct TransformPorperty{
+	glm::vec2 anchor_pos;
   glm::vec2 position;
   glm::vec2 scale;
   float rotation;
@@ -26,6 +27,7 @@ public:
   void AppendLayerInandOut(unsigned int ind, unsigned int in, unsigned int out);
 
   glm::vec2 GetTransPos(unsigned int ind)const {return layers_transform_map_.at(ind).position;}
+	glm::vec2 GetTransAncPos(unsigned int ind) const{return layers_transform_map_.at(ind).anchor_pos;}
 
   unsigned int GetWidth()const {return width_;}
   unsigned int GetHeight()const {return height_;}

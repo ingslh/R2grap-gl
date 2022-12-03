@@ -13,8 +13,10 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   layer_data_.end_pos = layer_info->GetLayerOutpos();
 
   shape_groups_ = layer_info->GetShapeGroup();
+	bool no_group_keyframe = true;
   for(auto& group : shape_groups_){
     GroupData group_data;
+		no_group_keyframe &= group->GetTransform()->IsNoKeyframe();
 
     /*auto trans = group->GetTransform();
     //group transform
@@ -70,6 +72,7 @@ RenderContent::RenderContent(LayersInfo* layer_info){
     }
     layer_data_.group_data.emplace_back(group_data);
   }
+	layer_data_.groups_no_keyframe = no_group_keyframe;
 }
 
 unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents) {
@@ -138,8 +141,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     render_content->GetTransRenderData()->GenerateTransformMat();
     render_content->SetLayerData(render_content->GetTransRenderData()->GetTransMat());
 
-
-
+		if(render_content->GetLayerData().groups_no_keyframe) continue;
     auto groups = render_content->GetShapeGroups();
     for (auto j = 0; j < groups.size(); j++) {
       auto group = groups[j];
@@ -149,8 +151,10 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
 
       auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), layer_ind, start_pos, end_pos);
       auto group_curve = group_contents_trans->GetOrigTransCurve();
-      group_curve = add_trans_curve(group_curve, trans_render_data, true);
+      group_contents_trans->SetParentLayerInd(layer_ind - 1);
+			group_curve = add_trans_curve(group_curve, trans_render_data, true);
       group_contents_trans->SetTransCurve(group_curve);
+
       group_contents_trans->GenerateTransformMat();
       render_content->SetGroupData(j, group_contents_trans->GetTransMat());
     }

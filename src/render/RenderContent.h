@@ -86,8 +86,10 @@ struct LayerData{
   float start_pos;
   float end_pos;
   unsigned int link_layer_index;
+
   std::vector<GroupData> group_data;
-  
+  bool groups_no_keyframe;
+
   std::vector<glm::mat4> trans;//Index is frameNum
 
   const std::vector<GroupData>& GetGroupData() const { return group_data; }

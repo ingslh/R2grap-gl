@@ -34,6 +34,15 @@ void TransformRenderData::GenerateTransformMat(){
   }
   else if (group_) {
     auto transform = group_->GetTransform();
+		if(parent_layer_ind_ != -1){
+
+			auto base_pos = AniInfoManager::GetIns().GetTransPos(parent_layer_ind_);
+			auto base_anc_pos = AniInfoManager::GetIns().GetTransAncPos(parent_layer_ind_);
+
+			transform->SetPosition(transform->GetPosition()
+														+ glm::vec3(base_pos.x, base_pos.y, 0)
+														- glm::vec3(base_anc_pos.x, base_anc_pos.y, 0));
+		}
     GenerateTransformMat(transform_curve_, transform.get());
   }
 }
@@ -118,14 +127,11 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
 
 bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
-  auto position = transform->GetPosition() / reslution - glm::vec3(0.5,0.5,0);
+
   if(!transform_mat_) return false;
   transform_mat_->trans.clear();
 
 	auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
-
-  if (transform_curve.count("Scale"))
-    auto scale_curve = std::get<0>(transform_curve.at("Scale"));
 
   for (unsigned int i = 0; i < frame_lenth; i++){
     glm::mat4 trans = glm::mat4(1.0f);
@@ -179,11 +185,12 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
           scale[j] = scale_curve[j].at(i);
       }
       auto start_pos = transform->GetPosition();
+			auto start_scale = transform->GetScale();
       glm::mat4 t1, t2, s;
       unsigned int t;
 			auto cur_pos = start_pos / glm::vec3(reslution.x, reslution.y, 1.0) - glm::vec3(0.5, 0.5, 0);
 			t1 = glm::translate(glm::mat4(1), -glm::vec3(cur_pos));
-			s = glm::scale(glm::mat4(1), glm::vec3(scale.front() / 100, scale.back() / 100, 1.0));
+			s = glm::scale(glm::mat4(1), glm::vec3((start_scale.x + scale.front()) / 100, (start_scale.y + scale.back()) / 100, 1.0));
 			t2 = glm::translate(glm::mat4(1), glm::vec3(cur_pos));
       trans = trans * t2 * s * t1;
     }

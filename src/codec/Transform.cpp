@@ -26,7 +26,7 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform, int
   for (auto& el : transform.items()) {
     ReadProperty(el.key(), el.value());
     
-    KeyframeGen keyframegen(el.key(),el.value(),PropertyType);
+    KeyframeGen keyframegen(el.key(),el.value(), PropertyType);
     auto pair = keyframegen.GetKeyframePair();
     if(pair != nullptr){
       keyframe_data_[pair->first] = pair->second;

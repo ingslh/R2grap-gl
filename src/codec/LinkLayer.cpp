@@ -33,7 +33,7 @@ void LinkLayer::UpdatePropertyByLink(unsigned int ind){
     rotation += link_transform->GetRotation(); 
   }
   cur_transform->SetPosition(cur_transform->GetOrigPosition() + pos_offset);
-  cur_transform->SetScale(scale * glm::vec3(100));
+  cur_transform->SetScale(cur_transform->GetOrigScale() * scale * glm::vec3(100));
   cur_transform->SetRotation(rotation);
   AniInfoManager::GetIns().SetLayerTransform(ind, cur_transform);
 }

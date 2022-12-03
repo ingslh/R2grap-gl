@@ -46,11 +46,13 @@ public:
   glm::vec3 GetShapeGrapOffset();
   static bool IsVectorProperty(std::string);
   const KeyframesMap& GetKeyframeData()const { return keyframe_data_; }
+	bool IsNoKeyframe(){return keyframe_data_.size() == 0; }
 
 	glm::vec3& GetOrigPosition(){return std::get<t_Vector>(original_property_values_["Position"]);}
   glm::vec3& GetPosition()  { return std::get<t_Vector>(property_values_["Position"]); }
   void SetPosition(const glm::vec3& pos){property_values_["Position"] = pos;}
   glm::vec3& GetScale() {return std::get<t_Vector>(property_values_["Scale"]);}
+	glm::vec3& GetOrigScale() {return std::get<t_Vector>(original_property_values_["Scale"]);}
   void SetScale(const glm::vec3& scale){property_values_["Scale"] = scale;}
   float GetRotation(){return std::get<t_Scalar>(property_values_["Rotation"]);}
   void SetRotation(const float rot){property_values_["Rotation"] = rot;}

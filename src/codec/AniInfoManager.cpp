@@ -5,6 +5,7 @@ namespace R2grap{
   
   void AniInfoManager:: SetLayerTransform(unsigned int ind, std::shared_ptr<Transform> transform){
     TransformPorperty property;
+		property.anchor_pos = glm::vec2(transform->GetAnchorPos().x, transform->GetAnchorPos().y);
     property.position = glm::vec2(transform->GetPosition().x, transform->GetPosition().y);
     property.scale = glm::vec2(transform->GetScale().x, transform->GetScale().y);
     property.rotation = transform->GetRotation();

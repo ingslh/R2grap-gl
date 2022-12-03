@@ -18,6 +18,8 @@ public:
   void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
   //void SetParentTrans(TransformRenderData* parent_ptr) { parent_ptr_ = std::shared_ptr<TransformRenderData>(parent_ptr); }
 
+	void SetParentLayerInd(int ind){parent_layer_ind_ = ind;}
+
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
@@ -49,7 +51,7 @@ private:
   std::map<int64_t, unsigned int> opacity_map_;
   LayersInfo* layer_ = nullptr;
   ShapeGroup* group_ = nullptr;
-  //std::shared_ptr<TransformRenderData> parent_ptr_ = nullptr;
+  int parent_layer_ind_  = -1;
 };
 
 }
