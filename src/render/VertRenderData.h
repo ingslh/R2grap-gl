@@ -9,7 +9,8 @@
 namespace R2grap{
 
 struct BezierVertData{
-  unsigned int group_ind;
+  unsigned int p_group_ind;//parent
+	unsigned int c_group_ind;//child
   unsigned int path_ind;
 
   bool closed;
