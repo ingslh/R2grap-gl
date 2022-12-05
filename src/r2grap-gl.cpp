@@ -16,13 +16,18 @@ using namespace R2grap;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 // settings
-const unsigned int SCR_WIDTH = 1000;
-const unsigned int SCR_HEIGHT = 900;
+//const unsigned int SCR_WIDTH = 1000;
+//const unsigned int SCR_HEIGHT = 900;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
 
 int main()
 {
+  JsonReader reader("../assets/designers.json");
+  unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
+  unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
+
+
   // glfw: initialize and configure
   // ------------------------------
   glfwInit();
@@ -64,7 +69,6 @@ int main()
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
 
-  JsonReader reader("../assets/thinking.json");
   auto layers_count = reader.getLayersCount();
 
   std::vector<std::shared_ptr<RenderContent>> contents;

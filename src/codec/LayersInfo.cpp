@@ -24,9 +24,18 @@ GroupContents::GroupContents(const nlohmann::json& json){
 }
 
 ShapeGroup::ShapeGroup(const nlohmann::json& json):
-blend_mode_(json["Blend Mode"]), transform_(std::make_shared<Transform>(json["Transform"])), 
-contents_(std::make_shared<GroupContents>(json["Contents"])) 
+blend_mode_(json["Blend Mode"]), transform_(std::make_shared<Transform>(json["Transform"]))
 {
+  auto has_child_groups = [&](const nlohmann::json& content)->bool{
+    return content.items().begin().key().find("Group") != std::string::npos;
+  };
+  if(has_child_groups(json["Contents"])){
+    auto contents = json["Contents"].items();
+    for(auto& el : contents){
+      child_groups_.emplace_back(std::make_shared<ShapeGroup>(el.value()));
+    }
+  }else
+    contents_= std::make_shared<GroupContents>(json["Contents"]);
 }
 
 LayersInfo::LayersInfo(const nlohmann::json& layer) :

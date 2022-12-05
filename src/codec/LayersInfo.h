@@ -27,8 +27,10 @@ public:
   ShapeGroup(const nlohmann::json& json);
   std::shared_ptr<GroupContents> GetContents()const {return contents_;}
   std::shared_ptr<Transform> GetTransform()const {return transform_;}
+  bool HasChildGroups(){return child_groups_.size();}
 
 private:
+  std::vector<std::shared_ptr<ShapeGroup>> child_groups_;
   std::shared_ptr<GroupContents> contents_;
   std::shared_ptr<Transform> transform_;
   unsigned int blend_mode_;
