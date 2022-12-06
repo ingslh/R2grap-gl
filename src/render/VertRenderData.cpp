@@ -9,8 +9,11 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
   auto shape_groups = data->GetShapeGroup();
   paths_count_ = 0;
 
-	for(auto i = 0; i < shape_groups.size(); i++){
-		auto group = shape_groups[i];
+
+  for(auto i = 0; i < shape_groups.size(); i++){
+	auto group = shape_groups[i];
+    if (group->HasChildGroups()) continue;
+
     auto paths = group->GetContents()->GetPaths();
     paths_count_ += static_cast<unsigned int>(paths.size());
     auto final_offset = group->GetTransform()->GetPosition() + shape_offset;

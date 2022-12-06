@@ -28,6 +28,7 @@ public:
   std::shared_ptr<GroupContents> GetContents()const {return contents_;}
   std::shared_ptr<Transform> GetTransform()const {return transform_;}
   bool HasChildGroups(){return child_groups_.size();}
+  const std::vector<std::shared_ptr<ShapeGroup>>& GetChildGroups() { return child_groups_; }
 
 private:
   std::vector<std::shared_ptr<ShapeGroup>> child_groups_;

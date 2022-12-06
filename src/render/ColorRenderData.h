@@ -38,16 +38,25 @@ struct ColorCacheData {
   {}
 };
 
+struct MulitColorData {
+  unsigned int first_ind;  //parent index
+  unsigned int second_ind; //child index
+  std::vector<ColorCacheData> color_cache_data;
+};
+
 class ColorRenderData : public R2grap::BaseRenderData{
 public:
   ColorRenderData(const LayersInfo* layer);
-  const std::vector<ColorCacheData>& GetColor(unsigned int ind)const { return multi_color_data_.at(ind); }
+  const std::vector<ColorCacheData>& GetColor(unsigned int parent_ind, unsigned int child_ind)const;
 private:
+  void GenerateColorCacheData(const unsigned int ind, const std::shared_ptr<GroupContents> content, std::vector<ColorCacheData>& color_cache_list);
+
   unsigned int fills_count_;
   unsigned int stroke_count_;
-  std::vector<glm::vec4> multi_fills_data_;
 
   std::map<unsigned int, std::vector<ColorCacheData>> multi_color_data_; //first: group index; second: fill or stroke
+
+  std::vector<MulitColorData> multi_color_data;
 };
 
 }

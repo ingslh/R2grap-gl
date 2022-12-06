@@ -15,17 +15,13 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   shape_groups_ = layer_info->GetShapeGroup();
 	bool no_group_keyframe = true;
   for(auto& group : shape_groups_){
+    if (group->HasChildGroups()) continue;
+
     GroupData group_data;
 		no_group_keyframe &= group->GetTransform()->IsNoKeyframe();
 
-    /*auto trans = group->GetTransform();
-    //group transform
-    auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(trans.get(), layer_data_.index, layer_data_.start_pos, layer_data_.end_pos, layer_contents_trans_);
-    auto group_trans_mat = group_contents_trans->GetTransMat()->trans;
-    group_data.trans = group_trans_mat;*/
-
     unsigned int group_index = std::find(shape_groups_.begin(), shape_groups_.end(), group) - shape_groups_.begin();
-    auto color_infos = layer_contents_color_->GetColor(group_index);
+    auto color_infos = layer_contents_color_->GetColor(group_index, 0);
 
     for(auto& color_info : color_infos){
       if(color_info.type == ColorDataType::t_cStroke){
@@ -84,6 +80,10 @@ unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr
     }
   }
   return count;
+}
+
+void RenderContent::GenerateGroupData(const std::shared_ptr<ShapeGroup> input, GroupData& group) {
+
 }
 
 void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents){

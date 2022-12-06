@@ -78,6 +78,8 @@ struct GroupData {
 
   std::vector<glm::mat4> trans; //Index is frameNum
 
+  std::vector<GroupData> child_trans;
+
   const std::vector<PathData>& GetPathData() const {return paths;}
 };
 
@@ -121,6 +123,7 @@ private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroups()const { return shape_groups_; }
+  void GenerateGroupData(const std::shared_ptr<ShapeGroup> input, GroupData& group);
   
   
 private:
