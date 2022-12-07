@@ -7,67 +7,77 @@ namespace R2grap{
 VerticesRenderData::VerticesRenderData(const LayersInfo* data){
   auto shape_offset = data->GetShapeTransform()->GetShapeGrapOffset();
   auto shape_groups = data->GetShapeGroup();
-  paths_count_ = 0;
-
+  layer_ind_ = data->GetLayerInd() - 1;
 
   for(auto i = 0; i < shape_groups.size(); i++){
-	auto group = shape_groups[i];
-    if (group->HasChildGroups()) continue;
-
-    auto paths = group->GetContents()->GetPaths();
-    paths_count_ += static_cast<unsigned int>(paths.size());
-    auto final_offset = group->GetTransform()->GetPosition() + shape_offset;
-
-    for(auto& path : paths){
-      auto path_index = static_cast<unsigned int>(std::find(paths.begin(), paths.end(), path) - paths.begin());
-
-      BezierVertData signal_path_data;
-      signal_path_data.p_group_ind = i;
-      signal_path_data.path_ind = path_index;
-      signal_path_data.closed = path->IsClosed();
-      auto bezier_verts = path->GetBezierVertices();
-      for(auto& vert : bezier_verts){
-        auto tmp_vert = Normalize<glm::vec2>(vert + glm::vec2(final_offset.x, final_offset.y));
-        signal_path_data.verts.emplace_back(tmp_vert.x);
-        signal_path_data.verts.emplace_back(tmp_vert.y);
-        signal_path_data.verts.emplace_back(0);
-      }
-
-      if(path->IsClosed())
-        signal_path_data.tri_index = path->GetTriIndexList();
-
-      if (path->HasKeyframe()) {
-        unsigned int layer_ind = data->GetLayerInd() - 1;
-        unsigned int inpos = 0, outpos = 0;
-        AniInfoManager::GetIns().GetLayerInandOutPos(layer_ind, inpos, outpos);
-        auto linear_map = path->GetLinearMap();
-
-        for (auto& el : linear_map) {
-          std::vector<float> tmp_float_arr;
-          auto dym_verts = el.second;
-          for (auto& vert : dym_verts) {
-            auto tmp_vert = Normalize<glm::vec2>(vert + glm::vec2(final_offset.x, final_offset.y));
-            tmp_float_arr.emplace_back(tmp_vert.x);
-            tmp_float_arr.emplace_back(tmp_vert.y);
-            tmp_float_arr.emplace_back(0);
-          }
-          signal_path_data.linear_verts[el.first] = tmp_float_arr;
-        }
-        auto tmp_path_data = signal_path_data.linear_verts;
-        for (auto i = inpos; i <= outpos; i++) {
-          if (!tmp_path_data.count(i) && i < tmp_path_data.begin()->first)
-            signal_path_data.linear_verts[i] = tmp_path_data.begin()->second;
-          else if (!tmp_path_data.count(i) && i > tmp_path_data.rbegin()->first)
-            signal_path_data.linear_verts[i] = tmp_path_data.rbegin()->second;
-        }
-      }
-
-      if (path->IsClosed() && path->HasKeyframe()) {
-        signal_path_data.linear_trig = path->GetTrigIndexMap();
-      }
-
-      bezier_vert_data_.emplace_back(signal_path_data);
+	  auto group = shape_groups[i];
+    if (!group->HasChildGroups()) {
+      std::vector<BezierVertData> vert_data;
+      GenerateVertCacheData(i, 0, group, shape_offset, vert_data);
+      bezier_vert_data_.insert(bezier_vert_data_.end(), vert_data.begin(), vert_data.end());
     }
+    else {
+      auto tmp_offset = group->GetTransform()->GetOrigPosition() - group->GetTransform()->GetAnchorPos() + shape_offset;
+      auto child_groups = group->GetChildGroups();
+      for (auto j = 0; j < child_groups.size(); j++) {
+        auto child_group = child_groups[j];
+        std::vector<BezierVertData> vert_data;
+        GenerateVertCacheData(i, j, child_group, tmp_offset, vert_data);
+        bezier_vert_data_.insert(bezier_vert_data_.end(), vert_data.begin(), vert_data.end());
+      }
+    }
+  }
+}
+
+void VerticesRenderData::GenerateVertCacheData(unsigned int p_ind, unsigned int c_ind, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset, std::vector<BezierVertData>& vert_data) {
+  auto paths = group->GetContents()->GetPaths();
+  auto final_offset = group->GetTransform()->GetPosition() + parent_offset;
+  for (auto i = 0; i < paths.size(); i++) {
+    BezierVertData signal_path_data;
+    signal_path_data.p_group_ind = p_ind;
+    signal_path_data.c_group_ind = c_ind;
+    signal_path_data.path_ind = i;
+    signal_path_data.closed = paths[i]->IsClosed();
+    auto bezier_verts = paths[i]->GetBezierVertices();
+    for (auto& vert : bezier_verts) {
+      auto tmp_vert = Normalize<glm::vec2>(vert + glm::vec2(final_offset.x, final_offset.y));
+      signal_path_data.verts.emplace_back(tmp_vert.x);
+      signal_path_data.verts.emplace_back(tmp_vert.y);
+      signal_path_data.verts.emplace_back(0);
+    }
+
+    if (paths[i]->IsClosed())
+      signal_path_data.tri_index = paths[i]->GetTriIndexList();
+
+    if (paths[i]->HasKeyframe()) {
+      unsigned int inpos = 0, outpos = 0;
+      AniInfoManager::GetIns().GetLayerInandOutPos(layer_ind_, inpos, outpos);
+      auto linear_map = paths[i]->GetLinearMap();
+
+      for (auto& el : linear_map) {
+        std::vector<float> tmp_float_arr;
+        auto dym_verts = el.second;
+        for (auto& vert : dym_verts) {
+          auto tmp_vert = Normalize<glm::vec2>(vert + glm::vec2(final_offset.x, final_offset.y));
+          tmp_float_arr.emplace_back(tmp_vert.x);
+          tmp_float_arr.emplace_back(tmp_vert.y);
+          tmp_float_arr.emplace_back(0);
+        }
+        signal_path_data.linear_verts[el.first] = tmp_float_arr;
+      }
+      auto tmp_path_data = signal_path_data.linear_verts;
+      for (auto i = inpos; i <= outpos; i++) {
+        if (!tmp_path_data.count(i) && i < tmp_path_data.begin()->first)
+          signal_path_data.linear_verts[i] = tmp_path_data.begin()->second;
+        else if (!tmp_path_data.count(i) && i > tmp_path_data.rbegin()->first)
+          signal_path_data.linear_verts[i] = tmp_path_data.rbegin()->second;
+      }
+    }
+
+    if (paths[i]->IsClosed() && paths[i]->HasKeyframe()) {
+      signal_path_data.linear_trig = paths[i]->GetTrigIndexMap();
+    }
+
   }
 }
 
@@ -88,9 +98,9 @@ bool VerticesRenderData::GetVertices(unsigned int path_ind, std::vector<float>& 
     return true;
 }
 
-bool VerticesRenderData::GetVertices(unsigned int group_ind, unsigned int path_ind, std::vector<float>& verts){
+bool VerticesRenderData::GetVertices(unsigned int p_group_ind, unsigned int c_group_ind, unsigned int path_ind, std::vector<float>& verts){
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data){
-    return (group_ind == data.group_ind && path_ind == data.path_ind);
+    return (p_group_ind == data.p_group_ind && c_group_ind == data.c_group_ind && path_ind == data.path_ind);
   });
   if(it == bezier_vert_data_.end()) return false;
   verts = bezier_vert_data_[it - bezier_vert_data_.begin()].verts;
@@ -106,16 +116,16 @@ bool VerticesRenderData::GetTriangleIndex(unsigned int ind, std::vector<unsigned
 
 bool VerticesRenderData::GetTriangleIndex(unsigned int group_ind, unsigned int path_ind, std::vector<unsigned int>& trigs) {
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data) {
-    return (group_ind == data.group_ind && path_ind == data.path_ind);
+    return (group_ind == data.p_group_ind && path_ind == data.path_ind);
   });
   if (it == bezier_vert_data_.end()) return false;
   trigs = bezier_vert_data_[it - bezier_vert_data_.begin()].tri_index;
   return true;
 }
 
-bool VerticesRenderData::GetBezierVertData(unsigned int group_ind, unsigned int path_ind, BezierVertData& vert_data){
+bool VerticesRenderData::GetBezierVertData(unsigned int p_group_ind, unsigned int c_group_ind,unsigned int path_ind, BezierVertData& vert_data){
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data) {
-    return (group_ind == data.group_ind && path_ind == data.path_ind);
+    return (p_group_ind == data.p_group_ind&& c_group_ind == data.c_group_ind&& path_ind == data.path_ind);
   });
   if (it == bezier_vert_data_.end()) return false;
   vert_data = bezier_vert_data_[it - bezier_vert_data_.begin()];

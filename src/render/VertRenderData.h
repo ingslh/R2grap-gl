@@ -25,17 +25,22 @@ class VerticesRenderData : public BaseRenderData{
 public:
   explicit VerticesRenderData(const LayersInfo* layer);
   bool GetVertices(unsigned int ind_path, std::vector<float>& vert_info);
-  bool GetVertices(unsigned int group_ind, unsigned int path_ind, std::vector<float>& vert_info);
+  bool GetVertices(unsigned int p_group_ind, unsigned int c_group_ind ,unsigned int path_ind, std::vector<float>& vert_info);
   bool GetTriangleIndex(unsigned int ind, std::vector<unsigned int>& trigs);
   bool GetTriangleIndex(unsigned int group_ind, unsigned int path_ind, std::vector<unsigned int>& trigs);
-  bool GetBezierVertData(unsigned int group_ind, unsigned int path_ind, BezierVertData& vert_data);
+  bool GetBezierVertData(unsigned int p_group_ind, unsigned int c_group_ind, unsigned int path_ind, BezierVertData& vert_data);
 
-  unsigned int GetPathsCount() const { return paths_count_; }
+  //unsigned int GetPathsCount() const { return paths_count_; }
   template<typename T>
   T Normalize(const T& pos); 
 
 private:
+  void GenerateVertCacheData(unsigned int p_ind, unsigned int c_ind ,const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset,std::vector<BezierVertData>& vert_data);
+
+private:
   std::vector<BezierVertData> bezier_vert_data_;//Index is group index
   unsigned int paths_count_;
+  unsigned int layer_ind_;
 };
+
 }
