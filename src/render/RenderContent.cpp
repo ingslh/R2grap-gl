@@ -133,7 +133,8 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     auto groups = render_content->GetShapeGroups();
 
     for (unsigned int j = 0; j < groups.size(); j++) {
-      RecusUpdateTransMat(groups[j], { layer_ind, start_pos, end_pos }, { j }, render_content, trans_render_data);
+      std::vector<unsigned int> indexs(j);
+      RecusUpdateTransMat(groups[j], { layer_ind, start_pos, end_pos }, indexs, render_content, trans_render_data);
     }
   }
 }
@@ -142,10 +143,10 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
   const std::shared_ptr<RenderContent> content, const TransformCurve& parent_curve) {
   auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), info.layer_ind, info.in_pos, info.out_pos);
   auto group_curve = group_contents_trans->GetOrigTransCurve();
+  group_contents_trans->SetParentLayerInd(info.layer_ind - 1);
   group_curve = AddTransCurve(group_curve, const_cast<TransformCurve&>(parent_curve), true);
 
-  if (group->HasChildGroups()) {
-    group_contents_trans->SetParentLayerInd(info.layer_ind - 1); // need to update
+  if (group->HasChildGroups()) {// need to update
     auto child_groups = group->GetChildGroups();
     for (auto i = 0; i < child_groups.size(); ++i) {
       indexs.push_back(i);

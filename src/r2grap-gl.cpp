@@ -23,7 +23,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
 
 int main()
 {
-  JsonReader reader("../assets/designers.json");
+  JsonReader reader("../assets/thinking.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 
@@ -91,6 +91,7 @@ int main()
   unsigned int index = 0;
   for (auto content_ind = 0; content_ind < contents.size(); content_ind++) {
     auto group_data = contents[content_ind]->GetLayerData().group_data;
+    
     for (auto group_ind = 0; group_ind < group_data.size(); group_ind++) {
 
       if (group_data[group_ind].child_trans.size()) continue;
