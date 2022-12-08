@@ -10,32 +10,34 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
   layer_ind_ = data->GetLayerInd() - 1;
 
   for(auto i = 0; i < shape_groups.size(); i++){
-	  auto group = shape_groups[i];
-    if (!group->HasChildGroups()) {
-      std::vector<BezierVertData> vert_data;
-      GenerateVertCacheData(i, 0, group, shape_offset, vert_data);
-      bezier_vert_data_.insert(bezier_vert_data_.end(), vert_data.begin(), vert_data.end());
-    }
-    else {
-      auto tmp_offset = group->GetTransform()->GetOrigPosition() - group->GetTransform()->GetAnchorPos() + shape_offset;
-      auto child_groups = group->GetChildGroups();
-      for (auto j = 0; j < child_groups.size(); j++) {
-        auto child_group = child_groups[j];
-        std::vector<BezierVertData> vert_data;
-        GenerateVertCacheData(i, j, child_group, tmp_offset, vert_data);
-        bezier_vert_data_.insert(bezier_vert_data_.end(), vert_data.begin(), vert_data.end());
-      }
-    }
+    std::vector<unsigned int> indexs = { (unsigned int)i };
+    RecusCalcBezierVertData(shape_groups[i], indexs, shape_offset);
   }
 }
 
-void VerticesRenderData::GenerateVertCacheData(unsigned int p_ind, unsigned int c_ind, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset, std::vector<BezierVertData>& vert_data) {
+void VerticesRenderData::RecusCalcBezierVertData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, glm::vec3 parent_offset) {
+  if (group->HasChildGroups()) {
+    auto child_groups = group->GetChildGroups();
+    for (auto i = 0; i < child_groups.size(); i++) {
+      auto offset = group->GetTransform()->GetOrigPosition() - group->GetTransform()->GetAnchorPos() + parent_offset;
+      auto cur_inds = indexs;
+      cur_inds.push_back(i);
+      RecusCalcBezierVertData(child_groups[i], cur_inds, offset);
+    }
+  }
+  else {
+    std::vector<BezierVertData> vert_data;
+    GenerateVertCacheData(indexs, group, parent_offset, vert_data);
+    bezier_vert_data_.insert(bezier_vert_data_.end(), vert_data.begin(), vert_data.end());
+  }
+}
+
+void VerticesRenderData::GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset, std::vector<BezierVertData>& vert_data) {
   auto paths = group->GetContents()->GetPaths();
   auto final_offset = group->GetTransform()->GetPosition() + parent_offset;
   for (auto i = 0; i < paths.size(); i++) {
     BezierVertData signal_path_data;
-    signal_path_data.p_group_ind = p_ind;
-    signal_path_data.c_group_ind = c_ind;
+    signal_path_data.group_indexs = indexs;
     signal_path_data.path_ind = i;
     signal_path_data.closed = paths[i]->IsClosed();
     auto bezier_verts = paths[i]->GetBezierVertices();
@@ -98,9 +100,9 @@ bool VerticesRenderData::GetVertices(unsigned int path_ind, std::vector<float>& 
     return true;
 }
 
-bool VerticesRenderData::GetVertices(unsigned int p_group_ind, unsigned int c_group_ind, unsigned int path_ind, std::vector<float>& verts){
+bool VerticesRenderData::GetVertices(const std::vector<unsigned int>& indexs, unsigned int path_ind, std::vector<float>& verts){
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data){
-    return (p_group_ind == data.p_group_ind && c_group_ind == data.c_group_ind && path_ind == data.path_ind);
+    return (indexs == data.group_indexs && path_ind == data.path_ind);
   });
   if(it == bezier_vert_data_.end()) return false;
   verts = bezier_vert_data_[it - bezier_vert_data_.begin()].verts;
@@ -114,18 +116,18 @@ bool VerticesRenderData::GetTriangleIndex(unsigned int ind, std::vector<unsigned
   return true;
 }
 
-bool VerticesRenderData::GetTriangleIndex(unsigned int group_ind, unsigned int path_ind, std::vector<unsigned int>& trigs) {
+bool VerticesRenderData::GetTriangleIndex(const std::vector<unsigned int>& indexs, unsigned int path_ind, std::vector<unsigned int>& trigs) {
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data) {
-    return (group_ind == data.p_group_ind && path_ind == data.path_ind);
+    return (indexs == data.group_indexs && path_ind == data.path_ind);
   });
   if (it == bezier_vert_data_.end()) return false;
   trigs = bezier_vert_data_[it - bezier_vert_data_.begin()].tri_index;
   return true;
 }
 
-bool VerticesRenderData::GetBezierVertData(unsigned int p_group_ind, unsigned int c_group_ind,unsigned int path_ind, BezierVertData& vert_data){
+bool VerticesRenderData::GetBezierVertData(const std::vector<unsigned int>& indexs, unsigned int path_ind, BezierVertData& vert_data){
   auto it = std::find_if(bezier_vert_data_.begin(), bezier_vert_data_.end(), [&](const BezierVertData& data) {
-    return (p_group_ind == data.p_group_ind&& c_group_ind == data.c_group_ind&& path_ind == data.path_ind);
+    return (indexs == data.group_indexs && path_ind == data.path_ind);
   });
   if (it == bezier_vert_data_.end()) return false;
   vert_data = bezier_vert_data_[it - bezier_vert_data_.begin()];

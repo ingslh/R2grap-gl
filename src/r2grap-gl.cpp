@@ -23,7 +23,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
 
 int main()
 {
-  JsonReader reader("../assets/thinking.json");
+  JsonReader reader("../assets/designers.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 
@@ -92,6 +92,9 @@ int main()
   for (auto content_ind = 0; content_ind < contents.size(); content_ind++) {
     auto group_data = contents[content_ind]->GetLayerData().group_data;
     for (auto group_ind = 0; group_ind < group_data.size(); group_ind++) {
+
+      if (group_data[group_ind].child_trans.size()) continue;
+
       auto path_data = group_data[group_ind].GetPathData();
       for(auto path_ind = 0; path_ind < path_data.size(); path_ind++){
         if(!path_data[path_ind].has_keyframe){
@@ -183,6 +186,7 @@ int main()
         
         auto group_data = layer_data.group_data;
         for(auto group_ind = 0; group_ind < group_data.size(); group_ind++){
+          if (group_data[group_ind].child_trans.size()) continue;
 
 					if(!layer_data.groups_no_keyframe){
 						auto group_trans_mat = group_data[group_ind].trans[played];

@@ -16,43 +16,40 @@ RenderContent::RenderContent(LayersInfo* layer_info){
 	bool no_group_keyframe = true;
   for(auto& group : shape_groups_){
     unsigned int group_index = std::find(shape_groups_.begin(), shape_groups_.end(), group) - shape_groups_.begin();
-    if (!group->HasChildGroups()) {
-      GroupData group_data;
-      no_group_keyframe &= group->GetTransform()->IsNoKeyframe();
-
-      auto color_infos = layer_contents_color_->GetColor(group_index, 0);
-      LoadColorContent(color_infos, group_data);
-
-      auto path_num = group->GetContents()->GetPathsNum();
-      for (auto i = 0; i < path_num; i++) {
-        BezierVertData vert_data;
-        layer_contents_path_->GetBezierVertData(group_index, 0, i, vert_data);
-        LoadPathContent(vert_data, group_data);
-      }
-      layer_data_.group_data.emplace_back(group_data);
-    }
-    else {
-      auto child_groups = group->GetChildGroups();
-      for (auto c_ind = 0; c_ind < child_groups.size(); c_ind++) {
-        auto child_group = child_groups[c_ind];
-
-        GroupData group_data;
-        no_group_keyframe &= child_group->GetTransform()->IsNoKeyframe();
-
-        auto color_infos = layer_contents_color_->GetColor(group_index, c_ind);
-        LoadColorContent(color_infos, group_data);
-
-        auto path_num = child_group->GetContents()->GetPathsNum();
-        for (auto i = 0; i < path_num; i++) {
-          BezierVertData vert_data;
-          layer_contents_path_->GetBezierVertData(group_index, c_ind, i, vert_data);
-          LoadPathContent(vert_data, group_data);
-        }
-        layer_data_.group_data[group_index].child_trans.emplace_back(group_data);
-      }
-    }
+    std::vector<unsigned int> indexs = { group_index };
+    GroupData group_data;
+    RecusCalcRenderData(group, indexs, group_data, no_group_keyframe);
+    layer_data_.group_data.push_back(group_data);
   }
 	layer_data_.groups_no_keyframe = no_group_keyframe;
+}
+
+void RenderContent::RecusCalcRenderData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, GroupData& group_data, bool& no_keyframe) {
+  if (group->HasChildGroups()) {
+    no_keyframe &= group->GetTransform()->IsNoKeyframe();
+
+    auto child_groups = group->GetChildGroups();
+    for (auto i = 0; i < child_groups.size(); i++) {
+      auto cur_inds = indexs;
+      cur_inds.push_back(i);
+      GroupData child_group_data;
+      RecusCalcRenderData(child_groups[i], cur_inds, child_group_data, no_keyframe);
+      group_data.child_trans.push_back(child_group_data);
+    }
+  }
+  else {
+    no_keyframe &= group->GetTransform()->IsNoKeyframe();
+
+    auto color_infos = layer_contents_color_->GetColor(indexs);
+    LoadColorContent(color_infos, group_data);
+
+    auto path_num = group->GetContents()->GetPathsNum();
+    for (auto path_ind = 0; path_ind < path_num; path_ind++) {
+      BezierVertData vert_data;
+      layer_contents_path_->GetBezierVertData( indexs, path_ind, vert_data);
+      LoadPathContent(vert_data, group_data);
+    }
+  }
 }
 
 void RenderContent::LoadColorContent(const std::vector<ColorCacheData>& color_cache, GroupData& group) {
@@ -114,44 +111,6 @@ void RenderContent::GenerateGroupData(const std::shared_ptr<ShapeGroup> input, G
 }
 
 void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents){
-  auto add_trans_curve = [&](TransformCurve& curve1, TransformCurve& curve2 ,bool front_insert)->TransformCurve{
-    for(auto& el : curve2){
-      if(curve1.count(el.first) == 0){
-        curve1[el.first] = el.second;
-      }else{
-        if(el.first == "Rotation"){
-          auto trans1 = std::get<1>(curve1[el.first]);
-          auto trans2 = std::get<1>(el.second);
-          if(front_insert){
-            trans1.insert(trans1.begin(),trans2.begin(),trans2.end());
-          }else{
-            trans1.insert(trans1.end(),trans2.begin(),trans2.end());
-          }
-          curve1[el.first] = trans1;
-        }else{
-          auto trans1 = std::get<0>(curve1[el.first]);
-          auto trans2 = std::get<0>(el.second);
-          if(trans1.size() != trans2.size()) continue;
-          for(auto i = 0; i < trans1.size(); i++){
-            auto map1 = trans1[i];
-            auto map2 = trans2[i];
-            if(TransComp::adjustMaps(map1,map2)){
-              if(el.first == "Position")
-                TransComp::MapaddMap(map1,map2);
-              else if(el.first == "Scale"){
-                TransComp::MapmultiplyMap(map1,map2);
-                TransComp::MapdivideNum(map1,float(100));
-              }
-            }
-            trans1[i] = map1;
-          }
-          curve1[el.first] = trans1;
-        }
-      }
-    }
-    return curve1;
-  };
-  
   auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
   for(auto i = 0; i < contents.size(); i++){
     auto render_content = contents[i];
@@ -160,9 +119,9 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     TransformCurve tmp_curve;
     for(auto it = link_layers.rbegin(); it != link_layers.rend(); it++){
       auto link_trans_data = contents[*it]->GetTransRenderData()->GetOrigTransCurve();
-      tmp_curve = add_trans_curve(tmp_curve, link_trans_data, false); 
+      tmp_curve = AddTransCurve(tmp_curve, link_trans_data, false); 
     }
-    trans_render_data = add_trans_curve(trans_render_data, tmp_curve, true);
+    trans_render_data = AddTransCurve(trans_render_data, tmp_curve, true);
     render_content->GetTransRenderData()->SetTransCurve(trans_render_data);
     render_content->GetTransRenderData()->GenerateTransformMat();
     render_content->SetLayerData(render_content->GetTransRenderData()->GetTransMat());
@@ -172,31 +131,73 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     auto start_pos = render_content->GetLayerData().start_pos;
     auto end_pos = render_content->GetLayerData().end_pos;
     auto groups = render_content->GetShapeGroups();
-    for (auto j = 0; j < groups.size(); j++) {
-      auto group = groups[j];
-      auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), layer_ind, start_pos, end_pos);
-      auto group_curve = group_contents_trans->GetOrigTransCurve();
-      group_contents_trans->SetParentLayerInd(layer_ind - 1);
-      group_curve = add_trans_curve(group_curve, trans_render_data, true);
-      group_contents_trans->SetTransCurve(group_curve);
 
-      if (!group->HasChildGroups()) {
-        group_contents_trans->GenerateTransformMat();
-        render_content->SetGroupData(j, 0, group_contents_trans->GetTransMat());
+    for (unsigned int j = 0; j < groups.size(); j++) {
+      RecusUpdateTransMat(groups[j], { layer_ind, start_pos, end_pos }, { j }, render_content, trans_render_data);
+    }
+  }
+}
+
+void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs, 
+  const std::shared_ptr<RenderContent> content, const TransformCurve& parent_curve) {
+  auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), info.layer_ind, info.in_pos, info.out_pos);
+  auto group_curve = group_contents_trans->GetOrigTransCurve();
+  group_curve = AddTransCurve(group_curve, const_cast<TransformCurve&>(parent_curve), true);
+
+  if (group->HasChildGroups()) {
+    group_contents_trans->SetParentLayerInd(info.layer_ind - 1); // need to update
+    auto child_groups = group->GetChildGroups();
+    for (auto i = 0; i < child_groups.size(); ++i) {
+      indexs.push_back(i);
+      RecusUpdateTransMat(child_groups[i], info, indexs, content, group_curve);
+    }
+  }
+  else {
+    group_contents_trans->SetTransCurve(group_curve);
+    group_contents_trans->GenerateTransformMat();
+    content->SetGroupData(indexs, group_contents_trans->GetTransMat());
+  }
+}
+
+const TransformCurve& RenderContent::AddTransCurve(TransformCurve& curve1, TransformCurve& curve2, bool front_insert) {
+  for (auto& el : curve2) {
+    if (curve1.count(el.first) == 0) {
+      curve1[el.first] = el.second;
+    }
+    else {
+      if (el.first == "Rotation") {
+        auto trans1 = std::get<1>(curve1[el.first]);
+        auto trans2 = std::get<1>(el.second);
+        if (front_insert) {
+          trans1.insert(trans1.begin(), trans2.begin(), trans2.end());
+        }
+        else {
+          trans1.insert(trans1.end(), trans2.begin(), trans2.end());
+        }
+        curve1[el.first] = trans1;
       }
       else {
-        auto child_groups = group->GetChildGroups();
-        for (auto k = 0; k < child_groups.size(); k++) {
-          auto cg_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(child_groups[k].get(), layer_ind, start_pos, end_pos);
-          auto cg_group_curve = cg_contents_trans->GetOrigTransCurve();
-          cg_group_curve = add_trans_curve(cg_group_curve, group_curve, true);
-          cg_contents_trans->SetTransCurve(cg_group_curve);
-          cg_contents_trans->GenerateTransformMat();
-          render_content->SetGroupData(j, k, cg_contents_trans->GetTransMat());
+        auto trans1 = std::get<0>(curve1[el.first]);
+        auto trans2 = std::get<0>(el.second);
+        if (trans1.size() != trans2.size()) continue;
+        for (auto i = 0; i < trans1.size(); i++) {
+          auto map1 = trans1[i];
+          auto map2 = trans2[i];
+          if (TransComp::adjustMaps(map1, map2)) {
+            if (el.first == "Position")
+              TransComp::MapaddMap(map1, map2);
+            else if (el.first == "Scale") {
+              TransComp::MapmultiplyMap(map1, map2);
+              TransComp::MapdivideNum(map1, float(100));
+            }
+          }
+          trans1[i] = map1;
         }
+        curve1[el.first] = trans1;
       }
     }
   }
+  return curve1;
 }
 
 unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind){

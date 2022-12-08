@@ -115,12 +115,27 @@ public:
 		layer_data_.trans = trans_mat->trans;
 	}
 
-  void SetGroupData(unsigned int i, unsigned int j,TransMat* trans_mat) {
+  /*void SetGroupData(unsigned int i, unsigned int j,TransMat* trans_mat) {
     if (j == 0)
       layer_data_.group_data[i].trans = trans_mat->trans;
     else
       layer_data_.group_data[i].child_trans[j].trans = trans_mat->trans;
+  }*/
+
+  void SetGroupData(std::vector<unsigned int> indexs, TransMat* trans_mat) {
+    auto group_data = &layer_data_.group_data[indexs.front()];
+    for (auto ind = 1; ind < indexs.size(); ind++) {
+      group_data = &group_data->child_trans[indexs[ind]];
+    }
+    group_data->trans = trans_mat->trans;
   }
+
+ private:
+   struct LayerInOut {
+     unsigned int layer_ind;
+     float in_pos;
+     float out_pos;
+   };
 
 private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
@@ -129,7 +144,10 @@ private:
   void GenerateGroupData(const std::shared_ptr<ShapeGroup> input, GroupData& group);
   void LoadColorContent(const std::vector<ColorCacheData>& color_cache , GroupData& group);
   void LoadPathContent(const BezierVertData& vert_data, GroupData& group);
-  
+  void RecusCalcRenderData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, GroupData& group_data ,bool& no_keyframe);
+  static void RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs, 
+    const std::shared_ptr<RenderContent> content,const TransformCurve& parent_curve);
+  static const TransformCurve& AddTransCurve(TransformCurve& curve1, TransformCurve& curve2, bool front_insert);
   
 private:
   LayerData layer_data_;
