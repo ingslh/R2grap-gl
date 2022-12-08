@@ -133,7 +133,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     auto groups = render_content->GetShapeGroups();
 
     for (unsigned int j = 0; j < groups.size(); j++) {
-      std::vector<unsigned int> indexs(j);
+      std::vector<unsigned int> indexs = {j};
       RecusUpdateTransMat(groups[j], { layer_ind, start_pos, end_pos }, indexs, render_content, trans_render_data);
     }
   }
