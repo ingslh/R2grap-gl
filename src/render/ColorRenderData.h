@@ -39,8 +39,8 @@ struct ColorCacheData {
 };
 
 struct MulitColorData {
-  unsigned int first_ind;  //parent index
-  unsigned int second_ind; //child index
+  int first_ind;  //parent index
+  int second_ind; //child index
   std::vector<ColorCacheData> color_cache_data;
 };
 

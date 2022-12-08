@@ -15,60 +15,87 @@ RenderContent::RenderContent(LayersInfo* layer_info){
   shape_groups_ = layer_info->GetShapeGroup();
 	bool no_group_keyframe = true;
   for(auto& group : shape_groups_){
-    if (group->HasChildGroups()) continue;
-
-    GroupData group_data;
-		no_group_keyframe &= group->GetTransform()->IsNoKeyframe();
-
     unsigned int group_index = std::find(shape_groups_.begin(), shape_groups_.end(), group) - shape_groups_.begin();
-    auto color_infos = layer_contents_color_->GetColor(group_index, 0);
+    if (!group->HasChildGroups()) {
+      GroupData group_data;
+      no_group_keyframe &= group->GetTransform()->IsNoKeyframe();
 
-    for(auto& color_info : color_infos){
-      if(color_info.type == ColorDataType::t_cStroke){
-        StrokeData stroke(color_info.color, color_info.opacity, color_info.stroke_wid);
-        if(color_info.h_ckf)
-          stroke.trans_color = color_info.trans_color;
-        if(color_info.h_okf)
-          stroke.trans_opacity = color_info.trans_opacity;
-        if(color_info.h_skf)
-          stroke.trans_stroke_wid = color_info.trans_stroke_wid;
-        group_data.stroke = std::make_shared<StrokeData>(stroke);
+      auto color_infos = layer_contents_color_->GetColor(group_index, 0);
+      LoadColorContent(color_infos, group_data);
+
+      auto path_num = group->GetContents()->GetPathsNum();
+      for (auto i = 0; i < path_num; i++) {
+        BezierVertData vert_data;
+        layer_contents_path_->GetBezierVertData(group_index, 0, i, vert_data);
+        LoadPathContent(vert_data, group_data);
       }
-      else if(color_info.type == ColorDataType::t_cFill){
-        FillData fill(color_info.color, color_info.opacity);
-        if(color_info.h_ckf)
-          fill.trans_color = color_info.trans_color;
-        if(color_info.h_okf)
-          fill.trans_opacity = color_info.trans_opacity;
-        group_data.fill = std::make_shared<FillData>(fill);
+      layer_data_.group_data.emplace_back(group_data);
+    }
+    else {
+      auto child_groups = group->GetChildGroups();
+      for (auto c_ind = 0; c_ind < child_groups.size(); c_ind++) {
+        auto child_group = child_groups[c_ind];
+
+        GroupData group_data;
+        no_group_keyframe &= child_group->GetTransform()->IsNoKeyframe();
+
+        auto color_infos = layer_contents_color_->GetColor(group_index, c_ind);
+        LoadColorContent(color_infos, group_data);
+
+        auto path_num = child_group->GetContents()->GetPathsNum();
+        for (auto i = 0; i < path_num; i++) {
+          BezierVertData vert_data;
+          layer_contents_path_->GetBezierVertData(group_index, c_ind, i, vert_data);
+          LoadPathContent(vert_data, group_data);
+        }
+        layer_data_.group_data[group_index].child_trans.emplace_back(group_data);
       }
     }
-
-    auto path_num = group->GetContents()->GetPathsNum();
-    for(auto i = 0; i < path_num; i++){
-      BezierVertData vert_data;
-      layer_contents_path_->GetBezierVertData(group_index, i, vert_data);
-      PathData path_data;
-      path_data.closed = vert_data.closed;
-      path_data.has_keyframe = vert_data.linear_verts.size();
-      path_data.verts = vert_data.verts;
-
-      if(path_data.closed){
-        path_data.tri_ind = vert_data.tri_index;
-      }
-
-      if(path_data.has_keyframe){
-        path_data.trans_verts = vert_data.linear_verts;
-      }
-
-      if(path_data.closed && path_data.has_keyframe){
-        path_data.trans_tri_ind = vert_data.linear_trig;
-      }
-      group_data.paths.emplace_back(path_data);
-    }
-    layer_data_.group_data.emplace_back(group_data);
   }
 	layer_data_.groups_no_keyframe = no_group_keyframe;
+}
+
+void RenderContent::LoadColorContent(const std::vector<ColorCacheData>& color_cache, GroupData& group) {
+  for (auto& color_info : color_cache) {
+    if (color_info.type == ColorDataType::t_cStroke) {
+      StrokeData stroke(color_info.color, color_info.opacity, color_info.stroke_wid);
+      if (color_info.h_ckf)//color keyframe
+        stroke.trans_color = color_info.trans_color;
+      if (color_info.h_okf)//opacity keyframe
+        stroke.trans_opacity = color_info.trans_opacity;
+      if (color_info.h_skf)//stroke width keyframe
+        stroke.trans_stroke_wid = color_info.trans_stroke_wid;
+      group.stroke = std::make_shared<StrokeData>(stroke);
+    }
+    else if (color_info.type == ColorDataType::t_cFill) {
+      FillData fill(color_info.color, color_info.opacity);
+      if (color_info.h_ckf)
+        fill.trans_color = color_info.trans_color;
+      if (color_info.h_okf)
+        fill.trans_opacity = color_info.trans_opacity;
+      group.fill = std::make_shared<FillData>(fill);
+    }
+  }
+}
+
+void RenderContent::LoadPathContent(const BezierVertData& vert_data, GroupData& group) {
+  PathData path_data;
+  path_data.closed = vert_data.closed;
+  path_data.has_keyframe = vert_data.linear_verts.size();
+  path_data.verts = vert_data.verts;
+
+  if (path_data.closed) {
+    path_data.tri_ind = vert_data.tri_index;
+  }
+
+  if (path_data.has_keyframe) {
+    path_data.trans_verts = vert_data.linear_verts;
+  }
+
+  if (path_data.closed && path_data.has_keyframe) {
+    path_data.trans_tri_ind = vert_data.linear_trig;
+  }
+  group.paths.emplace_back(path_data);
 }
 
 unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents) {
@@ -136,27 +163,38 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
       tmp_curve = add_trans_curve(tmp_curve, link_trans_data, false); 
     }
     trans_render_data = add_trans_curve(trans_render_data, tmp_curve, true);
-
     render_content->GetTransRenderData()->SetTransCurve(trans_render_data);
     render_content->GetTransRenderData()->GenerateTransformMat();
     render_content->SetLayerData(render_content->GetTransRenderData()->GetTransMat());
 
 		if(render_content->GetLayerData().groups_no_keyframe) continue;
+    auto layer_ind = render_content->GetLayerData().index;
+    auto start_pos = render_content->GetLayerData().start_pos;
+    auto end_pos = render_content->GetLayerData().end_pos;
     auto groups = render_content->GetShapeGroups();
     for (auto j = 0; j < groups.size(); j++) {
       auto group = groups[j];
-      auto layer_ind = render_content->GetLayerData().index;
-      auto start_pos = render_content->GetLayerData().start_pos;
-      auto end_pos = render_content->GetLayerData().end_pos;
-
       auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), layer_ind, start_pos, end_pos);
       auto group_curve = group_contents_trans->GetOrigTransCurve();
       group_contents_trans->SetParentLayerInd(layer_ind - 1);
-			group_curve = add_trans_curve(group_curve, trans_render_data, true);
+      group_curve = add_trans_curve(group_curve, trans_render_data, true);
       group_contents_trans->SetTransCurve(group_curve);
 
-      group_contents_trans->GenerateTransformMat();
-      render_content->SetGroupData(j, group_contents_trans->GetTransMat());
+      if (!group->HasChildGroups()) {
+        group_contents_trans->GenerateTransformMat();
+        render_content->SetGroupData(j, 0, group_contents_trans->GetTransMat());
+      }
+      else {
+        auto child_groups = group->GetChildGroups();
+        for (auto k = 0; k < child_groups.size(); k++) {
+          auto cg_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(child_groups[k].get(), layer_ind, start_pos, end_pos);
+          auto cg_group_curve = cg_contents_trans->GetOrigTransCurve();
+          cg_group_curve = add_trans_curve(cg_group_curve, group_curve, true);
+          cg_contents_trans->SetTransCurve(cg_group_curve);
+          cg_contents_trans->GenerateTransformMat();
+          render_content->SetGroupData(j, k, cg_contents_trans->GetTransMat());
+        }
+      }
     }
   }
 }

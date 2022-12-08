@@ -113,13 +113,13 @@ void ColorRenderData::GenerateColorCacheData(const unsigned int ind, const std::
 }
 
 const std::vector<ColorCacheData>& ColorRenderData::GetColor(unsigned int parent_ind, unsigned int child_ind)const {
-  auto it = std::find_if(multi_color_data.begin(), multi_color_data.end(), [&](MulitColorData& cache) {
+  auto it = std::find_if(multi_color_data.begin(), multi_color_data.end(), [&](const MulitColorData& cache) {
     return cache.first_ind == parent_ind && cache.second_ind == child_ind;
   });
   if (it != multi_color_data.end())
     return it->color_cache_data;
   else
-    return std::vector<ColorCacheData>();
+    return std::move(std::vector<ColorCacheData>());
 }
 
 }

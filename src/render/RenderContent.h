@@ -115,8 +115,11 @@ public:
 		layer_data_.trans = trans_mat->trans;
 	}
 
-  void SetGroupData(unsigned int i, TransMat* trans_mat) {
-    layer_data_.group_data[i].trans = trans_mat->trans;
+  void SetGroupData(unsigned int i, unsigned int j,TransMat* trans_mat) {
+    if (j == 0)
+      layer_data_.group_data[i].trans = trans_mat->trans;
+    else
+      layer_data_.group_data[i].child_trans[j].trans = trans_mat->trans;
   }
 
 private:
@@ -124,6 +127,8 @@ private:
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroups()const { return shape_groups_; }
   void GenerateGroupData(const std::shared_ptr<ShapeGroup> input, GroupData& group);
+  void LoadColorContent(const std::vector<ColorCacheData>& color_cache , GroupData& group);
+  void LoadPathContent(const BezierVertData& vert_data, GroupData& group);
   
   
 private:

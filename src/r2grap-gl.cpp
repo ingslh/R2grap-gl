@@ -195,7 +195,6 @@ int main()
             else
               shader.setVec4("color", group_data[group_ind].fill->trans_color[played]);
           }
-          //need to add stroke
           if(group_data[group_ind].stroke){
             if(!group_data[group_ind].stroke->trans_color.size())
               shader.setVec4("color", group_data[group_ind].stroke->color);

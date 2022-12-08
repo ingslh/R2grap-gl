@@ -77,7 +77,7 @@ void VerticesRenderData::GenerateVertCacheData(unsigned int p_ind, unsigned int 
     if (paths[i]->IsClosed() && paths[i]->HasKeyframe()) {
       signal_path_data.linear_trig = paths[i]->GetTrigIndexMap();
     }
-
+    vert_data.emplace_back(signal_path_data);
   }
 }
 
