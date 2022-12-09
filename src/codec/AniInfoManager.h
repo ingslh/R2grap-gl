@@ -4,14 +4,6 @@
 
 namespace R2grap{
 
-struct TransformPorperty{
-	glm::vec2 anchor_pos;
-  glm::vec2 position;
-  glm::vec2 scale;
-  float rotation;
-  float opacity;
-};
-
 class Transform;
 class AniInfoManager{
 public:
@@ -24,6 +16,7 @@ public:
 
   void SetLayersLinkMap(const std::map<unsigned int, std::vector<unsigned int>>& link_map);
   void SetLayerTransform(unsigned int ind, std::shared_ptr<Transform> transform);
+	void SetGroupsTransform(unsigned int lay_ind, const std::vector<unsigned int>& group_inds, std::shared_ptr<Transform> transform);
   void AppendLayerInandOut(unsigned int ind, unsigned int in, unsigned int out);
 
   glm::vec2 GetTransPos(unsigned int ind)const {return layers_transform_map_.at(ind).position;}
@@ -38,6 +31,21 @@ public:
   void GetLayerInandOutPos(const unsigned int ind, unsigned int& in, unsigned int& out);
 
 private:
+	struct TransformPorperty{
+			glm::vec2 anchor_pos;
+			glm::vec2 position;
+			glm::vec2 scale;
+			float rotation;
+			float opacity;
+	};
+
+	struct GroupTrans{
+			unsigned int layer_ind;
+			std::vector<unsigned int> group_inds;
+			TransformPorperty property;
+	};
+
+private:
   unsigned int width_;
   unsigned int height_;
   unsigned int frame_rate_;
@@ -46,5 +54,6 @@ private:
   std::map<unsigned int, std::vector<unsigned int>> layers_link_map_;
   std::map<unsigned int, TransformPorperty> layers_transform_map_;
   std::map<unsigned int, std::pair<unsigned int, unsigned int>> layers_inout_map_;
+	std::vector<GroupTrans> groups_transform_list_;
 };
 }

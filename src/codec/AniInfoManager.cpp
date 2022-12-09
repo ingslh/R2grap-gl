@@ -11,7 +11,22 @@ namespace R2grap{
     property.rotation = transform->GetRotation();
     property.opacity = transform->GetOpacity();
     layers_transform_map_[ind] = property;
-  } 
+  }
+
+	void AniInfoManager::SetGroupsTransform(unsigned int lay_ind, const std::vector<unsigned int> &group_inds,
+																					std::shared_ptr<Transform> transform) {
+		GroupTrans group_trans;
+		group_trans.layer_ind = lay_ind;
+		group_trans.group_inds = group_inds;
+		TransformPorperty property;
+		property.anchor_pos = glm::vec2(transform->GetAnchorPos().x, transform->GetAnchorPos().y);
+		property.position = glm::vec2(transform->GetPosition().x, transform->GetPosition().y);
+		property.scale = glm::vec2(transform->GetScale().x, transform->GetScale().y);
+		property.rotation = transform->GetRotation();
+		property.opacity = transform->GetOpacity();
+		group_trans.property = property;
+		groups_transform_list_.emplace_back(group_trans);
+	}
 
   void AniInfoManager::SetBasicInfo(nlohmann::json& json) {
     width_ = json["width"].get<unsigned int>();

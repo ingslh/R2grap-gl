@@ -32,7 +32,9 @@ blend_mode_(json["Blend Mode"]), transform_(std::make_shared<Transform>(json["Tr
   if(has_child_groups(json["Contents"])){
     auto contents = json["Contents"].items();
     for(auto& el : contents){
-      child_groups_.emplace_back(std::make_shared<ShapeGroup>(el.value()));
+			auto child_group = std::make_shared<ShapeGroup>(el.value());
+			child_group->SetParent(std::shared_ptr<ShapeGroup>(this));
+      child_groups_.emplace_back(child_group);
     }
   }else
     contents_= std::make_shared<GroupContents>(json["Contents"]);
