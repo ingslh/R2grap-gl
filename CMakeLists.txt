@@ -8,12 +8,8 @@ project(R2grap-gl)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(BASE
-    src/base/BezierGen.hpp
-    src/base/Polygon.hpp
-    src/base/KeyframeGen.hpp
-    src/base/TransComp.hpp
-	src/base/JsonConver.hpp
+file(GLOB BASE CONFIGURE_DEPENDS
+    src/base/*.hpp
 )
 
 set(SHADER
