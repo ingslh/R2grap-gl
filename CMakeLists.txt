@@ -8,8 +8,12 @@ project(R2grap-gl)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB BASE CONFIGURE_DEPENDS
-    src/base/*.hpp
+set(BASE
+    src/base/BezierGen.hpp
+    src/base/JsonConver.hpp
+    src/base/KeyframeGen.hpp
+    src/base/Polygon.hpp
+    src/base/TransComp.hpp
 )
 
 set(SHADER
@@ -23,7 +27,8 @@ set(CODEC
     src/codec/AniInfoManager.cpp
     src/codec/FillInfo.h
     src/codec/PathInfo.h
-	  src/codec/StrokeInfo.h
+    src/codec/PathInfo.cpp
+    src/codec/StrokeInfo.h
     src/codec/LayersInfo.h
     src/codec/LayersInfo.cpp
     src/codec/Transform.h
@@ -32,7 +37,7 @@ set(CODEC
     src/codec/LinkLayer.cpp
     src/codec/JsonReader.h
     src/codec/JsonReader.cpp
-)
+        src/codec/FillInfo.cpp src/codec/StrokeInfo.cpp)
 
 set(RENDER
     src/render/BaseRenderData.h
@@ -46,6 +51,8 @@ set(RENDER
     src/render/TransRenderData.cpp
     src/render/VertRenderData.h
     src/render/VertRenderData.cpp
+    src/render/PathRenderData.h
+    src/render/PathRenderData.cpp
 )
 
 set(MAIN src/r2grap-gl.cpp)

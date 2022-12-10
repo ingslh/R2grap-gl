@@ -35,7 +35,7 @@ unsigned int JsonReader::getLayersCount(){
 }
 
 std::shared_ptr<LayersInfo> JsonReader::GetLayersInfo(unsigned int ind){
-  if(ind < layers_.size() && layers_.size())
+  if(ind < layers_.size() && !layers_.empty())
     return layers_[ind];
   else
     return nullptr;

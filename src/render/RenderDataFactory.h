@@ -44,13 +44,13 @@ public:
 
   VerticesRenderDataPtr CreateVerticesData(const LayersInfo* layer){
     return VerticesRenderDataPtr(render_data_factory_->CreateVerticesData(layer), [=](VerticesRenderData *data){
-      render_data_factory_->ReleaseRenderData(data);
+      render_data_factory_->ReleaseRenderData((BaseRenderData*)data);
     });
   }
 
   ColorRenderDataPtr CreateColorData(const LayersInfo* layer){
     return ColorRenderDataPtr(render_data_factory_->CreateColorData(layer), [=](ColorRenderData *data){
-      render_data_factory_->ReleaseRenderData(data);
+      render_data_factory_->ReleaseRenderData((BaseRenderData*)data);
     });
   }
 

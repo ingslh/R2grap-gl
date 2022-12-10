@@ -25,8 +25,8 @@ Transform::Transform(const nlohmann::json& transform, bool IsShapeTransform, int
 
   for (auto& el : transform.items()) {
     ReadProperty(el.key(), el.value());
-    
-    KeyframeGen keyframegen(el.key(),el.value(), PropertyType);
+    auto frame_rate = AniInfoManager::GetIns().GetFrameRate();
+    KeyframeGen keyframegen(el.key(),el.value(), PropertyType, frame_rate);
     auto pair = keyframegen.GetKeyframePair();
     if(pair != nullptr){
       keyframe_data_[pair->first] = pair->second;

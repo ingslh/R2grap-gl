@@ -6,7 +6,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <variant>
-#include "AniInfoManager.h"
+
 
 namespace R2grap{
 
@@ -36,8 +36,7 @@ typedef std::map<std::string, std::variant<VectorKeyFrames, ScalarKeyFrames>> Ke
 
 class KeyframeGen{
 public:
-
-  KeyframeGen(const std::string& propname, const nlohmann::json& transform, const std::function<DimensionType(std::string)>& valueType){
+  KeyframeGen(const std::string& propname, const nlohmann::json& transform, const std::function<DimensionType(std::string)>& valueType, unsigned int frame_rate){
     if(valueType(propname) == t_NoFind) return;
     
     bool is_vector = (valueType(propname) == t_Vector);
@@ -46,14 +45,13 @@ public:
     if(cur_property.is_object()){
       VectorKeyFrames vector_keyframe;
       ScalarKeyFrames scalar_keyframe;
-      auto frameRate = AniInfoManager::GetIns().GetFrameRate();
       for(auto it = cur_property.begin(); it != cur_property.end(); ++it){
         if (it.key().substr(0, 5) != "Curve") continue;
         auto lastkeyValue = it.value()["lastkeyValue"];
-        float lastkeyTime = static_cast<float>(it.value()["lastkeyTime"]) * frameRate;
+        float lastkeyTime = static_cast<float>(it.value()["lastkeyTime"]) * frame_rate;
 
         auto keyValue = it.value()["keyValue"];
-        float keyTime = static_cast<float>(it.value()["keyTime"]) * frameRate;
+        float keyTime = static_cast<float>(it.value()["keyTime"]) * frame_rate;
 
         if(is_vector){
           auto vector_lastkeyvalue = lastkeyValue.size() == 3 ? glm::vec3(lastkeyValue[0], lastkeyValue[1], lastkeyValue[2]) : 

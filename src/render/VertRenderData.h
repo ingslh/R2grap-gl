@@ -21,6 +21,8 @@ struct BezierVertData{
   std::map<unsigned int, std::vector<unsigned int>> linear_trig;
 };
 
+class LayersInfo;
+class ShapeGroup;
 class VerticesRenderData : public BaseRenderData{
 public:
   explicit VerticesRenderData(const LayersInfo* layer);
@@ -36,7 +38,7 @@ public:
 
 private:
   void GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset,std::vector<BezierVertData>& vert_data);
-  void RecusCalcBezierVertData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, glm::vec3 parent_offset);
+  void RecusCalcBezierVertData(std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, glm::vec3 parent_offset);
 
 private:
   std::vector<BezierVertData> bezier_vert_data_;//Index is group index

@@ -1,4 +1,5 @@
 #pragma once
+#include "Transform.h"
 #include "BaseRenderData.h"
 #include "LayersInfo.h"
 #include <vector>
@@ -42,6 +43,8 @@ struct MulitColorData {
   std::vector<ColorCacheData> color_cache_data;
 };
 
+class ShapeGroup;
+class LayersInfo;
 class ColorRenderData : public R2grap::BaseRenderData{
 public:
   ColorRenderData(const LayersInfo* layer);

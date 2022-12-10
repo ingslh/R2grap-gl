@@ -94,7 +94,7 @@ int main()
     
     for (auto group_ind = 0; group_ind < group_data.size(); group_ind++) {
 
-      if (group_data[group_ind].child_trans.size()) continue;
+      if (group_data[group_ind].child_groups.size()) continue;
 
       auto path_data = group_data[group_ind].GetPathData();
       for(auto path_ind = 0; path_ind < path_data.size(); path_ind++){
@@ -187,7 +187,7 @@ int main()
         
         auto group_data = layer_data.group_data;
         for(auto group_ind = 0; group_ind < group_data.size(); group_ind++){
-          if (group_data[group_ind].child_trans.size()) continue;
+          if (group_data[group_ind].child_groups.size()) continue;
 
 					if(!layer_data.groups_no_keyframe){
 						auto group_trans_mat = group_data[group_ind].trans[played];

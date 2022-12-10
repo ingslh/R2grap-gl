@@ -1,12 +1,14 @@
 #pragma once
+#include "Transform.h"
 #include "RenderDataFactory.h"
 #include "BaseRenderData.h"
 #include "LayersInfo.h"
-#include "Transform.h"
 #include <glm/glm.hpp>
 #include <map>
 
 namespace R2grap{
+class TransMat;
+class Transform;
 class TransformRenderData : public BaseRenderData{
 public:
   TransformRenderData(const LayersInfo* layer);

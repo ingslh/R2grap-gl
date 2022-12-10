@@ -78,7 +78,7 @@ struct GroupData {
 
   std::vector<glm::mat4> trans; //Index is frameNum
 
-  std::vector<GroupData> child_trans;
+  std::vector<GroupData> child_groups;
 
   const std::vector<PathData>& GetPathData() const {return paths;}
 };
@@ -96,7 +96,11 @@ struct LayerData{
 
   const std::vector<GroupData>& GetGroupData() const { return group_data; }
 };
-
+class LayersInfo;
+class TransMat;
+class ShapeGroup;
+class BezierVertData;
+class	ColorCacheData;
 class RenderContent{
 public:
   RenderContent(LayersInfo* layer_info);
@@ -109,11 +113,7 @@ public:
 
   const LayerData& GetLayerData()const {return layer_data_;}
 
-	void SetLayerData(TransMat* trans_mat){
-		layer_data_.start_pos = trans_mat->clip_start;
-		layer_data_.end_pos = trans_mat->clip_end;
-		layer_data_.trans = trans_mat->trans;
-	}
+	void SetLayerData(TransMat* trans_mat);
 
   /*void SetGroupData(unsigned int i, unsigned int j,TransMat* trans_mat) {
     if (j == 0)
@@ -122,13 +122,7 @@ public:
       layer_data_.group_data[i].child_trans[j].trans = trans_mat->trans;
   }*/
 
-  void SetGroupData(std::vector<unsigned int> indexs, TransMat* trans_mat) {
-    auto group_data = &layer_data_.group_data[indexs.front()];
-    for (auto ind = 1; ind < indexs.size(); ind++) {
-      group_data = &group_data->child_trans[indexs[ind]];
-    }
-    group_data->trans = trans_mat->trans;
-  }
+  void SetGroupData(std::vector<unsigned int> indexs, TransMat* trans_mat);
 
  private:
    struct LayerInOut {
@@ -141,7 +135,6 @@ private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroups()const { return shape_groups_; }
-  void GenerateGroupData(const std::shared_ptr<ShapeGroup> input, GroupData& group);
   void LoadColorContent(const std::vector<ColorCacheData>& color_cache , GroupData& group);
   void LoadPathContent(const BezierVertData& vert_data, GroupData& group);
   void RecusCalcRenderData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, GroupData& group_data ,bool& no_keyframe);

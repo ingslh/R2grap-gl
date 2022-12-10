@@ -7,6 +7,7 @@
 #include "StrokeInfo.h"
 
 namespace R2grap{
+class Transform;
 class GroupContents{
 public:
   GroupContents(const nlohmann::json& json);
