@@ -95,7 +95,7 @@ void RenderContent::LoadPathContent(const BezierVertData& vert_data, GroupData& 
   if (path_data.closed && path_data.has_keyframe) {
     path_data.trans_tri_ind = vert_data.linear_trig;
   }
-  group.paths.emplace_back(path_data);
+  group.paths.emplace_back(std::make_shared<PathData>(path_data));
 }
 
 unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr<RenderContent>>& contents) {
@@ -155,6 +155,7 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
     for (auto i = 0; i < child_groups.size(); ++i) {
       indexs.push_back(i);
       RecusUpdateTransMat(child_groups[i], info, indexs, content, group_curve);
+			indexs.pop_back();
     }
   }
   else {

@@ -26,7 +26,8 @@ PathRenderData::PathRenderData(std::shared_ptr<RenderContent> content){
 				obj.keep_trans = false;
 				obj.trans =out_groups[i]->trans;
 			}
-			obj.path = std::make_shared<PathData>(c_path).get();
+
+			obj.path = c_path.get();
 			path_objs_.emplace_back(obj);
 		}
 	}

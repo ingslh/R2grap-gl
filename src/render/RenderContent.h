@@ -72,7 +72,7 @@ struct StrokeData {
 };
 
 struct GroupData {
-  std::vector<PathData> paths;
+  std::vector<std::shared_ptr<PathData>> paths;
   std::shared_ptr<FillData> fill = nullptr;
   std::shared_ptr<StrokeData> stroke = nullptr;
 
@@ -80,7 +80,6 @@ struct GroupData {
 
   std::vector<GroupData> child_groups;
 
-  const std::vector<PathData>& GetPathData() const {return paths;}
 };
 
 struct LayerData{
