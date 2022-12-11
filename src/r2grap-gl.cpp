@@ -5,12 +5,11 @@
 #include <camera.h>
 #include <shader_g.h>
 #include "JsonReader.h"
-#include "RenderDataFactory.h"
 #include "RenderContent.h"
 #include "AniInfoManager.h"
+#include "PathRenderData.h"
 
 #include <iostream>
-//#include <chrono>   
 using namespace R2grap;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -76,7 +75,8 @@ int main()
     auto layer_info = reader.GetLayersInfo(i).get();
     contents.emplace_back(std::make_shared<RenderContent>(layer_info));
   }
-	RenderContent::UpdateTransRenderData(contents);
+	std::vector<RePathObj> objs;
+	RenderContent::UpdateTransRenderData(contents,objs);
 
   auto paths_count = RenderContent::GetRenderPathCount(contents);
 

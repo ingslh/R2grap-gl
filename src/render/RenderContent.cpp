@@ -2,6 +2,7 @@
 #include "TransComp.hpp"
 #include "PathRenderData.h"
 #include "AniInfoManager.h"
+#include "PathRenderData.h"
 
 namespace R2grap{
 
@@ -108,7 +109,7 @@ unsigned int RenderContent::GetRenderPathCount(const std::vector<std::shared_ptr
   return count;
 }
 
-void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents){
+void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<RenderContent>>& contents, std::vector<RePathObj>& objs){
   auto link_map = AniInfoManager::GetIns().GetLayersLinkMap();
 	std::vector<RePathObj> path_objs;
 
@@ -126,7 +127,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     render_content->GetTransRenderData()->GenerateTransformMat();
     render_content->SetLayerData(render_content->GetTransRenderData()->GetTransMat());
 
-		if(render_content->GetLayerData().groups_no_keyframe) continue;
+		//if(render_content->GetLayerData().groups_no_keyframe) continue;
     auto layer_ind = render_content->GetLayerData().index;
     auto start_pos = render_content->GetLayerData().start_pos;
     auto end_pos = render_content->GetLayerData().end_pos;
@@ -138,6 +139,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     }
 		PathRenderData::GenPathRenderObjs(render_content, path_objs);
   }
+	objs = path_objs;
 	AniInfoManager::GetIns().SetRenderPathObjs(path_objs);
 }
 
