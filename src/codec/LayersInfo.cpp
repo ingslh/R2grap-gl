@@ -1,5 +1,6 @@
 #include "LayersInfo.h"
 #include "Transform.h"
+#include <memory>
 using namespace R2grap;
 
 GroupContents::GroupContents(const nlohmann::json& json){
@@ -33,7 +34,7 @@ blend_mode_(json["Blend Mode"]), transform_(std::make_shared<Transform>(json["Tr
     auto contents = json["Contents"].items();
     for(auto& el : contents){
 			auto child_group = std::make_shared<ShapeGroup>(el.value());
-			child_group->SetParent(std::shared_ptr<ShapeGroup>(this));
+ 			child_group->SetParent(weak_from_this());
       child_groups_.emplace_back(child_group);
     }
   }else

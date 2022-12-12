@@ -40,11 +40,11 @@ void TransformRenderData::GenerateTransformMat(){
 			auto base_anc_pos = AniInfoManager::GetIns().GetTransAncPos(parent_layer_ind_);
 			glm::vec2 offset = base_pos - base_anc_pos;
 			auto parent_group = group_->parent();
-			while(parent_group){
-				auto pos = parent_group->GetTransform()->GetPosition();
-				auto anchor_pos = parent_group->GetTransform()->GetAnchorPos();
+			while(parent_group.lock()){
+				auto pos = parent_group.lock()->GetTransform()->GetPosition();
+				auto anchor_pos = parent_group.lock()->GetTransform()->GetAnchorPos();
 				offset += glm::vec2(pos.x, pos.y) - glm::vec2(anchor_pos.x, anchor_pos.y);
-				parent_group = parent_group->parent();
+				parent_group = parent_group.lock()->parent();
 			}
 
 			transform->SetPosition(transform->GetPosition()+ glm::vec3(offset.x, offset.y, 0));
