@@ -150,8 +150,7 @@ int main()
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-			for(auto ind = 0; ind < 7; ind++){
+			for(auto ind = 0; ind < objs.size(); ind++){
 				auto obj = objs[ind];
 				if(obj.in_pos > static_cast<float>(played) || obj.out_pos < static_cast<float>(played)) continue;
 				if(!obj.keep_trans){
