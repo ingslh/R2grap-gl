@@ -26,6 +26,8 @@ public:
 
   glm::vec2 GetTransPos(unsigned int ind)const {return layers_transform_map_.at(ind).position;}
 	glm::vec2 GetTransAncPos(unsigned int ind) const{return layers_transform_map_.at(ind).anchor_pos;}
+  glm::vec2 GetTransScale(unsigned int ind) const { return layers_transform_map_.at(ind).scale; }
+  float GetTransRotation(unsigned int ind) const { return layers_transform_map_.at(ind).rotation; }
 
   unsigned int GetWidth(){return width_;}
   unsigned int GetHeight(){return height_;}

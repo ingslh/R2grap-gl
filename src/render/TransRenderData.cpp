@@ -9,9 +9,6 @@ TransformRenderData::TransformRenderData(const LayersInfo* layer) : //shape-laye
 keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(const_cast<LayersInfo*>(layer)){
 	auto transform = layer->GetShapeTransform();
   CompTransformCurve(transform.get(), transform_curve_, layer_->GetLayerInd());
-
-  //need to get link layer TransformCurve
-
 }
 
 TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int ind, float inpos, float outpos) :
@@ -20,9 +17,6 @@ TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned
   transform_mat_ = new TransMat();
   SetInandOutPos(ind, inpos, outpos);
   CompTransformCurve(transform.get(), transform_curve_, ind);//gengerate origial transform curve
-
-  //GenerateTransformMat(transform_curve, tmp_trans);
-  //need to get parent's transform_curve
 }
 
 void TransformRenderData::GenerateTransformMat(){
@@ -38,15 +32,19 @@ void TransformRenderData::GenerateTransformMat(){
 
 			auto base_pos = AniInfoManager::GetIns().GetTransPos(parent_layer_ind_);
 			auto base_anc_pos = AniInfoManager::GetIns().GetTransAncPos(parent_layer_ind_);
-			glm::vec2 offset = base_pos - base_anc_pos;
+      glm::vec2 offset = base_pos - base_anc_pos;
+      glm::vec2 cur_scale = AniInfoManager::GetIns().GetTransScale(parent_layer_ind_);
+			
 			auto parent_group = group_->parent();
 			while(parent_group.lock()){
 				auto pos = parent_group.lock()->GetTransform()->GetPosition();
 				auto anchor_pos = parent_group.lock()->GetTransform()->GetAnchorPos();
+        auto scale = parent_group.lock()->GetTransform()->GetScale();
 				offset += glm::vec2(pos.x, pos.y) - glm::vec2(anchor_pos.x, anchor_pos.y);
+        cur_scale *= glm::vec2(scale.x, scale.y);
 				parent_group = parent_group.lock()->parent();
 			}
-
+      transform->SetScale(transform->GetScale()* glm::vec3(cur_scale.x/100, cur_scale.y/100, 0));
 			transform->SetPosition(transform->GetPosition()+ glm::vec3(offset.x, offset.y, 0));
 		}
     GenerateTransformMat(transform_curve_, transform.get());
@@ -129,6 +127,57 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
     }
   }
 	orig_transform_curve_ = curve;
+}
+
+void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCurveEx& curve) {
+  curve.clear();
+  for (auto & it : keyframe_mat_) {
+    if (trans->IsVectorProperty(it.first)) {
+      auto vector_keyframes = std::get<t_Vector>(it.second);
+      auto start_value = vector_keyframes[0].lastkeyValue;
+      auto start = vector_keyframes.front().lastkeyTime;
+      std::map<unsigned int, std::vector<float>> curve_line;
+
+      for (auto& keyframe : vector_keyframes) {
+        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+        glm::vec2 lastPos_x(keyframe.lastkeyTime, keyframe.lastkeyValue.x);
+        glm::vec2 lastPos_y(keyframe.lastkeyTime, keyframe.lastkeyValue.y);
+        glm::vec2 outPos_x(keyframe.outPos[0].x, keyframe.outPos[0].y);
+        glm::vec2 outPos_y(keyframe.outPos[1].x, keyframe.outPos[1].y);
+        glm::vec2 inPos_x(keyframe.inPos[0].x, keyframe.inPos[0].y);
+        glm::vec2 inPos_y(keyframe.inPos[1].x, keyframe.inPos[1].y);
+        glm::vec2 curPos_x(keyframe.keyTime, keyframe.keyValue.x);
+        glm::vec2 curPos_y(keyframe.keyTime, keyframe.keyValue.y);
+        BezierGenerator generator_x(lastPos_x, outPos_x, inPos_x, curPos_x, bezier_duration, static_cast<unsigned int>(start), start_value.x);
+        BezierGenerator generator_y(lastPos_y, outPos_y, inPos_y, curPos_y, bezier_duration, static_cast<unsigned int>(start), start_value.y);
+        start += static_cast<unsigned int>(generator_x.getKeyframeCurve().size());
+        std::map<unsigned int, std::vector<float>> tmp_curve;
+        auto ret = BezierGenerator::MergeKeyframeCurve(generator_x, generator_y, tmp_curve);
+        curve_line.merge(tmp_curve);
+      }
+      curve[it.first] = { static_cast<unsigned int>(parent_layer_ind_), groups_ind_, curve_line };
+    }
+    else {
+      auto scalar_keyframes = std::get<t_Scalar>(it.second);
+      auto start_value = it.first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
+      auto start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
+      std::map<unsigned int, std::vector<float>> curve_line;
+
+      for (auto& keyframe : scalar_keyframes) {
+        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
+        glm::vec2 lastPos(keyframe.lastkeyTime, keyframe.lastkeyValue);
+        glm::vec2 curPos(keyframe.keyTime, keyframe.keyValue);
+        glm::vec2 inPos(keyframe.inPos[0]);
+        glm::vec2 outPos(keyframe.outPos[0]);
+        BezierGenerator generator(lastPos, outPos, inPos, curPos, bezier_duration, start, start_value);
+        auto curve = generator.getKeyframeCurveMap();
+        start += static_cast<unsigned int>(curve.size());
+        for (auto& pair : curve)
+          curve_line[pair.first] = { pair.second };
+      }
+      curve[it.first] = { static_cast<unsigned int>(parent_layer_ind_), groups_ind_, curve_line };
+    }
+  }
 }
 
 bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){

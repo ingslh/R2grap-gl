@@ -6,9 +6,9 @@
 #include "RenderContent.h"
 
 namespace R2grap{
-class PathData;
-class FillData;
-class StrokeData;
+struct PathData;
+struct FillData;
+struct StrokeData;
 struct RePathObj{
 		float in_pos;
 		float out_pos;
@@ -23,7 +23,7 @@ struct RePathObj{
 		RePathObj(float in, float out, FillData* fill, StrokeData* stroke):
 			in_pos(in), out_pos(out), fill(fill),stroke(stroke){}
 };
-class GroupData;
+struct GroupData;
 class RenderContent;
 class PathRenderData{
 public:

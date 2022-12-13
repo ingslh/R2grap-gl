@@ -146,8 +146,10 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
 void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs,
   const std::shared_ptr<RenderContent> content, const TransformCurve& parent_curve) {
   auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), info.layer_ind, info.in_pos, info.out_pos);
-  auto group_curve = group_contents_trans->GetOrigTransCurve();
   group_contents_trans->SetParentLayerInd(info.layer_ind - 1);
+  group_contents_trans->SetGroupsInd(indexs);
+  auto group_curve = group_contents_trans->GetOrigTransCurve();
+
   group_curve = AddTransCurve(group_curve, const_cast<TransformCurve&>(parent_curve), true);
 
   if (group->HasChildGroups()) {// need to update

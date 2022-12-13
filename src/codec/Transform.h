@@ -29,10 +29,17 @@ struct RotationCurve{
 		std::map<unsigned int, float> rot_value_map_;
 };
 
+struct TransPropEx {
+  unsigned int layer_ind;
+  std::vector<unsigned int> groups_ind;
+  std::map<unsigned int, std::vector<float>> value_map_;
+};
+
 //property name___dim num___frame num____property value  (not rotation)
 //property name___link layers index__frame num __property value  (rotation)
 typedef std::map<unsigned int, float> SigDimCurve;
 typedef std::map<std::string, std::variant<std::vector<SigDimCurve>, std::vector<RotationCurve>>> TransformCurve;
+typedef std::map<std::string, TransPropEx> TransformCurveEx;
 
 class Transform{
 public:

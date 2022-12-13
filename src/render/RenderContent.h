@@ -95,12 +95,13 @@ struct LayerData{
 
   const std::vector<GroupData>& GetGroupData() const { return group_data; }
 };
-class RePathObj;
+
+struct BezierVertData;
+struct	ColorCacheData;
+struct TransMat;
+struct RePathObj;
 class LayersInfo;
-class TransMat;
 class ShapeGroup;
-class BezierVertData;
-class	ColorCacheData;
 class RenderContent{
 public:
   RenderContent(LayersInfo* layer_info);
@@ -114,13 +115,6 @@ public:
   const LayerData& GetLayerData()const {return layer_data_;}
 
 	void SetLayerData(TransMat* trans_mat);
-
-  /*void SetGroupData(unsigned int i, unsigned int j,TransMat* trans_mat) {
-    if (j == 0)
-      layer_data_.group_data[i].trans = trans_mat->trans;
-    else
-      layer_data_.group_data[i].child_trans[j].trans = trans_mat->trans;
-  }*/
 
   void SetGroupData(std::vector<unsigned int> indexs, TransMat* trans_mat);
 

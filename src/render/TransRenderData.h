@@ -7,7 +7,7 @@
 #include <map>
 
 namespace R2grap{
-class TransMat;
+struct TransMat;
 class Transform;
 class TransformRenderData : public BaseRenderData{
 public:
@@ -20,6 +20,7 @@ public:
   void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
 
 	void SetParentLayerInd(int ind){parent_layer_ind_ = ind;}
+  void SetGroupsInd(std::vector<unsigned int> group_ind) { groups_ind_ = group_ind; }
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
@@ -27,6 +28,8 @@ protected:
 
 private:
   void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
+  //need to pre-set parent_layer_ind and groups_inds
+  void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
 
   /*struct TransMat {
     unsigned int layer_index;
@@ -53,6 +56,7 @@ private:
   LayersInfo* layer_ = nullptr;
   ShapeGroup* group_ = nullptr;
   int parent_layer_ind_  = -1;
+  std::vector<unsigned int> groups_ind_;
 };
 
 }

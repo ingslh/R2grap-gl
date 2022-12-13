@@ -104,7 +104,7 @@ const std::vector<ColorCacheData>& ColorRenderData::GetColor(std::vector<unsigne
   if (it != multi_color_data_.end())
     return it->color_cache_data;
   else
-    return std::move(std::vector<ColorCacheData>());
+    return std::vector<ColorCacheData>();
 }
 
 }
