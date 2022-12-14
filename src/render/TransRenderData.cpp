@@ -23,6 +23,7 @@ TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned
 void TransformRenderData::GenerateTransformMat(){
   if (layer_) {
     auto transform = layer_->GetShapeTransform();
+		transform_mat_ = new TransMat();
     SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
     GenerateTransformMat(transform_curve_, transform.get());
   }
@@ -280,7 +281,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
       glm::mat4 rot_trans = glm::mat4(1.0f);
       for (auto& rot_curve : rot_curves) {
         auto tmp_indexs = rot_curve.groups_ind;
-        tmp_indexs.insert(tmp_indexs.begin(), rot_curve.layer_ind);
+        tmp_indexs.insert(tmp_indexs.begin(), rot_curve.layer_ind -1);
         auto rot_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
         rot_pos =  glm::vec3(rot_pos.x, rot_pos.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
         if (i < rot_curve.value_map_.begin()->first)
@@ -359,16 +360,18 @@ void TransformRenderData::ConverCurveToCurveEx(const TransformCurve& curve1, Tra
       for (auto& pair : curve_map_1) {
         tran_prop_ex.value_map_[pair.first] = { pair.second, curve_map_2[pair.first] };
       }
-      curve2.at(it.first).emplace_back(tran_prop_ex); 
+      curve2[it.first] = { tran_prop_ex };
     }
     else {
       auto posrelat_curves = std::get<1>(it.second);
+			std::vector<TransPropEx> trans_prop_ex_list;
       for (auto& posrelat_curve : posrelat_curves) {
         TransPropEx tran_prop_ex;
         tran_prop_ex.layer_ind = posrelat_curve.layer_ind;
         tran_prop_ex.value_map_ = posrelat_curve.value_map_;
-        curve2.at(it.first).emplace_back(tran_prop_ex);
+				trans_prop_ex_list.push_back(tran_prop_ex);
       }
+			curve2[it.first] = trans_prop_ex_list;
     }
   }
 }

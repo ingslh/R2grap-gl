@@ -128,13 +128,14 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     trans_render_data = AddTransCurve(trans_render_data, tmp_curve, true);
     render_content->GetTransRenderData()->SetTransCurve(trans_render_data);
     render_content->GetTransRenderData()->GenerateTransformMat();
+		render_content->SetLayerDataTransMat(render_content->GetTransRenderData()->GetTransMat());
 
-    PathRenderData::GenPathRenderObjs(render_content, layer_path_objs);
+    //PathRenderData::GenPathRenderObjs(render_content, layer_path_objs);
     render_content->SetLayerDataPathObjs(layer_path_objs);
     AniInfoManager::GetIns().SetLinkTransformMap({ (unsigned int)i }, render_content->GetLayerTransform());
 
     //Recus layer's shapgroups to generate ervery child-group's transform curve and transform matrix;
-		if(render_content->GetLayerData().groups_no_keyframe) continue;
+		//if(render_content->GetLayerData().groups_no_keyframe) continue;
     auto groups = render_content->GetShapeGroups();
 
     for (unsigned int j = 0; j < groups.size(); j++) {

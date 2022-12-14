@@ -133,7 +133,7 @@ public:
     }
   }
 
-  static bool MergeKeyframeCurve(const BezierGenerator& gen1, const BezierGenerator& gen2, std::map<unsigned int, std::vector<float>> out_curve) {
+  static bool MergeKeyframeCurve(const BezierGenerator& gen1, const BezierGenerator& gen2, std::map<unsigned int, std::vector<float>>& out_curve) {
     auto curve1 = const_cast<BezierGenerator&>(gen1).GetKeyframeCurve();
     auto curve2 = const_cast<BezierGenerator&>(gen2).GetKeyframeCurve();
     if (curve1.size() != curve2.size()) return false;
@@ -141,6 +141,7 @@ public:
       if (curve1[i].x != curve2[i].x) return false;
       out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
     }
+		return true;
   }
 
 
@@ -148,7 +149,7 @@ public:
   const std::vector<vec2>& getKeyframeCurve() const {return keyframe_curve_;}
   const std::vector<vec2>& getBezierVerts() const {return bezier_verts_;}
 
-  const std::map<unsigned int, float>& getKeyframeCurveMap() const {
+  const std::map<unsigned int, float> getKeyframeCurveMap() const {
     std::map<unsigned int, float> ret;
     for (auto &el : keyframe_curve_) {
       ret[static_cast<unsigned int>(el.x)] = el.y;

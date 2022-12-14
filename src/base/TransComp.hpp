@@ -4,6 +4,16 @@
 namespace R2grap{
 namespace TransComp{
 
+template<typename T>
+std::vector<T> operator+(const std::vector<T>& vec1, const std::vector<T>& vec2){
+	std::vector<T> out;
+	if(vec1.size() != vec2.size()) return std::vector<T>();
+	for(auto i = 0; i < vec1.size(); i++){
+		out.push_back(vec1[i] + vec2[i]);
+	}
+	return out;
+}
+
 //adjust two maps have same keys
 template<typename Tk, typename Tv>
 bool adjustMaps(std::map<Tk,Tv>& map1, std::map<Tk,Tv>& map2){
