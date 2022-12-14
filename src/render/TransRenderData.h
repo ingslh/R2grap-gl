@@ -17,19 +17,26 @@ public:
   void GenerateTransformMat();
   const TransformCurve& GetTransCurve()const {return transform_curve_;}
 	const TransformCurve& GetOrigTransCurve()const {return orig_transform_curve_;}
+  const TransformCurveEx& GetGroupOrigTransCurve() const { return orig_group_transform_curve_; }
   void SetTransCurve(const TransformCurve& curve){transform_curve_ = curve;}
+  void SetTransCurve(const TransformCurveEx& curve) { group_transform_curve_ = curve; }
 
 	void SetParentLayerInd(int ind){parent_layer_ind_ = ind;}
-  void SetGroupsInd(std::vector<unsigned int> group_ind) { groups_ind_ = group_ind; }
+  void SetParentGroupsInd(std::vector<unsigned int> group_ind) { groups_ind_ = group_ind; }
+
+  void freashGroupPositionInitVal();
 
 protected:
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
+  bool GenerateTransformMat(const TransformCurveEx& transform_curve, Transform* transform);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
-private:
+public:
   void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
   //need to pre-set parent_layer_ind and groups_inds
   void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
+
+  static void ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2, unsigned int layer_ind, const std::vector<unsigned int> groups_ind);
 
   /*struct TransMat {
     unsigned int layer_index;
@@ -52,6 +59,8 @@ private:
   KeyframesMap keyframe_mat_;
   TransformCurve transform_curve_;//the temp data, need to merge with parent's curve
 	TransformCurve orig_transform_curve_;
+  TransformCurveEx group_transform_curve_;
+  TransformCurveEx orig_group_transform_curve_;
   std::map<int64_t, unsigned int> opacity_map_;
   LayersInfo* layer_ = nullptr;
   ShapeGroup* group_ = nullptr;

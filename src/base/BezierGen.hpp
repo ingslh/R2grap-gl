@@ -148,12 +148,29 @@ public:
   const std::vector<vec2>& getKeyframeCurve() const {return keyframe_curve_;}
   const std::vector<vec2>& getBezierVerts() const {return bezier_verts_;}
 
-  std::map<unsigned int, float> getKeyframeCurveMap() const {
+  const std::map<unsigned int, float>& getKeyframeCurveMap() const {
     std::map<unsigned int, float> ret;
     for (auto &el : keyframe_curve_) {
       ret[static_cast<unsigned int>(el.x)] = el.y;
     }
     return ret;
+  }
+
+  static bool MergeCurves(const std::vector<glm::vec2>& curve1, const std::vector<glm::vec2>& curve2, std::map<unsigned int, std::vector<float>>& out_curve) {
+    if (curve1.size() != curve2.size()) return false;
+
+    for (auto i = 0; i < curve1.size(); ++i) {
+      if (curve1[i].x != curve2[i].x) return false;
+      out_curve[i] = { curve1[i].y, curve2[i].y };
+    }
+    return true;
+  }
+
+  static bool ConverCurve(const std::vector<glm::vec2>& curve1, std::map<unsigned int, std::vector<float>>& out_curve) {
+    for (auto i = 0; i < curve1.size(); ++i) {
+      out_curve[i] = { curve1[i].y };
+    }
+    return true;
   }
 
 private:

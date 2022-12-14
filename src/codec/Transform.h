@@ -24,22 +24,24 @@ struct TransMat{
   TransMat() : layer_index(0), clip_start(0), clip_end(0), trans(std::vector<glm::mat4>()),duration(0){}
 };
 
-struct RotationCurve{
+//used for shape(layer) transform
+struct PosRelateCurve{
 		unsigned int layer_ind;
-		std::map<unsigned int, float> rot_value_map_;
+		std::map<unsigned int, std::vector<float>> value_map_;
 };
+//property name___dim num___frame num____property value  (not rotation)
+//property name___link layers index__frame num __property value  (rotation)
+typedef std::map<unsigned int, float> PositionCurve;
+typedef std::map<std::string, std::variant<std::vector<PositionCurve>, std::vector<PosRelateCurve>>> TransformCurve;
 
+
+//used for groups transform
 struct TransPropEx {
   unsigned int layer_ind;
   std::vector<unsigned int> groups_ind;
   std::map<unsigned int, std::vector<float>> value_map_;
 };
-
-//property name___dim num___frame num____property value  (not rotation)
-//property name___link layers index__frame num __property value  (rotation)
-typedef std::map<unsigned int, float> SigDimCurve;
-typedef std::map<std::string, std::variant<std::vector<SigDimCurve>, std::vector<RotationCurve>>> TransformCurve;
-typedef std::map<std::string, TransPropEx> TransformCurveEx;
+typedef std::map<std::string, std::vector<TransPropEx>> TransformCurveEx;
 
 class Transform{
 public:

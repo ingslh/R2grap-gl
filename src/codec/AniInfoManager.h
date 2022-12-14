@@ -37,6 +37,17 @@ public:
   std::map<unsigned int, std::vector<unsigned int>> GetLayersLinkMap(){return layers_link_map_;}
   void GetLayerInandOutPos(unsigned int ind, unsigned int& in, unsigned int& out);
 
+  void SetLinkTransformMap(const std::vector<unsigned int>& link_indexs, const std::shared_ptr<Transform> tran_ptr) {
+    link_transform_map_[link_indexs] = tran_ptr;
+  }
+
+  const std::shared_ptr<Transform> GetLinkTransPtrbyIndexs(const std::vector<unsigned int>& link_indexs) {
+    if (link_transform_map_.count(link_indexs))
+      return link_transform_map_[link_indexs];
+    else
+      return nullptr;
+  }
+
 private:
 	struct TransformPorperty{
 			glm::vec2 anchor_pos;
@@ -63,5 +74,6 @@ private:
   std::map<unsigned int, std::pair<unsigned int, unsigned int>> layers_inout_map_;
 	std::vector<GroupTrans> groups_transform_list_;
 	std::vector<RePathObj> render_path_objs_;
+  std::map<std::vector<unsigned int>, std::shared_ptr<Transform>> link_transform_map_; //for groups
 };
 }

@@ -82,6 +82,7 @@ struct GroupData {
 
 };
 
+struct RePathObj;
 struct LayerData{
   unsigned int index;
   float start_pos;
@@ -91,6 +92,7 @@ struct LayerData{
   std::vector<GroupData> group_data;
   bool groups_no_keyframe;
 
+  std::vector<RePathObj> path_objs;
   std::vector<glm::mat4> trans;//Index is frameNum
 
   const std::vector<GroupData>& GetGroupData() const { return group_data; }
@@ -114,7 +116,8 @@ public:
 
   const LayerData& GetLayerData()const {return layer_data_;}
 
-	void SetLayerData(TransMat* trans_mat);
+	void SetLayerDataTransMat(TransMat* trans_mat);
+  void SetLayerDataPathObjs(const std::vector<RePathObj>& objs) { layer_data_.path_objs = objs; }
 
   void SetGroupData(std::vector<unsigned int> indexs, TransMat* trans_mat);
 
@@ -129,19 +132,26 @@ private:
   const std::vector<GroupData>& GetGroupData()const {return layer_data_.group_data;}
   TransformRenderDataPtr GetTransRenderData()const {return layer_contents_trans_;}
   const std::vector<std::shared_ptr<ShapeGroup>>& GetShapeGroups()const { return shape_groups_; }
+  const std::shared_ptr<Transform> GetLayerTransform()const { return layer_transform_; }
   void LoadColorContent(const std::vector<ColorCacheData>& color_cache , GroupData& group);
   void LoadPathContent(const BezierVertData& vert_data, GroupData& group);
   void RecusCalcRenderData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, GroupData& group_data ,bool& no_keyframe);
+
+  static void SetGroupTransRender(const TransformRenderDataPtr tran_ptr, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind, const std::shared_ptr<Transform> trans_ptr);;
   static void RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs, 
-    const std::shared_ptr<RenderContent> content,const TransformCurve& parent_curve);
+    const std::shared_ptr<RenderContent> content,const TransformCurveEx& parent_curve);
   static const TransformCurve& AddTransCurve(TransformCurve& curve1, TransformCurve& curve2, bool front_insert);
-  
-private:
-  LayerData layer_data_;
+  static const TransformCurveEx& AddTransCurve(TransformCurveEx& curve1, TransformCurveEx& curve2, bool front_insert);
+
+protected:
   VerticesRenderDataPtr layer_contents_path_;
   ColorRenderDataPtr layer_contents_color_;
   TransformRenderDataPtr layer_contents_trans_;
   std::vector<std::shared_ptr<ShapeGroup>> shape_groups_;
+  std::shared_ptr<Transform> layer_transform_;
+
+private:
+  LayerData layer_data_;
 };
 
 }
