@@ -174,7 +174,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
 }
 
 bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
-  auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
+  auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 1);
 
   if(!transform_mat_) return false;
   transform_mat_->trans.clear();
@@ -224,7 +224,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
       scale.resize(2);
       auto scale_curves = std::get<1>(transform_curve.at("Scale"));
       for (auto& scale_curve : scale_curves) {
-        auto layer_ind = scale_curve.layer_ind;
+        auto layer_ind = scale_curve.layer_ind ;
         auto pos_v2 = AniInfoManager::GetIns().GetTransPos(layer_ind);
         auto start_pos = glm::vec3(pos_v2.x, pos_v2.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
         auto start_scale = AniInfoManager::GetIns().GetTransScale(layer_ind);
@@ -237,10 +237,9 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
             scale[j] = scale_curve.value_map_[i][j];
         }
         glm::mat4 t1, t2, s;
-        auto cur_pos = start_pos / glm::vec3(reslution.x, reslution.y, 1.0) - glm::vec3(0.5, 0.5, 0);
-        t1 = glm::translate(glm::mat4(1), -glm::vec3(cur_pos));
+        t1 = glm::translate(glm::mat4(1), -glm::vec3(start_pos));
         s = glm::scale(glm::mat4(1), glm::vec3((start_scale.x + scale.front()) / 100, (start_scale.y + scale.back()) / 100, 1.0));
-        t2 = glm::translate(glm::mat4(1), glm::vec3(cur_pos));
+        t2 = glm::translate(glm::mat4(1), glm::vec3(start_pos));
         trans = trans * t2 * s * t1;
       }
     }
@@ -321,7 +320,9 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
         trans = trans * t2 * s * t1;
       }
     }
+    transform_mat_->trans.emplace_back(trans);
   }
+  return true;
 }
 
 void TransformRenderData::freashGroupPositionInitVal() {

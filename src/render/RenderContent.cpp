@@ -131,7 +131,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
 		render_content->SetLayerDataTransMat(render_content->GetTransRenderData()->GetTransMat());
 
     //PathRenderData::GenPathRenderObjs(render_content, layer_path_objs);
-    render_content->SetLayerDataPathObjs(layer_path_objs);
+    //render_content->SetLayerDataPathObjs(layer_path_objs);
     AniInfoManager::GetIns().SetLinkTransformMap({ (unsigned int)i }, render_content->GetLayerTransform());
 
     //Recus layer's shapgroups to generate ervery child-group's transform curve and transform matrix;
@@ -175,6 +175,8 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
   else {
     group_contents_trans->SetTransCurve(group_curve);
     group_contents_trans->GenerateTransformMat();
+
+    auto test = group_contents_trans->GetTransMat();
     content->SetGroupData(indexs, group_contents_trans->GetTransMat());
   }
 }

@@ -162,14 +162,14 @@ public:
 
     for (auto i = 0; i < curve1.size(); ++i) {
       if (curve1[i].x != curve2[i].x) return false;
-      out_curve[i] = { curve1[i].y, curve2[i].y };
+      out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
     }
     return true;
   }
 
   static bool ConverCurve(const std::vector<glm::vec2>& curve1, std::map<unsigned int, std::vector<float>>& out_curve) {
     for (auto i = 0; i < curve1.size(); ++i) {
-      out_curve[i] = { curve1[i].y };
+      out_curve[curve1[i].x] = { curve1[i].y };
     }
     return true;
   }
