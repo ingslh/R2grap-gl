@@ -28,13 +28,13 @@ void LinkLayer::UpdatePropertyByLink(unsigned int ind){
     auto temp_pos = link_transform->GetOrigPosition() + pos_offset;
     pos_offset = temp_pos - link_transform->GetAnchorPos();
     //scale
-    scale *= link_transform->GetScale()/glm::vec3(100);
+    //scale *= link_transform->GetScale()/glm::vec3(100);
     //rotation
-    rotation += link_transform->GetRotation(); 
+    //rotation += link_transform->GetRotation();
   }
   cur_transform->SetPosition(cur_transform->GetOrigPosition() + pos_offset);
-  cur_transform->SetScale(cur_transform->GetOrigScale() * scale);
-  cur_transform->SetRotation(rotation);
+  //cur_transform->SetScale(cur_transform->GetOrigScale() * scale);
+  //cur_transform->SetRotation(rotation);
   AniInfoManager::GetIns().SetLayerTransform(ind, cur_transform);
 }
 

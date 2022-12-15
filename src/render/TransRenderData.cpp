@@ -203,6 +203,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
 			glm::mat4 rot_trans = glm::mat4(1.0f);
       for(auto& rot_curve : rot_curves){
         auto layer_ind = rot_curve.layer_ind;
+				auto start_rot = AniInfoManager::GetIns().GetTransRotation(layer_ind);
         auto pos_v2 = AniInfoManager::GetIns().GetTransPos(layer_ind);
         auto pos_v3 = glm::vec3(pos_v2.x, pos_v2.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
         if (i < rot_curve.value_map_.begin()->first)
@@ -213,7 +214,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
           rot = rot_curve.value_map_.at(i).front();
         
         auto t1 = glm::translate(glm::mat4(1), -glm::vec3(pos_v3.x, pos_v3.y, 0));
-        auto r = glm::rotate(glm::mat4(1), glm::radians(rot), glm::vec3(0, 0, 1.0));
+        auto r = glm::rotate(glm::mat4(1), glm::radians(start_rot + rot), glm::vec3(0, 0, 1.0));
         auto t2 = glm::translate(glm::mat4(1), glm::vec3(pos_v3.x, pos_v3.y, 0));
         trans = trans * t2 * r * t1;
       }
