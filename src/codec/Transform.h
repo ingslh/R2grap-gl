@@ -29,10 +29,8 @@ struct PosRelateCurve{
 		unsigned int layer_ind;
 		std::map<unsigned int, std::vector<float>> value_map_;
 };
-//property name___dim num___frame num____property value  (not rotation)
-//property name___link layers index__frame num __property value  (rotation)
-typedef std::map<unsigned int, float> PositionCurve;
-typedef std::map<std::string, std::variant<std::vector<PositionCurve>, std::vector<PosRelateCurve>>> TransformCurve;
+//property name___link layers index__frame num __property value  
+typedef std::map<std::string, std::vector<PosRelateCurve>> TransformCurve;
 
 
 //used for groups transform

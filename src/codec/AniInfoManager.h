@@ -48,6 +48,10 @@ public:
       return nullptr;
   }
 
+  bool ExistLinkTrans(const std::vector<unsigned int>& link_indexs) {
+    return link_transform_map_.count(link_indexs);
+  }
+
 private:
 	struct TransformPorperty{
 			glm::vec2 anchor_pos;

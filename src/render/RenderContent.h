@@ -140,8 +140,10 @@ private:
   static void SetGroupTransRender(const TransformRenderDataPtr tran_ptr, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind, const std::shared_ptr<Transform> trans_ptr);
   static void RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs, 
     const std::shared_ptr<RenderContent> content,const TransformCurveEx& parent_curve);
-  static const TransformCurve& AddTransCurve(TransformCurve& curve1, TransformCurve& curve2, bool front_insert);
-  static const TransformCurveEx& AddTransCurve(TransformCurveEx& curve1, TransformCurveEx& curve2, bool front_insert);
+
+  template<typename TransCurve>
+  static const TransCurve& AddTransCurve(TransCurve& curve1, TransCurve& curve2, bool front_insert);
+  //static const TransformCurveEx& AddTransCurve(TransformCurveEx& curve1, TransformCurveEx& curve2, bool front_insert);
 
 protected:
   VerticesRenderDataPtr layer_contents_path_;

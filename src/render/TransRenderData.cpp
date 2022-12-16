@@ -37,38 +37,12 @@ void TransformRenderData::GenerateTransformMat(){
 void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve, int ind){
   curve.clear();
   for (auto & it : keyframe_mat_){
-    if(it.first == "Position"){ //vector
+    if(trans->IsVectorProperty(it.first)){ //vector
       auto vector_keyframes = std::get<t_Vector>(it.second);
       auto start_value =  vector_keyframes[0].lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
-      std::vector<std::map<unsigned int, float>> double_curve_line;
-      double_curve_line.resize(2);
-
-      for (auto& keyframe : vector_keyframes) {
-        auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
-        glm::vec2 lastPos_x(keyframe.lastkeyTime, keyframe.lastkeyValue.x);
-        glm::vec2 lastPos_y(keyframe.lastkeyTime, keyframe.lastkeyValue.y);
-        glm::vec2 outPos_x(keyframe.outPos[0].x, keyframe.outPos[0].y);
-        glm::vec2 outPos_y(keyframe.outPos[1].x, keyframe.outPos[1].y);
-        glm::vec2 inPos_x(keyframe.inPos[0].x, keyframe.inPos[0].y);
-        glm::vec2 inPos_y(keyframe.inPos[1].x, keyframe.inPos[1].y);
-        glm::vec2 curPos_x(keyframe.keyTime, keyframe.keyValue.x);
-        glm::vec2 curPos_y(keyframe.keyTime, keyframe.keyValue.y);
-        BezierGenerator generator_x(lastPos_x, outPos_x, inPos_x, curPos_x, bezier_duration, static_cast<unsigned int>(start), start_value.x);
-        auto curve_x = generator_x.getKeyframeCurveMap();
-        BezierGenerator generator_y(lastPos_y, outPos_y, inPos_y, curPos_y, bezier_duration, static_cast<unsigned int>(start), start_value.y);
-        auto curve_y = generator_y.getKeyframeCurveMap();
-        start += static_cast<unsigned int>(curve_x.size()); 
-        double_curve_line.front().merge(curve_x);
-        double_curve_line.back().merge(curve_y);
-      }
-      curve[it.first] = double_curve_line;
-    }
-    else if (it.first == "Scale") {
-      auto vector_keyframes = std::get<t_Vector>(it.second);
-      auto start_value = vector_keyframes[0].lastkeyValue;
-      auto start = vector_keyframes.front().lastkeyTime;
       std::map<unsigned int, std::vector<float>> curve_line;
+
       for (auto& keyframe : vector_keyframes) {
         auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
         glm::vec2 lastPos_x(keyframe.lastkeyTime, keyframe.lastkeyValue.x);
@@ -80,9 +54,8 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         glm::vec2 curPos_x(keyframe.keyTime, keyframe.keyValue.x);
         glm::vec2 curPos_y(keyframe.keyTime, keyframe.keyValue.y);
         BezierGenerator generator_x(lastPos_x, outPos_x, inPos_x, curPos_x, bezier_duration, static_cast<unsigned int>(start), start_value.x);
-        auto curve_x = generator_x.getKeyframeCurveMap();
         BezierGenerator generator_y(lastPos_y, outPos_y, inPos_y, curPos_y, bezier_duration, static_cast<unsigned int>(start), start_value.y);
-
+        
         std::map<unsigned int, std::vector<float>> merge_curve;
         BezierGenerator::MergeCurves(generator_x.getKeyframeCurve(), generator_y.getKeyframeCurve(), merge_curve);
         start += static_cast<unsigned int>(merge_curve.size());
@@ -151,7 +124,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
     }
     else {
       auto scalar_keyframes = std::get<t_Scalar>(it.second);
-      auto start_value = it.first == "Rotation" ? 0.0 : scalar_keyframes[0].lastkeyValue;
+      auto start_value = scalar_keyframes[0].lastkeyValue;
       auto start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
       std::map<unsigned int, std::vector<float>> curve_line;
 
@@ -185,21 +158,21 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
     if (transform_curve.count("Position")){
       std::vector<float> offset;
       offset.resize(2);
-      auto pos_curve = std::get<0>(transform_curve.at("Position"));
+      auto pos_curve = transform_curve.at("Position").begin();
       for (auto j = 0; j < offset.size(); j++) {
-        if(i < pos_curve[j].begin()->first)
-          offset[j] = pos_curve[j].begin()->second;
-        else if( i > pos_curve[j].rbegin()->first)
-          offset[j] = pos_curve[j].rbegin()->second;
+        if(i < pos_curve->value_map_.begin()->first)
+          offset[j] = pos_curve->value_map_.begin()->second[j];
+        else if( i > pos_curve->value_map_.rbegin()->first)
+          offset[j] = pos_curve->value_map_.rbegin()->second[j];
         else
-          offset[j] = pos_curve[j].at(i);
+          offset[j] = pos_curve->value_map_.at(i).at(j);
       }
       trans = glm::translate(trans, glm::vec3(offset.front()/reslution.x, offset.back()/reslution.y, 0));
     }
 
     if (transform_curve.count("Rotation")) {
       float rot;
-      auto rot_curves = std::get<1>(transform_curve.at("Rotation"));
+      auto rot_curves = transform_curve.at("Rotation");
 			glm::mat4 rot_trans = glm::mat4(1.0f);
       for(auto& rot_curve : rot_curves){
         auto layer_ind = rot_curve.layer_ind;
@@ -223,7 +196,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
     if (transform_curve.count("Scale")) {
       std::vector<float> scale;
       scale.resize(2);
-      auto scale_curves = std::get<1>(transform_curve.at("Scale"));
+      auto scale_curves = transform_curve.at("Scale");
       for (auto& scale_curve : scale_curves) {
         auto layer_ind = scale_curve.layer_ind ;
         auto pos_v2 = AniInfoManager::GetIns().GetTransPos(layer_ind);
@@ -280,9 +253,18 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
       auto rot_curves = transform_curve.at("Rotation");
       glm::mat4 rot_trans = glm::mat4(1.0f);
       for (auto& rot_curve : rot_curves) {
-        auto tmp_indexs = rot_curve.groups_ind;
-        tmp_indexs.insert(tmp_indexs.begin(), rot_curve.layer_ind -1);
-        auto rot_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
+        std::vector<unsigned int> tmp_indexs = rot_curve.groups_ind;
+        tmp_indexs.insert(tmp_indexs.begin(), rot_curve.layer_ind);
+        glm::vec3 rot_pos;
+        float start_rot;
+        if (AniInfoManager::GetIns().ExistLinkTrans(tmp_indexs)) {
+          rot_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
+          start_rot = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetRotation();
+        }
+        else {
+          rot_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
+          start_rot = AniInfoManager::GetIns().GetTransRotation(tmp_indexs.front());
+        }
         rot_pos =  glm::vec3(rot_pos.x, rot_pos.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
         if (i < rot_curve.value_map_.begin()->first)
           rot = rot_curve.value_map_.begin()->second.front();
@@ -292,7 +274,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
           rot = rot_curve.value_map_.at(i).front();
 
         auto t1 = glm::translate(glm::mat4(1), -glm::vec3(rot_pos.x, rot_pos.y, 0));
-        auto r = glm::rotate(glm::mat4(1), glm::radians(rot), glm::vec3(0, 0, 1.0));
+        auto r = glm::rotate(glm::mat4(1), glm::radians(start_rot +  rot), glm::vec3(0, 0, 1.0));
         auto t2 = glm::translate(glm::mat4(1), glm::vec3(rot_pos.x, rot_pos.y, 0));
         trans = trans * t2 * r * t1;
       }
@@ -305,9 +287,16 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
       for (auto& scale_curve : scale_curves) {
         auto tmp_indexs = scale_curve.groups_ind;
         tmp_indexs.insert(tmp_indexs.begin(), scale_curve.layer_ind);
-        auto scale_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
+        glm::vec3 start_scale, scale_pos;
+        if (AniInfoManager::GetIns().ExistLinkTrans(tmp_indexs)) {
+          scale_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
+          start_scale = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetScale();
+        }
+        else {
+          scale_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
+          start_scale = glm::vec3(AniInfoManager::GetIns().GetTransScale(tmp_indexs.front()), 0);
+        }
         scale_pos = glm::vec3(scale_pos.x, scale_pos.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
-        auto start_scale = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetScale();
         if (i < scale_curve.value_map_.begin()->first)
           scale = scale_curve.value_map_.begin()->second;
         else if (i > scale_curve.value_map_.rbegin()->first)
@@ -353,28 +342,15 @@ void TransformRenderData::SetInandOutPos(unsigned int ind, float in_pos, float o
 void TransformRenderData::ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2,
   unsigned int layer_ind, const std::vector<unsigned int> groups_ind) {
   for (auto& it : curve1) {
-    if (it.first == "Position") {//dim only is 2
+    auto posrelat_curves = it.second;
+		std::vector<TransPropEx> trans_prop_ex_list;
+    for (auto& posrelat_curve : posrelat_curves) {
       TransPropEx tran_prop_ex;
-      tran_prop_ex.layer_ind = layer_ind;
-      tran_prop_ex.groups_ind = groups_ind;
-      auto curve_map_1 = std::get<0>(it.second).front();
-      auto curve_map_2 = std::get<0>(it.second).back();
-      for (auto& pair : curve_map_1) {
-        tran_prop_ex.value_map_[pair.first] = { pair.second, curve_map_2[pair.first] };
-      }
-      curve2[it.first] = { tran_prop_ex };
+      tran_prop_ex.layer_ind = posrelat_curve.layer_ind;
+      tran_prop_ex.value_map_ = posrelat_curve.value_map_;
+			trans_prop_ex_list.push_back(tran_prop_ex);
     }
-    else {
-      auto posrelat_curves = std::get<1>(it.second);
-			std::vector<TransPropEx> trans_prop_ex_list;
-      for (auto& posrelat_curve : posrelat_curves) {
-        TransPropEx tran_prop_ex;
-        tran_prop_ex.layer_ind = posrelat_curve.layer_ind;
-        tran_prop_ex.value_map_ = posrelat_curve.value_map_;
-				trans_prop_ex_list.push_back(tran_prop_ex);
-      }
-			curve2[it.first] = trans_prop_ex_list;
-    }
+		curve2[it.first] = trans_prop_ex_list;
   }
 }
 

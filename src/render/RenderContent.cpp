@@ -162,7 +162,7 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
   group_contents_trans->CompTransformCurve(group->GetTransform().get(), group_trans);
   auto group_curve = group_contents_trans->GetGroupOrigTransCurve();
 
-  group_curve = AddTransCurve(group_curve, const_cast<TransformCurveEx&>(parent_curve), true);
+  group_curve = AddTransCurve<TransformCurveEx>(group_curve, const_cast<TransformCurveEx&>(parent_curve), true);
 
   if (group->HasChildGroups()) {// need to update
     auto child_groups = group->GetChildGroups();
@@ -181,73 +181,40 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
   }
 }
 
-const TransformCurve& RenderContent::AddTransCurve(TransformCurve& curve1, TransformCurve& curve2, bool front_insert) {
+template<typename TransCurve>
+const TransCurve& RenderContent::AddTransCurve(TransCurve& curve1, TransCurve& curve2, bool front_insert) {
   for (auto& el : curve2) {
     if (curve1.count(el.first) == 0) {
       curve1[el.first] = el.second;
     }
     else {
-      if (el.first != "Position") {
-        auto trans1 = std::get<1>(curve1[el.first]);
-        auto trans2 = std::get<1>(el.second);
-        if (front_insert) {
-          trans1.insert(trans1.begin(), trans2.begin(), trans2.end());
+        auto trans1 = curve1[el.first];
+        auto trans2 = el.second;
+        if (el.first == "Position") {
+          //if (trans1.size() != trans2.size() != 1) continue;
+          for (auto i = 0; i < trans1.size(); i++) {
+            auto map1 = trans1[i].value_map_;
+            auto map2 = trans2[i].value_map_;
+            if (TransComp::adjustMaps(map1, map2)) {
+              TransComp::MapaddMap(map1, map2);
+            }
+            trans1[i].value_map_ = map1;
+          }
+          curve1[el.first] = trans1;
         }
         else {
-          trans1.insert(trans1.end(), trans2.begin(), trans2.end());
+          if (front_insert)
+            trans1.insert(trans1.begin(), trans2.begin(), trans2.end());
+          else
+            trans1.insert(trans1.end(), trans2.begin(), trans2.end());
         }
         curve1[el.first] = trans1;
-      }
-      else {
-        auto trans1 = std::get<0>(curve1[el.first]);
-        auto trans2 = std::get<0>(el.second);
-        if (trans1.size() != trans2.size()) continue;
-        for (auto i = 0; i < trans1.size(); i++) {
-          auto map1 = trans1[i];
-          auto map2 = trans2[i];
-          if (TransComp::adjustMaps(map1, map2)) {
-            TransComp::MapaddMap(map1, map2);
-          }
-          trans1[i] = map1;
-        }
-        curve1[el.first] = trans1;
-      }
     }
   }
   return curve1;
 }
 
-const TransformCurveEx& RenderContent::AddTransCurve(TransformCurveEx& curve1, TransformCurveEx& curve2, bool front_insert) {
-  for (auto& el : curve2) {
-    if (curve1.count(el.first) == 0) {
-      curve1[el.first] = el.second;
-    }
-    else {
-      auto trans1 = curve1[el.first];
-      auto trans2 = el.second;
-      if (el.first == "Position") {
-        if (trans1.size() != trans2.size() != 1) continue;
-        for (auto i = 0; i < trans1.size(); i++) {
-          auto map1 = trans1[i].value_map_;
-          auto map2 = trans2[i].value_map_;
-          if (TransComp::adjustMaps(map1, map2)) {
-            TransComp::MapaddMap(map1, map2);
-          }
-          trans1[i].value_map_ = map1;
-        }
-        curve1[el.first] = trans1;
-      }
-      else {
-        if (front_insert) 
-          trans1.insert(trans1.begin(), trans2.begin(), trans2.end());
-        else 
-          trans1.insert(trans1.end(), trans2.begin(), trans2.end());
-        curve1[el.first] = trans1;
-      }
-    }
-  }
-  return curve1;
-}
+
 
 void RenderContent::SetGroupTransRender(const TransformRenderDataPtr tran_ptr, unsigned int layer_ind, 
   const std::vector<unsigned int>& groups_ind, const std::shared_ptr<Transform> trans_ptr) {
