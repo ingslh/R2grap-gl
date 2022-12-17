@@ -144,6 +144,15 @@ public:
 		return true;
   }
 
+  static bool MergeKeyframeCurve(const std::vector<glm::vec2>& curve1, const std::vector<glm::vec2>& curve2, std::map<unsigned int, std::vector<float>>& out_curve) {
+    if (curve1.size() != curve2.size()) return false;
+    for (auto i = 0; i < curve1.size(); i++) {
+      if (curve1[i].x != curve2[i].x) return false;
+      out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
+    }
+    return true;
+  }
+
 
 public:
   const std::vector<vec2>& getKeyframeCurve() const {return keyframe_curve_;}
@@ -174,6 +183,8 @@ public:
     return true;
   }
 
+  const std::vector<vec2>& GetKeyframeCurve() { return keyframe_curve_; }
+
 private:
   void CubicPolynomial(float l, float r, const std::vector<float>& elements, std::vector<float>& ret) {
     auto a = elements[0], b = elements[1], c = elements[2], d = elements[3];
@@ -188,8 +199,6 @@ private:
     }
     CubicPolynomial(l, mid, elements, ret), CubicPolynomial(mid, r, elements, ret);
   }
-
-  const std::vector<vec2>& GetKeyframeCurve() { return keyframe_curve_; }
 
 private:
   std::vector<vec2> bezier_verts_;

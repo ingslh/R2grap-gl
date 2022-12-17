@@ -18,7 +18,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
 
 int main()
 {
-  JsonReader reader("../assets/thinking.json");
+  JsonReader reader("../assets/designers.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 

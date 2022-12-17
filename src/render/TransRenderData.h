@@ -36,8 +36,12 @@ public:
   //need to pre-set parent_layer_ind and groups_inds
   void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
 
+  template<typename T, typename OutT>
+  bool GetBezierKeyframe(const Keyframe<T>& keyframe, OutT& out, unsigned int dur, unsigned int s_t, T s_v);
+
   static void ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2, unsigned int layer_ind, const std::vector<unsigned int> groups_ind);
 
+private:
   /*struct TransMat {
     unsigned int layer_index;
     float clip_start;
@@ -56,6 +60,7 @@ public:
     T keyValue;                     //bezier:curpos_y
     float keyTime;                  //bezier:curpos_x
   };*/
+
   KeyframesMap keyframe_mat_;
   TransformCurve transform_curve_;//the temp data, need to merge with parent's curve
 	TransformCurve orig_transform_curve_;
