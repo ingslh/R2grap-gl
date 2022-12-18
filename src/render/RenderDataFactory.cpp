@@ -24,8 +24,8 @@ TransformRenderData* RenderDataFactory::CreateTransformData(const LayersInfo* la
   return new TransformRenderData(layer);
 }
 
-TransformRenderData* RenderDataFactory::CreateTransformData(const ShapeGroup* group, unsigned int ind, float inpos, float outpos){
-  return new TransformRenderData(group, ind, inpos, outpos);
+TransformRenderData* RenderDataFactory::CreateTransformData(const ShapeGroup* group, unsigned int ind, const std::vector<unsigned int>& groups_ind){
+  return new TransformRenderData(group, ind, groups_ind);
 }
 
 bool RenderDataFactory::ReleaseRenderData(BaseRenderData* data){

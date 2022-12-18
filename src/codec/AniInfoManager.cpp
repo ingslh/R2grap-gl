@@ -40,13 +40,18 @@ namespace R2grap{
     layers_link_map_ = link_map;
   }
 
-  void AniInfoManager::AppendLayerInandOut(unsigned int ind, unsigned int in, unsigned int out) {
+  void AniInfoManager::AppendLayerInandOut(unsigned int ind, float in, float out) {
     layers_inout_map_[ind] = std::make_pair(in,out);
   }
 
-  void AniInfoManager::GetLayerInandOutPos(const unsigned int ind, unsigned int& in, unsigned int& out) {
-    in = layers_inout_map_[ind].first * frame_rate_;
-    out = layers_inout_map_[ind].second * frame_rate_;
+  void AniInfoManager::GetLayerInandOutPos(const unsigned int ind, float& in, float& out, bool out_times) {
+    if(out_times){
+			in = layers_inout_map_[ind].first;
+			out = layers_inout_map_[ind].second;
+		}else{
+			in = layers_inout_map_[ind].first * frame_rate_;
+			out = layers_inout_map_[ind].second * frame_rate_;
+		}
   }
 
 

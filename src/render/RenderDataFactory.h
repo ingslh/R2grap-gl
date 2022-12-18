@@ -18,7 +18,7 @@ public:
   VerticesRenderData* CreateVerticesData(const LayersInfo* layer);
   ColorRenderData* CreateColorData(const LayersInfo* layer);
   TransformRenderData* CreateTransformData(const LayersInfo* layer);
-  TransformRenderData* CreateTransformData(const ShapeGroup* group, unsigned int ind, float inpos, float outpos);
+  TransformRenderData* CreateTransformData(const ShapeGroup* group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind);
   static bool ReleaseRenderData(BaseRenderData* data);
 };
 
@@ -60,8 +60,8 @@ public:
     });
   }
 
-  TransformRenderDataPtr CreateTransformData(const ShapeGroup* group, unsigned int ind, float inpos, float outpos){
-    return TransformRenderDataPtr(render_data_factory_->CreateTransformData(group, ind, inpos, outpos),[=](TransformRenderData* data){
+  TransformRenderDataPtr CreateTransformData(const ShapeGroup* group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind){
+    return TransformRenderDataPtr(render_data_factory_->CreateTransformData(group, layer_ind, groups_ind),[=](TransformRenderData* data){
       render_data_factory_->ReleaseRenderData((BaseRenderData*)data);
     });
   }

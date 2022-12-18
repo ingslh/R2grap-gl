@@ -12,7 +12,7 @@ class Transform;
 class TransformRenderData : public BaseRenderData{
 public:
   TransformRenderData(const LayersInfo* layer);
-  TransformRenderData(const ShapeGroup* shape_group, unsigned int ind, float inpos, float outpos);
+  TransformRenderData(const ShapeGroup* shape_group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind);
   TransMat* GetTransMat(){return transform_mat_;}
   void GenerateTransformMat();
   const TransformCurve& GetTransCurve()const {return transform_curve_;}
@@ -22,23 +22,21 @@ public:
   void SetTransCurve(const TransformCurveEx& curve) { group_transform_curve_ = curve; }
 
 	void SetParentLayerInd(int ind){parent_layer_ind_ = ind;}
-  void SetParentGroupsInd(std::vector<unsigned int> group_ind) { groups_ind_ = group_ind; }
+  void SetGroupsInd(std::vector<unsigned int> group_ind) { groups_ind_ = group_ind; }
 
   void freashGroupPositionInitVal();
 
 protected:
+	void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
+		//need to pre-set parent_layer_ind and groups_inds
+	void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
   bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
   bool GenerateTransformMat(const TransformCurveEx& transform_curve, Transform* transform);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 public:
-  void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
-  //need to pre-set parent_layer_ind and groups_inds
-  void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
-
   template<typename T, typename OutT>
   bool GetBezierKeyframe(const Keyframe<T>& keyframe, OutT& out, unsigned int dur, unsigned int s_t, T s_v);
-
   static void ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2, unsigned int layer_ind, const std::vector<unsigned int> groups_ind);
 
 private:

@@ -142,9 +142,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
       std::vector<unsigned int> indexs = {j};
       TransformCurveEx layer_trans_curve_ex;
       TransformRenderData::ConverCurveToCurveEx(trans_render_data, layer_trans_curve_ex, i, std::vector<unsigned int>());
-      RecusUpdateTransMat(groups[j], 
-        { render_content->GetLayerData().index, render_content->GetLayerData().start_pos,  render_content->GetLayerData().end_pos },
-        indexs, render_content, layer_trans_curve_ex);
+      RecusUpdateTransMat(groups[j], render_content->GetLayerData().index, indexs, render_content, layer_trans_curve_ex);
     }
 		PathRenderData::GenPathRenderObjs(render_content, path_objs);
   }
@@ -152,14 +150,9 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
 	AniInfoManager::GetIns().SetRenderPathObjs(path_objs);
 }
 
-void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs,
+void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const unsigned int layer_ind, std::vector<unsigned int>& indexs,
   const std::shared_ptr<RenderContent> content, const TransformCurveEx& parent_curve) {
-  auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), info.layer_ind, info.in_pos, info.out_pos);
-  SetGroupTransRender(group_contents_trans, info.layer_ind - 1, indexs, group->GetTransform());
-
-
-  TransformCurveEx group_trans;
-  group_contents_trans->CompTransformCurve(group->GetTransform().get(), group_trans);
+  auto group_contents_trans = SRenderDataFactory::GetIns().CreateTransformData(group.get(), layer_ind - 1, indexs);
   auto group_curve = group_contents_trans->GetGroupOrigTransCurve();
 
   group_curve = AddTransCurve<TransformCurveEx>(group_curve, const_cast<TransformCurveEx&>(parent_curve), true);
@@ -168,7 +161,7 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
     auto child_groups = group->GetChildGroups();
     for (auto i = 0; i < child_groups.size(); ++i) {
       indexs.push_back(i);
-      RecusUpdateTransMat(child_groups[i], info, indexs, content, group_curve);
+      RecusUpdateTransMat(child_groups[i], layer_ind, indexs, content, group_curve);
 			indexs.pop_back();
     }
   }
@@ -176,7 +169,6 @@ void RenderContent::RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group,
     group_contents_trans->SetTransCurve(group_curve);
     group_contents_trans->GenerateTransformMat();
 
-    auto test = group_contents_trans->GetTransMat();
     content->SetGroupData(indexs, group_contents_trans->GetTransMat());
   }
 }
@@ -212,19 +204,6 @@ const TransCurve& RenderContent::AddTransCurve(TransCurve& curve1, TransCurve& c
     }
   }
   return curve1;
-}
-
-
-
-void RenderContent::SetGroupTransRender(const TransformRenderDataPtr tran_ptr, unsigned int layer_ind, 
-  const std::vector<unsigned int>& groups_ind, const std::shared_ptr<Transform> trans_ptr) {
-  tran_ptr->SetParentLayerInd(layer_ind);
-  tran_ptr->SetParentGroupsInd(groups_ind);
-  tran_ptr->freashGroupPositionInitVal();
-
-  auto tmp_indexs_list = groups_ind;
-  tmp_indexs_list.insert(tmp_indexs_list.begin(), layer_ind);
-  AniInfoManager::GetIns().SetLinkTransformMap(tmp_indexs_list, trans_ptr);
 }
 
 unsigned int RenderContent::GetPathIndex(const std::vector<std::shared_ptr<RenderContent>>& contents, unsigned int layer_ind, unsigned int group_ind, unsigned int path_ind){

@@ -8,23 +8,31 @@ namespace R2grap{
 TransformRenderData::TransformRenderData(const LayersInfo* layer) : //shape-layer transform 
 keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(const_cast<LayersInfo*>(layer)){
 	auto transform = layer->GetShapeTransform();
-  CompTransformCurve(transform.get(), transform_curve_, layer_->GetLayerInd());
+	transform_mat_ = new TransMat();
+	SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
+  CompTransformCurve(transform.get(), transform_curve_, (int)layer_->GetLayerInd());
 }
 
-TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int ind, float inpos, float outpos) :
-  keyframe_mat_(shape_group->GetTransform()->GetKeyframeData()), group_(const_cast<ShapeGroup*>(shape_group)) {//group transform 
+TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind) :
+  keyframe_mat_(shape_group->GetTransform()->GetKeyframeData()), group_(const_cast<ShapeGroup*>(shape_group)) ,
+	parent_layer_ind_((int)layer_ind),groups_ind_(groups_ind){//group transform
   auto transform = shape_group->GetTransform();
   transform_mat_ = new TransMat();
-  SetInandOutPos(ind, inpos, outpos);
-  //group's tranform curve need to generate after set parnet layer index and parent groups index
-  //CompTransformCurve(transform.get(), transform_curve_, ind);//gengerate origial transform curve
+	float inpos = 0, outpos = 0;
+	AniInfoManager::GetIns().GetLayerInandOutPos(layer_ind, inpos, outpos, true);
+  SetInandOutPos(layer_ind, inpos, outpos);
+
+	auto tmp_indexs_list = groups_ind;
+	tmp_indexs_list.insert(tmp_indexs_list.begin(), layer_ind);
+	AniInfoManager::GetIns().SetLinkTransformMap(tmp_indexs_list, transform);
+
+	freashGroupPositionInitVal();
+	CompTransformCurve(transform.get(), group_transform_curve_);
 }
 
 void TransformRenderData::GenerateTransformMat(){
   if (layer_) {
     auto transform = layer_->GetShapeTransform();
-		transform_mat_ = new TransMat();
-    SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
     GenerateTransformMat(transform_curve_, transform.get());
   }
   else if (group_) {
@@ -39,7 +47,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
   for (auto & it : keyframe_mat_){
     if(trans->IsVectorProperty(it.first)){ //vector
       auto vector_keyframes = std::get<t_Vector>(it.second);
-      auto start_value =  vector_keyframes[0].lastkeyValue;
+      auto start_value =  vector_keyframes.front().lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
       std::map<unsigned int, std::vector<float>> curve_line;
 
@@ -47,7 +55,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
         std::vector<std::vector<glm::vec2>> out;
         GetBezierKeyframe<glm::vec3, std::vector<std::vector<glm::vec2>>>(keyframe, out, bezier_duration, static_cast<unsigned int>(start), start_value);
-        start += static_cast<unsigned int>(out.front().size());
+        start += static_cast<float>(out.front().size());
         std::map<unsigned int, std::vector<float>> tmp_curve;
         BezierGenerator::MergeKeyframeCurve(out.front(), out.back(), tmp_curve);
         curve_line.merge(tmp_curve);
@@ -68,7 +76,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         std::map<unsigned int, float> curve;
         GetBezierKeyframe<float, std::map<unsigned int, float>>(keyframe, curve, bezier_duration, static_cast<unsigned int>(start), start_value);
 
-        start += static_cast<unsigned int>(curve.size());
+        start += static_cast<float>(curve.size());
         for (auto& pair : curve)
           curve_line[pair.first] = { pair.second };
       }
@@ -86,7 +94,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
   for (auto & it : keyframe_mat_) {
     if (trans->IsVectorProperty(it.first)) {
       auto vector_keyframes = std::get<t_Vector>(it.second);
-      auto start_value = vector_keyframes[0].lastkeyValue;
+      auto start_value = vector_keyframes.front().lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
       std::map<unsigned int, std::vector<float>> curve_line;
 
@@ -94,7 +102,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
         auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
         std::vector<std::vector<glm::vec2>> out;
         GetBezierKeyframe<glm::vec3, std::vector<std::vector<glm::vec2>>>(keyframe, out, bezier_duration, static_cast<unsigned int>(start), start_value);
-        start += static_cast<unsigned int>(out.front().size());
+        start += static_cast<float>(out.front().size());
         std::map<unsigned int, std::vector<float>> tmp_curve;
         BezierGenerator::MergeKeyframeCurve(out.front(), out.back(), tmp_curve);
         curve_line.merge(tmp_curve);
@@ -103,7 +111,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
     }
     else {
       auto scalar_keyframes = std::get<t_Scalar>(it.second);
-      auto start_value = scalar_keyframes[0].lastkeyValue;
+      auto start_value = scalar_keyframes.front().lastkeyValue;
       auto start = static_cast<unsigned int>(scalar_keyframes.front().lastkeyTime);
       std::map<unsigned int, std::vector<float>> curve_line;
 
@@ -127,7 +135,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
 
   if(!transform_mat_) return false;
   transform_mat_->trans.clear();
-	auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
+	auto frame_lenth = static_cast<unsigned int>(transform_mat_->clip_end - transform_mat_->clip_start + 1);
 
   for (unsigned int i = 0; i < frame_lenth; i++){
     glm::mat4 trans = glm::mat4(1.0f);

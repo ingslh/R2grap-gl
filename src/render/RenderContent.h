@@ -137,8 +137,7 @@ private:
   void LoadPathContent(const BezierVertData& vert_data, GroupData& group);
   void RecusCalcRenderData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, GroupData& group_data ,bool& no_keyframe);
 
-  static void SetGroupTransRender(const TransformRenderDataPtr tran_ptr, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind, const std::shared_ptr<Transform> trans_ptr);
-  static void RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const LayerInOut& info, std::vector<unsigned int>& indexs, 
+  static void RecusUpdateTransMat(const std::shared_ptr<ShapeGroup> group, const unsigned int layer_ind, std::vector<unsigned int>& indexs,
     const std::shared_ptr<RenderContent> content,const TransformCurveEx& parent_curve);
 
   template<typename TransCurve>

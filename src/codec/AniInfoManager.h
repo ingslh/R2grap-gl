@@ -19,7 +19,7 @@ public:
   void SetLayersLinkMap(const std::map<unsigned int, std::vector<unsigned int>>& link_map);
   void SetLayerTransform(unsigned int ind, std::shared_ptr<Transform> transform);
 	void SetGroupsTransform(unsigned int lay_ind, const std::vector<unsigned int>& group_inds, std::shared_ptr<Transform> transform);
-  void AppendLayerInandOut(unsigned int ind, unsigned int in, unsigned int out);
+  void AppendLayerInandOut(unsigned int ind, float in, float out);
 
 	void SetRenderPathObjs(const std::vector<RePathObj>& objs){render_path_objs_ = objs;}
 	const std::vector<RePathObj>& GetRenderPathObjs()const {return render_path_objs_;}
@@ -35,7 +35,7 @@ public:
   unsigned int GetDuration(){return duration_;}
   unsigned int GetLayersNum(){return layers_num_;}
   std::map<unsigned int, std::vector<unsigned int>> GetLayersLinkMap(){return layers_link_map_;}
-  void GetLayerInandOutPos(unsigned int ind, unsigned int& in, unsigned int& out);
+  void GetLayerInandOutPos(unsigned int ind, float& in, float& out, bool out_times = false);
 
   void SetLinkTransformMap(const std::vector<unsigned int>& link_indexs, const std::shared_ptr<Transform> tran_ptr) {
     link_transform_map_[link_indexs] = tran_ptr;
@@ -75,7 +75,7 @@ private:
   unsigned int layers_num_;
   std::map<unsigned int, std::vector<unsigned int>> layers_link_map_;
   std::map<unsigned int, TransformPorperty> layers_transform_map_;
-  std::map<unsigned int, std::pair<unsigned int, unsigned int>> layers_inout_map_;
+  std::map<unsigned int, std::pair<float, float>> layers_inout_map_;
 	std::vector<GroupTrans> groups_transform_list_;
 	std::vector<RePathObj> render_path_objs_;
   std::map<std::vector<unsigned int>, std::shared_ptr<Transform>> link_transform_map_; //for groups

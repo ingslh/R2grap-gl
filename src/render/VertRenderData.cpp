@@ -51,7 +51,7 @@ void VerticesRenderData::GenerateVertCacheData(const std::vector<unsigned int>& 
       signal_path_data.tri_index = paths[i]->GetTriIndexList();
 
     if (paths[i]->HasKeyframe()) {
-      unsigned int inpos = 0, outpos = 0;
+      float inpos = 0, outpos = 0;
       AniInfoManager::GetIns().GetLayerInandOutPos(layer_ind_, inpos, outpos);
       auto linear_map = paths[i]->GetLinearMap();
 
