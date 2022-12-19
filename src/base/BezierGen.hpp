@@ -74,6 +74,17 @@ public:
       if(it.in.x == 0 && it.in.y == 0 && it.out.x ==0 && it.out.y == 0)
         bezier_verts_.emplace_back(it.start);
       else{
+        auto dis = (unsigned int)glm::distance(it.end, it.start);
+        if (dis < 5) {
+          default_segments_ = 5;
+        }
+        else if (dis>=5 && dis <= 10) {
+          default_segments_ =  10;
+        }
+        else if (dis > 10) {
+          default_segments_ = 15;
+        }
+
         auto delta = 1.0/float(default_segments_);
         for(unsigned int i = 0; i <= default_segments_; i++){
           auto t = static_cast<float>(delta * float(i));
@@ -87,6 +98,17 @@ public:
   }
 
   BezierGenerator(const BezierCluster& cluster) {
+    auto dis = (unsigned int)glm::distance(cluster.end, cluster.start);
+    if (dis < 5) {
+      default_segments_ = 5;
+    }
+    else if (dis >= 5 && dis <= 10) {
+      default_segments_ = 10;
+    }
+    else if (dis > 10) {
+      default_segments_ = 15;
+    }
+
     auto delta = 1.0 / float(default_segments_);
     for (unsigned int i = 0; i <= default_segments_; i++) {
       auto t = static_cast<float>(delta * float(i));

@@ -18,7 +18,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
 
 int main()
 {
-  JsonReader reader("../assets/designers.json");
+  JsonReader reader("../assets/Gender.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 
@@ -27,6 +27,7 @@ int main()
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_SAMPLES, 4);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -55,6 +56,7 @@ int main()
   // configure global opengl state
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 
   // build and compile shaders
   // -------------------------
