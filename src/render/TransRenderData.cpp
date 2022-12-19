@@ -10,7 +10,10 @@ keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(const_cast<
 	auto transform = layer->GetShapeTransform();
 	transform_mat_ = new TransMat();
 	SetInandOutPos(layer_->GetLayerInd(), layer_->GetLayerInpos(), layer_->GetLayerOutpos());
-  CompTransformCurve(transform.get(), transform_curve_, (int)layer_->GetLayerInd());
+
+  AniInfoManager::GetIns().SetLinkTransformMap({ (unsigned int)layer_->GetLayerInd() - 1 }, transform);
+
+  CompTransformCurve(transform.get(), transform_curve_, (int)layer_->GetLayerInd() - 1);
 }
 
 TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind) :
@@ -61,7 +64,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
         curve_line.merge(tmp_curve);
       }
       PosRelateCurve pos_relate_curve;
-      pos_relate_curve.layer_ind = ind - 1;
+      pos_relate_curve.layer_ind = ind;
       pos_relate_curve.value_map_ = curve_line;
       curve[it.first] = std::vector<PosRelateCurve>({ pos_relate_curve });
     }
@@ -81,7 +84,7 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
           curve_line[pair.first] = { pair.second };
       }
       PosRelateCurve pos_relate_curve;
-      pos_relate_curve.layer_ind = ind - 1;
+      pos_relate_curve.layer_ind = ind;
       pos_relate_curve.value_map_ = curve_line;
       curve[it.first] = std::vector<PosRelateCurve>({ pos_relate_curve });
     }
@@ -143,14 +146,13 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
       std::vector<float> offset;
       offset.resize(2);
       auto pos_curve = transform_curve.at("Position").begin();
-      for (auto j = 0; j < offset.size(); j++) {
-        if(i < pos_curve->value_map_.begin()->first)
-          offset[j] = pos_curve->value_map_.begin()->second[j];
-        else if( i > pos_curve->value_map_.rbegin()->first)
-          offset[j] = pos_curve->value_map_.rbegin()->second[j];
-        else
-          offset[j] = pos_curve->value_map_.at(i).at(j);
-      }
+      if(i < pos_curve->value_map_.begin()->first)
+        offset = pos_curve->value_map_.begin()->second;
+      else if( i > pos_curve->value_map_.rbegin()->first)
+        offset = pos_curve->value_map_.rbegin()->second;
+      else
+        offset = pos_curve->value_map_.at(i);
+      
       trans = glm::translate(trans, glm::vec3(offset.front()/reslution.x, offset.back()/reslution.y, 0));
     }
 
@@ -159,10 +161,11 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
       auto rot_curves = transform_curve.at("Rotation");
 			glm::mat4 rot_trans = glm::mat4(1.0f);
       for(auto& rot_curve : rot_curves){
-        auto layer_ind = rot_curve.layer_ind;
-				auto start_rot = AniInfoManager::GetIns().GetTransRotation(layer_ind);
-        auto pos_v2 = AniInfoManager::GetIns().GetTransPos(layer_ind);
-        auto pos_v3 = glm::vec3(pos_v2.x, pos_v2.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
+        std::vector<unsigned int> tmp_indexs = { rot_curve.layer_ind };
+        glm::vec3 rot_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
+        float start_rot = AniInfoManager::GetIns().GetTransRotation(tmp_indexs.front());
+        rot_pos = glm::vec3(rot_pos.x, rot_pos.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
+
         if (i < rot_curve.value_map_.begin()->first)
           rot = rot_curve.value_map_.begin()->second.front();
         else if(i > rot_curve.value_map_.rbegin()->first)
@@ -170,9 +173,9 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
         else
           rot = rot_curve.value_map_.at(i).front();
         
-        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(pos_v3.x, pos_v3.y, 0));
+        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(rot_pos.x, rot_pos.y, 0));
         auto r = glm::rotate(glm::mat4(1), glm::radians(start_rot + rot), glm::vec3(0, 0, 1.0));
-        auto t2 = glm::translate(glm::mat4(1), glm::vec3(pos_v3.x, pos_v3.y, 0));
+        auto t2 = glm::translate(glm::mat4(1), glm::vec3(rot_pos.x, rot_pos.y, 0));
         trans = trans * t2 * r * t1;
       }
     }
@@ -182,21 +185,21 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
       scale.resize(2);
       auto scale_curves = transform_curve.at("Scale");
       for (auto& scale_curve : scale_curves) {
-        auto layer_ind = scale_curve.layer_ind ;
-        auto pos_v2 = AniInfoManager::GetIns().GetTransPos(layer_ind);
-        auto start_pos = glm::vec3(pos_v2.x, pos_v2.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
-        auto start_scale = AniInfoManager::GetIns().GetTransScale(layer_ind);
-        for (auto j = 0; j < scale.size(); j++) {
-          if (i < scale_curve.value_map_.begin()->first)
-            scale[j] = scale_curve.value_map_.begin()->second[j];
-          else if (i > scale_curve.value_map_.rbegin()->first)
-            scale[j] = scale_curve.value_map_.rbegin()->second[j];
-          else
-            scale[j] = scale_curve.value_map_[i][j];
-        }
-        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(start_pos));
+        std::vector<unsigned int> tmp_indexs = { scale_curve.layer_ind };
+        glm::vec3 scale_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
+        scale_pos = glm::vec3(scale_pos.x, scale_pos.y, 0) / reslution - glm::vec3(0.5, 0.5, 0);
+        auto start_scale = glm::vec3(AniInfoManager::GetIns().GetTransScale(tmp_indexs.front()), 0);
+
+        if (i < scale_curve.value_map_.begin()->first)
+          scale = scale_curve.value_map_.begin()->second;
+        else if (i > scale_curve.value_map_.rbegin()->first)
+          scale = scale_curve.value_map_.rbegin()->second;
+        else
+          scale = scale_curve.value_map_.at(i);
+
+        auto t1 = glm::translate(glm::mat4(1), -glm::vec3(scale_pos.x, scale_pos.y, 0));
         auto s = glm::scale(glm::mat4(1), glm::vec3((start_scale.x + scale.front()) / 100, (start_scale.y + scale.back()) / 100, 1.0));
-        auto t2 = glm::translate(glm::mat4(1), glm::vec3(start_pos));
+        auto t2 = glm::translate(glm::mat4(1), glm::vec3(scale_pos.x, scale_pos.y, 0));
         trans = trans * t2 * s * t1;
       }
     }
@@ -220,14 +223,13 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
       std::vector<float> offset;
       offset.resize(2);
       auto pos_curve = transform_curve.at("Position").begin();
-      for (auto j = 0; j < offset.size(); j++) {
-        if (i < pos_curve->value_map_.begin()->first)
-          offset[j] = pos_curve->value_map_.begin()->second[j];
-        else if (i > pos_curve->value_map_.rbegin()->first)
-          offset[j] = pos_curve->value_map_.rbegin()->second[j];
-        else
-          offset[j] = pos_curve->value_map_.at(i).at(j);
-      }
+      if (i < pos_curve->value_map_.begin()->first)
+        offset = pos_curve->value_map_.begin()->second;
+      else if (i > pos_curve->value_map_.rbegin()->first)
+        offset = pos_curve->value_map_.rbegin()->second;
+      else
+        offset = pos_curve->value_map_.at(i);
+      
       trans = glm::translate(trans, glm::vec3(offset.front() / reslution.x, offset.back() / reslution.y, 0));
     }
 
@@ -243,8 +245,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
         if (AniInfoManager::GetIns().ExistLinkTrans(tmp_indexs)) {
           rot_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
           start_rot = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetRotation();
-        }
-        else {
+        }else {
           rot_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
           start_rot = AniInfoManager::GetIns().GetTransRotation(tmp_indexs.front());
         }
@@ -274,8 +275,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
         if (AniInfoManager::GetIns().ExistLinkTrans(tmp_indexs)) {
           scale_pos = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetPosition();
           start_scale = AniInfoManager::GetIns().GetLinkTransPtrbyIndexs(tmp_indexs)->GetScale();
-        }
-        else {
+        }else {
           scale_pos = glm::vec3(AniInfoManager::GetIns().GetTransPos(tmp_indexs.front()), 0);
           start_scale = glm::vec3(AniInfoManager::GetIns().GetTransScale(tmp_indexs.front()), 0);
         }
