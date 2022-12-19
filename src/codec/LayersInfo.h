@@ -20,7 +20,7 @@ private:
   std::vector<std::shared_ptr<PathInfo>> paths_;
   std::shared_ptr<FillInfo> fills_ = nullptr;
   std::shared_ptr<StrokeInfo> stroke_ = nullptr;
-  bool existMergePaths_;
+  bool existMergePaths_ = false;
 };
 
 class ShapeGroup : public std::enable_shared_from_this<ShapeGroup>{

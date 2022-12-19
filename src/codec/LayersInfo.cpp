@@ -48,7 +48,13 @@ start_time_(layer["startTime"]),out_point_(layer["outPoint"]),in_point_(layer["i
 	link_ = layer["Link"].is_number() ? static_cast<int>(layer["Link"]) : -1;
   transform_ = std::make_shared<Transform>(layer["Transform"],true);
   auto contents = layer["Contents"].items();
-  for(auto& el : contents){
-    groups_.emplace_back(std::make_shared<ShapeGroup>(el.value()));
+  std::map<int, nlohmann::json> groups;
+  for (auto& el : contents) {
+    auto key = std::stoi(el.key().substr(strlen("Group")));
+    groups[key] = el.value();
+  }
+
+  for(auto& it : groups){
+    groups_.emplace_back(std::make_shared<ShapeGroup>(it.second));
   }
 }
