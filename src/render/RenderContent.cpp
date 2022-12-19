@@ -116,7 +116,6 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
 
   //Build the layer's transition animation data(render_content->layer_data_->trans)
   for(auto i = 0; i < contents.size(); i++){
-    std::vector<RePathObj> layer_path_objs;
     const auto& render_content = contents[i];
     auto trans_render_data = render_content->GetTransRenderData()->GetOrigTransCurve();
     auto link_layers = link_map[i];
@@ -130,16 +129,15 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
     render_content->GetTransRenderData()->GenerateTransformMat();
 		render_content->SetLayerDataTransMat(render_content->GetTransRenderData()->GetTransMat());
 
-
     //Recus layer's shapgroups to generate ervery child-group's transform curve and transform matrix;
-		//if(render_content->GetLayerData().groups_no_keyframe) continue;
-    auto groups = render_content->GetShapeGroups();
-
-    for (unsigned int j = 0; j < groups.size(); j++) {
-      std::vector<unsigned int> indexs = {j};
-      TransformCurveEx layer_trans_curve_ex;
-      TransformRenderData::ConverCurveToCurveEx(trans_render_data, layer_trans_curve_ex, i, std::vector<unsigned int>());
-      RecusUpdateTransMat(groups[j], render_content->GetLayerData().index, indexs, render_content, layer_trans_curve_ex);
+    if (!render_content->GetLayerData().groups_no_keyframe) {
+      auto groups = render_content->GetShapeGroups();
+      for (unsigned int j = 0; j < groups.size(); j++) {
+        std::vector<unsigned int> indexs = { j };
+        TransformCurveEx layer_trans_curve_ex;
+        TransformRenderData::ConverCurveToCurveEx(trans_render_data, layer_trans_curve_ex, i, std::vector<unsigned int>());
+        RecusUpdateTransMat(groups[j], render_content->GetLayerData().index, indexs, render_content, layer_trans_curve_ex);
+      }
     }
 		PathRenderData::GenPathRenderObjs(render_content, path_objs);
   }

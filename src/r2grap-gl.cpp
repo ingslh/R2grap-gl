@@ -22,7 +22,6 @@ int main()
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 
-
   // glfw: initialize and configure
   // ------------------------------
   glfwInit();
