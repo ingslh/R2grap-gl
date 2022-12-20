@@ -13,8 +13,12 @@
 using namespace R2grap;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
+
+// timing
+float input_deltaTime = 0.0f;	// time between current frame and last frame
 
 int main()
 {
@@ -44,7 +48,7 @@ int main()
     return -1;
   }
   glfwMakeContextCurrent(window);
-
+  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //disable the mouse
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -122,14 +126,8 @@ int main()
 	}
 
   glfwSwapInterval(1);// open the vertical synchronization
-  // draw points
+
   shader.use();
-  glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-  glm::mat4 view = camera.GetViewMatrix();
-  glm::mat4 model = glm::mat4(1.0f);
-  shader.setMat4("projection", projection);
-  shader.setMat4("view", view);
-  shader.setMat4("model", model);
 
   static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
   double lastTime = glfwGetTime(), timer = lastTime;
@@ -144,12 +142,23 @@ int main()
   {
     // - Measure time
     nowTime = glfwGetTime();
-    deltaTime += (nowTime - lastTime) / limitFPS;
+    input_deltaTime = nowTime - lastTime;
+    deltaTime += input_deltaTime / limitFPS;
     lastTime = nowTime;
 
+    //Input
+    processInput(window);
+    //Render
     while (deltaTime >= 1.0) { // render
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+      glm::mat4 view = camera.GetViewMatrix();
+      glm::mat4 model = glm::mat4(1.0f);
+      shader.setMat4("projection", projection);
+      shader.setMat4("view", view);
+      shader.setMat4("model", model);
 
 			for(auto ind = 0; ind < objs.size(); ind++){
 				auto obj = objs[ind];
@@ -203,9 +212,8 @@ int main()
       frames++;
       deltaTime--;
 			glfwSwapBuffers(window);
+      glfwPollEvents();
     }
-
-
 
     // - Reset after one second
     if (glfwGetTime() - timer > 1.0) {
@@ -214,9 +222,6 @@ int main()
       frames = 0;
     }
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
-    //glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 
   // optional: de-allocate all resources once they've outlived their purpose:
@@ -236,4 +241,19 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
   // make sure the viewport matches the new window dimensions; note that width and 
   // height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window)
+{
+   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
+
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    camera.ProcessKeyboard(FORWARD, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    camera.ProcessKeyboard(BACKWARD, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    camera.ProcessKeyboard(LEFT, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    camera.ProcessKeyboard(RIGHT, input_deltaTime);
 }

@@ -37,7 +37,8 @@ set(CODEC
     src/codec/LinkLayer.cpp
     src/codec/JsonReader.h
     src/codec/JsonReader.cpp
-        src/codec/FillInfo.cpp src/codec/StrokeInfo.cpp)
+    src/codec/FillInfo.cpp 
+	src/codec/StrokeInfo.cpp)
 
 set(RENDER
     src/render/BaseRenderData.h
