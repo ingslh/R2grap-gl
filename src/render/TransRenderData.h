@@ -27,17 +27,17 @@ public:
   void freashGroupPositionInitVal();
 
 protected:
-	void CompTransformCurve(Transform* trans, TransformCurve& curve, int layer_ind = -1);
+	void CompTransformCurve(TransformCurve& curve, int layer_ind = -1);
 		//need to pre-set parent_layer_ind and groups_inds
-	void CompTransformCurve(const Transform* trans, TransformCurveEx& curve);
-  bool GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform);
-  bool GenerateTransformMat(const TransformCurveEx& transform_curve, Transform* transform);
+	void CompTransformCurve(TransformCurveEx& curve);
+  bool GenerateTransformMat(const TransformCurve& transform_curve);
+  bool GenerateTransformMat(const TransformCurveEx& transform_curve);
   void SetInandOutPos(unsigned int ind, float in_pos, float out_pos);
 
 public:
   template<typename T, typename OutT>
   bool GetBezierKeyframe(const Keyframe<T>& keyframe, OutT& out, unsigned int dur, unsigned int s_t, T s_v);
-  static void ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2, unsigned int layer_ind, const std::vector<unsigned int> groups_ind);
+  static void ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2);
 
 private:
   /*struct TransMat {

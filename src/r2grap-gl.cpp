@@ -22,7 +22,7 @@ float input_deltaTime = 0.0f;	// time between current frame and last frame
 
 int main()
 {
-  JsonReader reader("../assets/Gender.json");
+  JsonReader reader("../assets/thinking.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 

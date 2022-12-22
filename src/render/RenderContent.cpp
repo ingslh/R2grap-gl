@@ -135,7 +135,7 @@ void RenderContent::UpdateTransRenderData(const std::vector<std::shared_ptr<Rend
       for (unsigned int j = 0; j < groups.size(); j++) {
         std::vector<unsigned int> indexs = { j };
         TransformCurveEx layer_trans_curve_ex;
-        TransformRenderData::ConverCurveToCurveEx(trans_render_data, layer_trans_curve_ex, i, std::vector<unsigned int>());
+        TransformRenderData::ConverCurveToCurveEx(trans_render_data, layer_trans_curve_ex);
         RecusUpdateTransMat(groups[j], render_content->GetLayerData().index, indexs, render_content, layer_trans_curve_ex);
       }
     }

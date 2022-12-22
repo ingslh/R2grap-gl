@@ -13,7 +13,7 @@ keyframe_mat_(layer->GetShapeTransform()->GetKeyframeData()), layer_(const_cast<
 
   AniInfoManager::GetIns().SetLinkTransformMap({ (unsigned int)layer_->GetLayerInd() - 1 }, transform);
 
-  CompTransformCurve(transform.get(), transform_curve_, (int)layer_->GetLayerInd() - 1);
+  CompTransformCurve(transform_curve_, (int)layer_->GetLayerInd() - 1);
 }
 
 TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned int layer_ind, const std::vector<unsigned int>& groups_ind) :
@@ -30,25 +30,25 @@ TransformRenderData::TransformRenderData(const ShapeGroup* shape_group, unsigned
 	AniInfoManager::GetIns().SetLinkTransformMap(tmp_indexs_list, transform);
 
 	freashGroupPositionInitVal();
-	CompTransformCurve(transform.get(), group_transform_curve_);
+	CompTransformCurve(group_transform_curve_);
 }
 
 void TransformRenderData::GenerateTransformMat(){
   if (layer_) {
     auto transform = layer_->GetShapeTransform();
-    GenerateTransformMat(transform_curve_, transform.get());
+    GenerateTransformMat(transform_curve_);
   }
   else if (group_) {
     auto transform = group_->GetTransform();
-    GenerateTransformMat(group_transform_curve_, transform.get());
+    GenerateTransformMat(group_transform_curve_);
   }
 }
 
 
-void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& curve, int ind){
+void TransformRenderData::CompTransformCurve(TransformCurve& curve, int ind){
   curve.clear();
   for (auto & it : keyframe_mat_){
-    if(trans->IsVectorProperty(it.first)){ //vector
+    if(R2grap::Transform::IsVectorProperty(it.first)){ //vector
       auto vector_keyframes = std::get<t_Vector>(it.second);
       auto start_value =  vector_keyframes.front().lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
@@ -76,11 +76,11 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
 
       for(auto& keyframe : scalar_keyframes){
         auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
-        std::map<unsigned int, float> curve;
-        GetBezierKeyframe<float, std::map<unsigned int, float>>(keyframe, curve, bezier_duration, static_cast<unsigned int>(start), start_value);
+        std::map<unsigned int, float> out;
+        GetBezierKeyframe<float, std::map<unsigned int, float>>(keyframe, out, bezier_duration, static_cast<unsigned int>(start), start_value);
 
-        start += static_cast<float>(curve.size());
-        for (auto& pair : curve)
+        start += static_cast<float>(out.size());
+        for (auto& pair : out)
           curve_line[pair.first] = { pair.second };
       }
       PosRelateCurve pos_relate_curve;
@@ -92,10 +92,10 @@ void TransformRenderData::CompTransformCurve(Transform* trans, TransformCurve& c
 	orig_transform_curve_ = curve;
 }
 
-void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCurveEx& curve) {
+void TransformRenderData::CompTransformCurve(TransformCurveEx& curve) {
   curve.clear();
   for (auto & it : keyframe_mat_) {
-    if (trans->IsVectorProperty(it.first)) {
+    if (R2grap::Transform::IsVectorProperty(it.first)) {
       auto vector_keyframes = std::get<t_Vector>(it.second);
       auto start_value = vector_keyframes.front().lastkeyValue;
       auto start = vector_keyframes.front().lastkeyTime;
@@ -120,11 +120,11 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
 
       for (auto& keyframe : scalar_keyframes) {
         auto bezier_duration = static_cast<unsigned int>(keyframe.keyTime - keyframe.lastkeyTime);
-        std::map<unsigned int, float> curve;
-        GetBezierKeyframe<float, std::map<unsigned int, float>>(keyframe, curve, bezier_duration, static_cast<unsigned int>(start), start_value);
+        std::map<unsigned int, float> out;
+        GetBezierKeyframe<float, std::map<unsigned int, float>>(keyframe, out, bezier_duration, static_cast<unsigned int>(start), start_value);
 
-        start += static_cast<unsigned int>(curve.size());
-        for (auto& pair : curve)
+        start += static_cast<unsigned int>(out.size());
+        for (auto& pair : out)
           curve_line[pair.first] = { pair.second };
       }
       curve[it.first] = { { static_cast<unsigned int>(parent_layer_ind_), groups_ind_, curve_line } };
@@ -133,7 +133,7 @@ void TransformRenderData::CompTransformCurve(const Transform* trans, TransformCu
   orig_group_transform_curve_ = curve;
 }
 
-bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve, Transform* transform){
+bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_curve){
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 1);
 
   if(!transform_mat_) return false;
@@ -209,7 +209,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurve& transform_c
 	return true;
 }
 
-bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform_curve, Transform* transform) {
+bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform_curve) {
   auto reslution = glm::vec3(AniInfoManager::GetIns().GetWidth(), AniInfoManager::GetIns().GetHeight(), 0);
 
   if (!transform_mat_) return false;
@@ -217,7 +217,7 @@ bool TransformRenderData::GenerateTransformMat(const TransformCurveEx& transform
 
   auto frame_lenth = transform_mat_->clip_end - transform_mat_->clip_start + 1;
 
-  for (unsigned int i = 0; i < frame_lenth; i++) {
+  for (auto i = 0; i < (unsigned int)frame_lenth; i++) {
     glm::mat4 trans = glm::mat4(1.0f);
     if (transform_curve.count("Position")) {
       std::vector<float> offset;
@@ -314,6 +314,7 @@ void TransformRenderData::freashGroupPositionInitVal() {
 }
 
 void TransformRenderData::SetInandOutPos(unsigned int ind, float in_pos, float out_pos) {
+	if(!transform_mat_) return;
   transform_mat_->layer_index = ind;
   auto frameRate = AniInfoManager::GetIns().GetFrameRate();
   auto duration = AniInfoManager::GetIns().GetDuration();
@@ -322,8 +323,7 @@ void TransformRenderData::SetInandOutPos(unsigned int ind, float in_pos, float o
 }
 
 //
-void TransformRenderData::ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2,
-  unsigned int layer_ind, const std::vector<unsigned int> groups_ind) {
+void TransformRenderData::ConverCurveToCurveEx(const TransformCurve& curve1, TransformCurveEx& curve2) {
   for (auto& it : curve1) {
     auto posrelat_curves = it.second;
 		std::vector<TransPropEx> trans_prop_ex_list;
