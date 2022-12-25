@@ -14,7 +14,7 @@ VerticesRenderData::VerticesRenderData(const LayersInfo* data){
   }
 }
 
-void VerticesRenderData::RecusCalcBezierVertData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, glm::vec3 parent_offset) {
+void VerticesRenderData::RecusCalcBezierVertData(const std::shared_ptr<ShapeGroup>& group, std::vector<unsigned int> indexs, glm::vec3 parent_offset) {
   if (group->HasChildGroups()) {
     auto child_groups = group->GetChildGroups();
     for (auto i = 0; i < child_groups.size(); i++) {
@@ -31,7 +31,7 @@ void VerticesRenderData::RecusCalcBezierVertData(const std::shared_ptr<ShapeGrou
   }
 }
 
-void VerticesRenderData::GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset, std::vector<BezierVertData>& vert_data) {
+void VerticesRenderData::GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup>& group, glm::vec3 parent_offset, std::vector<BezierVertData>& vert_data) {
   auto paths = group->GetContents()->GetPaths();
   auto final_offset = group->GetTransform()->GetPosition() + parent_offset;
   for (auto i = 0; i < paths.size(); i++) {
@@ -67,11 +67,11 @@ void VerticesRenderData::GenerateVertCacheData(const std::vector<unsigned int>& 
         signal_path_data.linear_verts[el.first] = tmp_float_arr;
       }
       auto tmp_path_data = signal_path_data.linear_verts;
-      for (auto i = inpos; i <= outpos; i++) {
-        if (!tmp_path_data.count(i) && i < tmp_path_data.begin()->first)
-          signal_path_data.linear_verts[i] = tmp_path_data.begin()->second;
-        else if (!tmp_path_data.count(i) && i > tmp_path_data.rbegin()->first)
-          signal_path_data.linear_verts[i] = tmp_path_data.rbegin()->second;
+      for (auto ind = (unsigned int)inpos; ind <= (unsigned int)outpos; ind++) {
+        if (!tmp_path_data.count(ind) && ind < tmp_path_data.begin()->first)
+          signal_path_data.linear_verts[ind] = tmp_path_data.begin()->second;
+        else if (!tmp_path_data.count(ind) && ind > tmp_path_data.rbegin()->first)
+          signal_path_data.linear_verts[ind] = tmp_path_data.rbegin()->second;
       }
     }
 

@@ -37,12 +37,12 @@ public:
   T Normalize(const T& pos); 
 
 private:
-  void GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup> group, glm::vec3 parent_offset,std::vector<BezierVertData>& vert_data);
-  void RecusCalcBezierVertData(std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs, glm::vec3 parent_offset);
+  void GenerateVertCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup>& group, glm::vec3 parent_offset,std::vector<BezierVertData>& vert_data);
+  void RecusCalcBezierVertData(const std::shared_ptr<ShapeGroup>& group, std::vector<unsigned int> indexs, glm::vec3 parent_offset);
 
 private:
   std::vector<BezierVertData> bezier_vert_data_;//Index is group index
-  unsigned int paths_count_;
+
   unsigned int layer_ind_;
 };
 

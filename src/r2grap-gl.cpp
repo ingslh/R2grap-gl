@@ -22,7 +22,7 @@ float input_deltaTime = 0.0f;	// time between current frame and last frame
 
 int main()
 {
-  JsonReader reader("../assets/thinking.json");
+  JsonReader reader("../assets/designers.json");
   unsigned int SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
   unsigned int SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
 
@@ -79,7 +79,7 @@ int main()
 	std::vector<RePathObj> objs;
 	RenderContent::UpdateTransRenderData(contents,objs);
 
-  auto paths_count = static_cast<unsigned int>(objs.size());
+  auto paths_count = static_cast<int>(objs.size());
 
   unsigned int* VBOs = new unsigned int[paths_count];
   unsigned int* VAOs = new unsigned int[paths_count];

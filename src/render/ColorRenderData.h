@@ -48,11 +48,11 @@ class LayersInfo;
 class ColorRenderData : public R2grap::BaseRenderData{
 public:
   ColorRenderData(const LayersInfo* layer);
-  const std::vector<ColorCacheData>& GetColor(std::vector<unsigned int>& indexs)const;
+  std::vector<ColorCacheData> GetColor(std::vector<unsigned int>& indexs)const;
 
 private:
   void GenerateColorCacheData(const std::vector<unsigned int>& indexs, const std::shared_ptr<ShapeGroup> group, MulitColorData& color_data);
-  void RecusCalcColorData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs);
+  void RecusCalcColorData(const std::shared_ptr<ShapeGroup>& group, const std::vector<unsigned int>& indexs);
   void ProcessColorData(const KeyframePair& key_pair, ColorCacheData& color_data);
 
   unsigned int fills_count_;

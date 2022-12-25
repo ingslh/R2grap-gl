@@ -14,7 +14,7 @@ ColorRenderData::ColorRenderData(const LayersInfo* data){
   }
 }
 
-void ColorRenderData::RecusCalcColorData(const std::shared_ptr<ShapeGroup> group, std::vector<unsigned int> indexs) {
+void ColorRenderData::RecusCalcColorData(const std::shared_ptr<ShapeGroup>& group, const std::vector<unsigned int>& indexs) {
   if (group->HasChildGroups()) {
     auto child_groups = group->GetChildGroups();
     for (auto i = 0; i < child_groups.size(); i++) {
@@ -49,8 +49,8 @@ void ColorRenderData::GenerateColorCacheData(const std::vector<unsigned int>& in
     auto stroke_opacity = content->GetStroke()->GetOpacity();
 
     ColorCacheData tmp_data( ColorDataType::t_cStroke, stroke_color, stroke_opacity);
-    tmp_data.stroke_wid = content->GetStroke()->GetStrokeWidth();
-    tmp_data.miter_limit = content->GetStroke()->GetMiterLimit();
+    tmp_data.stroke_wid = (float)content->GetStroke()->GetStrokeWidth();
+    tmp_data.miter_limit = (float)content->GetStroke()->GetMiterLimit();
     auto keyframe_map = content->GetStroke()->GetKeyframeData();
     for (auto& it : keyframe_map) {
       ProcessColorData(it, tmp_data);
@@ -97,14 +97,14 @@ void ColorRenderData::ProcessColorData(const KeyframePair& key_pair, ColorCacheD
   }
 }
 
-const std::vector<ColorCacheData>& ColorRenderData::GetColor(std::vector<unsigned int>& indexs)const {
+std::vector<ColorCacheData> ColorRenderData::GetColor(std::vector<unsigned int>& indexs)const {
   auto it = std::find_if(multi_color_data_.begin(), multi_color_data_.end(), [&](const MulitColorData& cache) {
     return cache.group_indexs == indexs;
   });
   if (it != multi_color_data_.end())
     return it->color_cache_data;
   else
-    return std::vector<ColorCacheData>();
+    return {};
 }
 
 }
