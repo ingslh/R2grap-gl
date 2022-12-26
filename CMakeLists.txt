@@ -8,52 +8,24 @@ project(R2grap-gl)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(BASE
-    src/base/BezierGen.hpp
-    src/base/JsonConver.hpp
-    src/base/KeyframeGen.hpp
-    src/base/Polygon.hpp
-    src/base/TransComp.hpp
+file (GLOB BASE CONFIG_DEFENDS
+	src/base/*.hpp
+)
+
+file(GLOB CODEC CONFIG_DEFENDS
+	src/codec/*.h
+	src/codec/*.cpp
+)
+
+file(GLOB RENDER CONFIG_DEFENDS
+	src/render/*.h
+	src/render/*.cpp
 )
 
 set(SHADER
     src/shader/bezier_insert.geom
     src/shader/r2grap_m.frag
     src/shader/r2grap_m.vert
-)
-
-set(CODEC
-    src/codec/AniInfoManager.h
-    src/codec/AniInfoManager.cpp
-    src/codec/FillInfo.h
-    src/codec/PathInfo.h
-    src/codec/PathInfo.cpp
-    src/codec/StrokeInfo.h
-    src/codec/LayersInfo.h
-    src/codec/LayersInfo.cpp
-    src/codec/Transform.h
-    src/codec/Transform.cpp
-    src/codec/LinkLayer.h
-    src/codec/LinkLayer.cpp
-    src/codec/JsonReader.h
-    src/codec/JsonReader.cpp
-    src/codec/FillInfo.cpp 
-	src/codec/StrokeInfo.cpp)
-
-set(RENDER
-    src/render/BaseRenderData.h
-    src/render/ColorRenderData.h
-    src/render/ColorRenderData.cpp
-    src/render/RenderContent.h
-    src/render/RenderContent.cpp
-    src/render/RenderDataFactory.h
-    src/render/RenderDataFactory.cpp
-    src/render/TransRenderData.h
-    src/render/TransRenderData.cpp
-    src/render/VertRenderData.h
-    src/render/VertRenderData.cpp
-    src/render/PathRenderData.h
-    src/render/PathRenderData.cpp
 )
 
 set(MAIN src/r2grap-gl.cpp)
@@ -96,7 +68,7 @@ set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})
 
 set(INCLUDE_DIRECTORIES 
   ${CMAKE_CURRENT_LIST_DIR}/include
-	${CMAKE_CURRENT_LIST_DIR}/src/codec
+  ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
 )
