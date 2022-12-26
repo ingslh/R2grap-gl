@@ -1,3 +1,4 @@
+#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -8,14 +9,12 @@
 #include "RenderContent.h"
 #include "AniInfoManager.h"
 #include "PathRenderData.h"
-
-#include <iostream>
 using namespace R2grap;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
-Camera camera(glm::vec3(0.0f, 0.0f, 0.9f));
+Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
 // timing
 float input_deltaTime = 0.0f;	// time between current frame and last frame

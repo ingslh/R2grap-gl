@@ -28,7 +28,7 @@ set(SHADER
     src/shader/r2grap_m.vert
 )
 
-set(MAIN src/r2grap-gl.cpp)
+set(MAIN src/r2grap.cpp)
 
 source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})
@@ -81,8 +81,6 @@ set(LIBS_DIRECTORIES
 	lib
 )
 
-add_library(GLAD include/glad/glad.c)
-
 if(WIN32)
 	link_directories(${LIBS_DIRECTORIES})
 else()	
@@ -90,6 +88,7 @@ else()
 	link_directories(/opt/homebrew/Cellar/glfw/3.3.7/lib)
 endif()
 
+add_library(GLAD include/glad/glad.c)
 add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
