@@ -9,7 +9,7 @@ void processInput(GLFWwindow *window);
 // timing
 float input_deltaTime = 0.0f;	// time between current frame and last frame 
   
-R2grap::R2grap(const std::string& filename){
+R2grapGl::R2grapGl(const std::string& filename){
 
   JsonReader reader("../assets/" + filename);
   SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
@@ -109,11 +109,11 @@ R2grap::R2grap(const std::string& filename){
 	glfwSwapInterval(1);// open the vertical synchronization
 
 	shader_->use();
+  run();
 }
 
-void R2grap::run() {
-	Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
-
+Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+void R2grapGl::run() {
 	static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
 	double lastTime = glfwGetTime(), timer = lastTime;
 	double deltaTime = 0, nowTime = 0;
@@ -212,6 +212,21 @@ void R2grap::run() {
 	glDeleteBuffers(paths_count, EBOs);
 
 	glfwTerminate();
+}
+
+void processInput(GLFWwindow *window)
+{
+   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, true);
+
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    camera.ProcessKeyboard(FORWARD, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    camera.ProcessKeyboard(BACKWARD, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    camera.ProcessKeyboard(LEFT, input_deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    camera.ProcessKeyboard(RIGHT, input_deltaTime);
 }
 
 }

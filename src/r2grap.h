@@ -8,9 +8,9 @@
 class Shader;
 namespace R2grap{
 struct RePathObj;
-class R2grap{
+class R2grapGl{
 public:
-  R2grap(const std::string& file_name);
+  R2grapGl(const std::string& file_name);
   void run();
 
 private:

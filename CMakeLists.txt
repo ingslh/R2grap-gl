@@ -28,7 +28,11 @@ set(SHADER
     src/shader/r2grap_m.vert
 )
 
-set(MAIN src/r2grap.cpp)
+set(MAIN 
+    src/r2grap.cpp
+    src/r2grap.h
+    src/main.cpp
+)
 
 source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})
@@ -71,6 +75,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
+  ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
 include_directories(

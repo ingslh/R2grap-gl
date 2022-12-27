@@ -10,7 +10,7 @@ namespace R2grap{
 
 struct PathData {
   bool closed;
-  bool has_keyframe;
+  bool has_keyframe = false;
   std::vector<float> verts;//path's vertices, can have mulitity paths;
   std::vector<unsigned int> tri_ind;//for gerenate EBO array
 
