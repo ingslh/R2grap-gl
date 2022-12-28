@@ -22,10 +22,18 @@ file(GLOB RENDER CONFIG_DEFENDS
 	src/render/*.cpp
 )
 
+file(GLOB DIRECTX CONFIG_DEPENDS
+  src/directx/*.h
+  src/directx/*.cpp
+)
+
 set(SHADER
-    src/shader/bezier_insert.geom
-    src/shader/r2grap_m.frag
-    src/shader/r2grap_m.vert
+    src/shader/glsl/bezier_insert.geom
+    src/shader/glsl/r2grap_m.frag
+    src/shader/glsl/r2grap_m.vert
+    src/shader/hlsl/r2grap_d3d.hlsli
+    src/shader/hlsl/r2grap_d3d_PS.hlsl
+    src/shader/hlsl/r2grap_d3d_VS.hlsl
 )
 
 set(MAIN 
@@ -38,6 +46,7 @@ source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})
 source_group(codec FILES ${CODEC})
 source_group(render FILES ${RENDER})
+source_group(directx FILES ${DIRECTX})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 
@@ -75,6 +84,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
+  ${CMAKE_CURRENT_LIST_DIR}/src/directx
   ${CMAKE_CURRENT_LIST_DIR}/src
 )
 

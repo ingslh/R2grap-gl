@@ -49,7 +49,7 @@ R2grapGl::R2grapGl(const std::string& filename){
 
 	// build and compile shaders
 	// -------------------------
-	shader_ = new Shader("../src/shader/r2grap_m.vert", "../src/shader/r2grap_m.frag");
+	shader_ = new Shader("../src/shader/glsl/r2grap_m.vert", "../src/shader/glsl/r2grap_m.frag");
 
 	auto layers_count = reader.getLayersCount();
 
