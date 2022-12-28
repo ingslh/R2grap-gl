@@ -93,6 +93,10 @@ else()
 	link_directories(/opt/homebrew/Cellar/glfw/3.3.7/lib)
 endif()
 
+if(APPLE)
+  add_subdirectory(include/metal-cmake)
+endif()
+
 add_library(GLAD include/glad/glad.c)
 add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${MAIN})
 
@@ -109,6 +113,9 @@ endif()
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} glfw3 GLAD)
+elseif(APPLE)
+  target_link_libraries(${PROJECT_NAME} METAL_CPP)
+  target_link_libraries(${PROJECT_NAME} GLFW GLAD)
 else()
 	target_link_libraries(${PROJECT_NAME} GLFW GLAD)
 endif()
