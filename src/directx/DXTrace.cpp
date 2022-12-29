@@ -51,12 +51,12 @@ HRESULT WINAPI DXTraceW(_In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HRE
 
         wcscpy_s(strBufferMsg, 1024, L"");
         if (nMsgLen > 0)
-            swprintf_s(strBufferMsg, 1024, L"当前调用：%ls\n", strMsg);
+            swprintf_s(strBufferMsg, 1024, L"Current call:%ls\n", strMsg);
 
-        swprintf_s(strBuffer, 3000, L"文件名：%ls\n行号：%ls\n错误码含义：%ls\n%ls您需要调试当前应用程序吗？",
+        swprintf_s(strBuffer, 3000, L"file name:%ls\nLink Number: %ls\nerror_code:%ls\n%lsDo you need to debug the current application",
             strBufferFile, strBufferLine, strBufferError, strBufferMsg);
 
-        int nResult = MessageBoxW(GetForegroundWindow(), strBuffer, L"错误", MB_YESNO | MB_ICONERROR);
+        int nResult = MessageBoxW(GetForegroundWindow(), strBuffer, L"Error", MB_YESNO | MB_ICONERROR);
         if (nResult == IDYES)
             DebugBreak();
     }

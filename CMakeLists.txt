@@ -27,6 +27,11 @@ file(GLOB DIRECTX CONFIG_DEPENDS
   src/directx/*.cpp
 )
 
+file(GLOB OPENGL CONFIG_DEPENDS
+  src/opengl/*h
+  src/opengl/*cpp
+)
+
 set(SHADER
     src/shader/glsl/bezier_insert.geom
     src/shader/glsl/r2grap_m.frag
@@ -37,8 +42,6 @@ set(SHADER
 )
 
 set(MAIN 
-    src/r2grap.cpp
-    src/r2grap.h
     src/main.cpp
 )
 
@@ -47,6 +50,7 @@ source_group(base FILES ${BASE})
 source_group(codec FILES ${CODEC})
 source_group(render FILES ${RENDER})
 source_group(directx FILES ${DIRECTX})
+source_group(opengl FILES ${OPENGL})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 
@@ -103,8 +107,9 @@ else()
 	link_directories(/opt/homebrew/Cellar/glfw/3.3.7/lib)
 endif()
 
+
 add_library(GLAD include/glad/glad.c)
-add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${MAIN})
+add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
@@ -119,6 +124,7 @@ endif()
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} glfw3 GLAD)
+	target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
 else()
 	target_link_libraries(${PROJECT_NAME} GLFW GLAD)
 endif()

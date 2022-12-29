@@ -28,7 +28,8 @@ HRESULT WINAPI DXTraceW(_In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HRE
 // HR宏
 // ------------------------------
 // Debug模式下的错误提醒与追踪
-#if defined(DEBUG) | defined(_DEBUG)
+
+#if defined(DEBUG) | defined(_DEBUG) | defined(_RELEASE) | defined(RELEASE)
     #ifndef HR
     #define HR(x)												\
     {															\

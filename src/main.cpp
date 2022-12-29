@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <r2grap.h>
+#include "opengl/r2grapgl.h"
 
 int main(int argc, char *argv[]){
   if(argc > 2 || argc == 1) return 0;
