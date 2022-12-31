@@ -22,15 +22,18 @@ file(GLOB RENDER CONFIG_DEFENDS
 	src/render/*.cpp
 )
 
+file(GLOB OPENGL CONFIG_DEPENDS
+  src/opengl/*.h
+  src/opengl/*.cpp
+)
+
 set(SHADER
     src/shader/bezier_insert.geom
     src/shader/r2grap_m.frag
     src/shader/r2grap_m.vert
 )
 
-set(MAIN 
-    src/r2grap.cpp
-    src/r2grap.h
+set(MAIN
     src/main.cpp
 )
 
@@ -75,6 +78,7 @@ set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
+  ${CMAKE_CURRENT_LIST_DIR}/src/opengl
   ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
@@ -98,7 +102,7 @@ if(APPLE)
 endif()
 
 add_library(GLAD include/glad/glad.c)
-add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${MAIN})
+add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
