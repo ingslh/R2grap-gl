@@ -19,6 +19,10 @@ MetalMTKViewDelegate::~MetalMTKViewDelegate()
 	delete _pRenderer;
 }
 
+void MetalMTKViewDelegate::setRePathObjs(const std::vector<R2grap::RePathObj> &objs) {
+	_pRenderer->setRePathObjs(objs);
+}
+
 void MetalMTKViewDelegate::drawInMTKView( MTK::View* pView )
 {
 	_pRenderer->draw( pView );

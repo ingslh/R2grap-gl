@@ -7,6 +7,7 @@
 #include <AppKit/AppKit.hpp>
 #include <MetalKit/MetalKit.hpp>
 #include <glm/glm.hpp>
+#include "PathRenderData.h"
 
 namespace shader_types
 {
@@ -30,6 +31,9 @@ public:
 		void buildBuffers();
 		void draw( MTK::View* pView );
 
+		void setRePathObjs(const std::vector<R2grap::RePathObj> objs);
+		void buildBuffers(const R2grap::RePathObj& obj);
+
 private:
 		MTL::Device* _pDevice;
 		MTL::CommandQueue* _pCommandQueue;
@@ -44,6 +48,10 @@ private:
 		int _frame;
 		dispatch_semaphore_t _semaphore;
 		static const int kMaxFramesInFlight;
+
+		std::vector<R2grap::RePathObj> path_objs_;
+		std::vector<MTL::Buffer*> pVertDataBufferList_;
+		std::vector<MTL::Buffer*> pIndexBufferList_;
 };
 
 

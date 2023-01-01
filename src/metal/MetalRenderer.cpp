@@ -40,6 +40,10 @@ MetalRenderer::~MetalRenderer()
 	_pDevice->release();
 }
 
+void MetalRenderer::setRePathObjs(const std::vector<R2grap::RePathObj> objs) {
+	path_objs_ = objs;
+}
+
 void MetalRenderer::buildShaders()
 {
 	using NS::StringEncoding::UTF8StringEncoding;
@@ -194,6 +198,27 @@ void MetalRenderer::buildBuffers()
 	for ( size_t i = 0; i < kMaxFramesInFlight; ++i )
 	{
 		_pCameraDataBuffer[ i ] = _pDevice->newBuffer( cameraDataSize, MTL::ResourceStorageModeManaged );
+	}
+}
+
+void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
+	auto path_data = obj.path;
+	if(!path_data->has_keyframe){
+		auto vert_array = path_data->verts;
+		const size_t vertexDataSize = sizeof(float) * vert_array.size();
+		MTL::Buffer* pVertexBuffer = _pDevice->newBuffer( vertexDataSize, MTL::ResourceStorageModeManaged );
+		pVertDataBufferList_.push_back(pVertexBuffer);
+		memcpy(pVertDataBufferList_.back()->contents(), &vert_array[0], vertexDataSize);
+		pVertDataBufferList_.back()->didModifyRange(NS::Range::Make(0, pVertexBuffer->length()));
+
+		if(path_data->closed){
+			auto ind_array = path_data->tri_ind;
+			const size_t indexDataSize = sizeof(unsigned int) * ind_array.size();
+			MTL::Buffer* pIndexBuffer = _pDevice->newBuffer( indexDataSize, MTL::ResourceStorageModeManaged );
+			pIndexBufferList_.push_back(pIndexBuffer);
+			memcpy(pIndexBufferList_.back()->contents(), &ind_array[0], indexDataSize);
+			pVertDataBufferList_.back()->didModifyRange(NS::Range::Make(0,pIndexBuffer->length()));
+		}
 	}
 }
 
