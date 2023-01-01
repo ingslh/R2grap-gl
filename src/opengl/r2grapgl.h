@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
-#include "include/glad/glad.h"
-#include "include/GLFW/glfw3.h"
-#include "include/glm/glm.hpp"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <vector>
 
 class Shader;

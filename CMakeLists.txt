@@ -27,6 +27,11 @@ file(GLOB OPENGL CONFIG_DEPENDS
   src/opengl/*.cpp
 )
 
+file(GLOB METAL CONFIG_DEFENDS
+    src/metal/*.h
+    src/metal/*.cpp
+)
+
 set(SHADER
     src/shader/bezier_insert.geom
     src/shader/r2grap_m.frag
@@ -41,6 +46,8 @@ source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})
 source_group(codec FILES ${CODEC})
 source_group(render FILES ${RENDER})
+source_group(opengl FILES ${OPENGL})
+source_group(metal FILES ${METAL})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) 
 
@@ -75,6 +82,8 @@ set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})
 
 set(INCLUDE_DIRECTORIES 
   ${CMAKE_CURRENT_LIST_DIR}/include
+  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
@@ -84,6 +93,8 @@ set(INCLUDE_DIRECTORIES
 
 include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
+    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
 )
 
 set(LIBS_DIRECTORIES
@@ -102,7 +113,7 @@ if(APPLE)
 endif()
 
 add_library(GLAD include/glad/glad.c)
-add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${MAIN})
+add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${METAL} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
