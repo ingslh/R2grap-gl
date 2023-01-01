@@ -65,6 +65,10 @@ void MetalAppDelegate::applicationWillFinishLaunching( NS::Notification* pNotifi
 void MetalAppDelegate::applicationDidFinishLaunching( NS::Notification* pNotification )
 {
 	CGRect frame = (CGRect){ {100.0, 100.0}, {512.0, 512.0} };
+	if(window_width_ != 0 && window_height_ != 0){
+		frame.size.width = window_width_;
+		frame.size.height = window_height_;
+	}
 
 	_pWindow = NS::Window::alloc()->init(
 		frame,
@@ -95,4 +99,13 @@ void MetalAppDelegate::applicationDidFinishLaunching( NS::Notification* pNotific
 bool MetalAppDelegate::applicationShouldTerminateAfterLastWindowClosed( NS::Application* pSender )
 {
 	return true;
+}
+
+void MetalAppDelegate::setWindowSize(unsigned int width, unsigned int height) {
+	window_width_ = width;
+	window_height_ = height;
+}
+
+void MetalAppDelegate::setPathObjs(const std::vector<R2grap::RePathObj> &objs) {
+	path_objs_ = objs;
 }
