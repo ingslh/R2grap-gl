@@ -33,6 +33,7 @@ public:
 
 		void setRePathObjs(const std::vector<R2grap::RePathObj> objs);
 		void buildBuffers(const R2grap::RePathObj& obj);
+		void drawPathObjs();
 
 private:
 		MTL::Device* _pDevice;
@@ -50,8 +51,10 @@ private:
 		static const int kMaxFramesInFlight;
 
 		std::vector<R2grap::RePathObj> path_objs_;
-		std::vector<MTL::Buffer*> pVertDataBufferList_;
-		std::vector<MTL::Buffer*> pIndexBufferList_;
+		std::vector<MTL::Buffer*> pVertDataBufferList_;//size = objs's size
+		std::vector<MTL::Buffer*> pIndexBufferList_;//size != objs's size(path maybe not closed)
+		std::vector<MTL::Buffer*> pInstanceDataBufferList_;//size = objs's size
+		MTL::Buffer* pCameraDataBuffer_;
 };
 
 

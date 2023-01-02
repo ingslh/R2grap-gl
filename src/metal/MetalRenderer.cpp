@@ -220,6 +220,22 @@ void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
 			pVertDataBufferList_.back()->didModifyRange(NS::Range::Make(0,pIndexBuffer->length()));
 		}
 	}
+	else{
+		const size_t vertexDataSize = sizeof(float) * path_data->GetMaxVectorSize(R2grap::PathData::PathVecContentType::t_Vertices);
+		MTL::Buffer* pVertexBuffer = _pDevice->newBuffer(vertexDataSize, MTL::ResourceStorageModeManaged);
+		pVertDataBufferList_.push_back(pVertexBuffer);
+		if(path_data->closed){
+			const size_t indexDataSize = sizeof(unsigned int) * path_data->GetMaxVectorSize(R2grap::PathData::PathVecContentType::t_TriangleIndex);
+			MTL::Buffer* pIndexBuffer = _pDevice->newBuffer(indexDataSize, MTL::ResourceStorageModeManaged);
+			pIndexBufferList_.push_back(pIndexBuffer);
+		}
+	}
+
+	const size_t instanceDataSize = sizeof( shader_types::InstanceData );
+	pInstanceDataBufferList_.push_back(_pDevice->newBuffer( instanceDataSize, MTL::ResourceStorageModeManaged));
+
+	const size_t cameraDataSize = sizeof( shader_types::CameraData );
+	pCameraDataBuffer_ = _pDevice->newBuffer( cameraDataSize, MTL::ResourceStorageModeManaged );
 }
 
 void MetalRenderer::draw( MTK::View* pView )
