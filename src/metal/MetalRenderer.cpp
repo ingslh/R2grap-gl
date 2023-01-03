@@ -45,12 +45,12 @@ void MetalRenderer::setRePathObjs(const std::vector<R2grap::RePathObj> objs) {
 	path_objs_ = objs;
 }
 
-void MetalRender::setScrSize(unsigned width, unsigned height){
+void MetalRenderer::setScrSize(unsigned width, unsigned height){
 	scr_width_ = width;
 	scr_height_ = height;
 }
 
-void MetalRender::setFrameCount(unsigned count){
+void MetalRenderer::setFrameCount(unsigned count){
 	frame_count_ = count;
 }
 
@@ -349,7 +349,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 	});
 
 	glm::mat4 old_trans;
-	for(auto ind = 0; ind < objs_.size(); ind++){
+	for(auto ind = 0; ind < path_objs_.size(); ind++){
 
 		MTL::Buffer* pVertexBuffer = pVertDataBufferList_[ind];
 		MTL::Buffer* pIndexBuffer = pIndexBufferList_[ind];
@@ -357,32 +357,32 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		shader_types::InstanceData* pInstanceData = reinterpret_cast< shader_types::InstanceData *>( pInstanceDataBuffer->contents() );
 		
 		
-		auto obj = objs_[ind];
+		auto obj = path_objs_[ind];
 		if(obj.in_pos > static_cast<float>(played_) || obj.out_pos < static_cast<float>(played_)) continue;
 		
 		//set InstanceData.transform
 		if(!obj.keep_trans){
-			pInstanceData[ i ].instanceTransform = obj.trans[played_];
-		}else if(obj.keep_trans && !objs_[ind - 1].keep_trans){
-			pInstanceData[ i ].instanceTransform = objs_[ind - 1].trans[played_];
-			old_trans = pInstanceData[ i ].instanceTransform;
+			pInstanceData->instanceTransform = obj.trans[played_];
+		}else if(obj.keep_trans && !path_objs_[ind - 1].keep_trans){
+			pInstanceData->instanceTransform = path_objs_[ind - 1].trans[played_];
+			old_trans = pInstanceData[ind].instanceTransform;
 		}else{
-			pInstanceData[ i ].instanceTransform = old_trans;
+			pInstanceData->instanceTransform = old_trans;
 		}
 
 		//set InstacneData.color
 		if(obj.fill){
 			if(obj.fill->trans_color.empty())
-				pInstanceData[ i ].instanceColor = obj.fill->color;
+				pInstanceData->instanceColor = obj.fill->color;
 			else
-				pInstanceData[ i ].instanceColor = obj.fill->trans_color[played_];
+				pInstanceData->instanceColor = obj.fill->trans_color[played_];
 		}
 
 		if(obj.stroke){
 			if(obj.stroke->trans_color.empty())
-				pInstanceData[i].instanceColor = obj.stroke->color;
+				pInstanceData->instanceColor = obj.stroke->color;
 			else
-				pInstanceData[i].instanceColor = obj.stroke->trans_color[played_];
+				pInstanceData->instanceColor = obj.stroke->trans_color[played_];
 		}
 		pInstanceDataBuffer->didModifyRange( NS::Range::Make( 0, pInstanceDataBuffer->length() ) );
 
@@ -395,7 +395,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 			if(path->closed){
 				auto trig_vec = path->trans_tri_ind[played_];
 				memcpy(pIndexBuffer->contents(), &trig_vec[0], sizeof(unsigned int) * trig_vec.size());
-				pIndexBuffer->didModifyRange(NS::Range::Make(0, pIndexBuffer->length()))
+				pIndexBuffer->didModifyRange(NS::Range::Make(0, pIndexBuffer->length()));
 			}
 		}
 
@@ -405,21 +405,24 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		pEnc->setRenderPipelineState( _pPSO );
 		pEnc->setDepthStencilState( _pDepthStencilState );
 
-		pEnc->setVertexBuffer( _pVertexDataBuffer, /* offset */ 0, /* index */ 0 );
+		pEnc->setVertexBuffer( pVertexBuffer, /* offset */ 0, /* index */ 0 );
 		pEnc->setVertexBuffer( pInstanceDataBuffer, /* offset */ 0, /* index */ 1 );
-		pEnc->setVertexBuffer( pCameraDataBuffer, /* offset */ 0, /* index */ 2 );
+		pEnc->setVertexBuffer( pCameraDataBuffer_, /* offset */ 0, /* index */ 2 );
 
 		pEnc->setCullMode( MTL::CullModeBack );
 		pEnc->setFrontFacingWinding( MTL::Winding::WindingCounterClockwise );
 
 		if(path->closed){
+			auto index_size = path->has_keyframe ? path->trans_tri_ind[played_].size() : path->tri_ind.size();
 			pEnc->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangleStrip,
-																	path->trans_tri_ind[played_].size(),
+																	index_size,
 																	MTL::IndexType::IndexTypeUInt16,
 																	pIndexBuffer, 0);
 		}else{
+			auto vert_size = path->has_keyframe ? path->trans_verts[played_].size() : path->verts.size();
 			pEnc->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeLineStrip,
-													0, path->trans_verts[played_].size())
+													 (NS::UInteger)0,
+													 vert_size);
 		}
 		pEnc->endEncoding();
 	}

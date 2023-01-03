@@ -12,7 +12,7 @@ namespace R2grap{
 class LinkLayer;
 class JsonReader{
 public:
-  JsonReader(const std::string& path);
+  explicit JsonReader(const std::string& path);
   unsigned int getLayersCount();
   std::shared_ptr<LayersInfo> GetLayersInfo(unsigned int ind);
   unsigned int GetLayersNum(){return layers_.size();}

@@ -89,7 +89,7 @@ void MetalAppDelegate::applicationDidFinishLaunching( NS::Notification* pNotific
 		_pViewDelegate->setRePathObjs(path_objs_);
 	if(window_width_ != 0 && window_height_ != 0)
 		_pViewDelegate->setScrSize(window_width_, window_height_);
-	if(frame_count != 0)
+	if(frame_count_ != 0)
 		_pViewDelegate->setFrameCount(frame_count_);
 	_pMtkView->setDelegate( _pViewDelegate );
 
