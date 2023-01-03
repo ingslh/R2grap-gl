@@ -15,6 +15,7 @@ public:
 private:
 		unsigned window_width_;
 		unsigned window_height_;
+		unsigned frame_count_;
 };
 }
 

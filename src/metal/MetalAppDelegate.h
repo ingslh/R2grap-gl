@@ -21,6 +21,7 @@ public:
 
 		void setWindowSize(unsigned width, unsigned height);
 		void setPathObjs(const std::vector<R2grap::RePathObj>& objs);
+		void setFrameCount(unsigned count);
 
 private:
 		NS::Window* _pWindow;
@@ -30,6 +31,7 @@ private:
 
 		unsigned window_width_ = 0;
 		unsigned window_height_ = 0;
+		unsigned frame_count_ = 0;
 		std::vector<R2grap::RePathObj> path_objs_;
 };
 

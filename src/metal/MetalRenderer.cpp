@@ -4,6 +4,7 @@
 #include "MetalRenderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <camera.h>
 
 const int MetalRenderer::kMaxFramesInFlight = 3;
 static constexpr size_t kNumInstances = 32;
@@ -42,6 +43,15 @@ MetalRenderer::~MetalRenderer()
 
 void MetalRenderer::setRePathObjs(const std::vector<R2grap::RePathObj> objs) {
 	path_objs_ = objs;
+}
+
+void MetalRender::setScrSize(unsigned width, unsigned height){
+	scr_width_ = width;
+	scr_height_ = height;
+}
+
+void MetalRender::setFrameCount(unsigned count){
+	frame_count_ = count;
 }
 
 void MetalRenderer::buildShaders()
@@ -208,16 +218,16 @@ void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
 		const size_t vertexDataSize = sizeof(float) * vert_array.size();
 		MTL::Buffer* pVertexBuffer = _pDevice->newBuffer( vertexDataSize, MTL::ResourceStorageModeManaged );
 		pVertDataBufferList_.push_back(pVertexBuffer);
-		memcpy(pVertDataBufferList_.back()->contents(), &vert_array[0], vertexDataSize);
-		pVertDataBufferList_.back()->didModifyRange(NS::Range::Make(0, pVertexBuffer->length()));
+		memcpy(pVertexBuffer->contents(), &vert_array[0], vertexDataSize);
+		pVertexBuffer->didModifyRange(NS::Range::Make(0, pVertexBuffer->length()));
 
 		if(path_data->closed){
 			auto ind_array = path_data->tri_ind;
 			const size_t indexDataSize = sizeof(unsigned int) * ind_array.size();
 			MTL::Buffer* pIndexBuffer = _pDevice->newBuffer( indexDataSize, MTL::ResourceStorageModeManaged );
-			pIndexBufferList_.push_back(pIndexBuffer);
-			memcpy(pIndexBufferList_.back()->contents(), &ind_array[0], indexDataSize);
-			pVertDataBufferList_.back()->didModifyRange(NS::Range::Make(0,pIndexBuffer->length()));
+			pIndexBufferList_[pVertDataBufferList_.size() - 1] = pIndexBuffer;
+			memcpy(pIndexBuffer->contents(), &ind_array[0], indexDataSize);
+			pIndexBuffer->didModifyRange(NS::Range::Make(0,pIndexBuffer->length()));
 		}
 	}
 	else{
@@ -227,7 +237,7 @@ void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
 		if(path_data->closed){
 			const size_t indexDataSize = sizeof(unsigned int) * path_data->GetMaxVectorSize(R2grap::PathData::PathVecContentType::t_TriangleIndex);
 			MTL::Buffer* pIndexBuffer = _pDevice->newBuffer(indexDataSize, MTL::ResourceStorageModeManaged);
-			pIndexBufferList_.push_back(pIndexBuffer);
+			pIndexBufferList_[pVertDataBufferList_.size() - 1] = pIndexBuffer;
 		}
 	}
 
@@ -236,6 +246,12 @@ void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
 
 	const size_t cameraDataSize = sizeof( shader_types::CameraData );
 	pCameraDataBuffer_ = _pDevice->newBuffer( cameraDataSize, MTL::ResourceStorageModeManaged );
+	shader_types::CameraData* pCameraData = reinterpret_cast< shader_types::CameraData *>( pCameraDataBuffer_->contents() );
+	
+	Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+	pCameraData->perspectiveTransform = glm::perspective( glm::radians(camera.Zoom) ,(float)scr_width_/(float)scr_height_, 0.1f, 100.0f ) ;
+	pCameraData->worldTransform = glm::mat4(1);
+	pCameraDataBuffer_->didModifyRange( NS::Range::Make( 0, sizeof( shader_types::CameraData ) ) );
 }
 
 void MetalRenderer::draw( MTK::View* pView )
@@ -319,5 +335,97 @@ void MetalRenderer::draw( MTK::View* pView )
 	pCmd->presentDrawable( pView->currentDrawable() );
 	pCmd->commit();
 
+	pPool->release();
+}
+
+void MetalRenderer::drawPathObjs(MTK::View* pView){
+	NS::AutoreleasePool* pPool = NS::AutoreleasePool::alloc()->init();
+
+	MTL::CommandBuffer* pCmd = _pCommandQueue->commandBuffer();
+	dispatch_semaphore_wait( _semaphore, DISPATCH_TIME_FOREVER );
+	MetalRenderer* pRenderer = this;
+	pCmd->addCompletedHandler( ^void( MTL::CommandBuffer* pCmd ){
+			dispatch_semaphore_signal( pRenderer->_semaphore );
+	});
+
+	glm::mat4 old_trans;
+	for(auto ind = 0; ind < objs_.size(); ind++){
+
+		MTL::Buffer* pVertexBuffer = pVertDataBufferList_[ind];
+		MTL::Buffer* pIndexBuffer = pIndexBufferList_[ind];
+		MTL::Buffer* pInstanceDataBuffer = pInstanceDataBufferList_[ind];
+		shader_types::InstanceData* pInstanceData = reinterpret_cast< shader_types::InstanceData *>( pInstanceDataBuffer->contents() );
+		
+		
+		auto obj = objs_[ind];
+		if(obj.in_pos > static_cast<float>(played_) || obj.out_pos < static_cast<float>(played_)) continue;
+		
+		//set InstanceData.transform
+		if(!obj.keep_trans){
+			pInstanceData[ i ].instanceTransform = obj.trans[played_];
+		}else if(obj.keep_trans && !objs_[ind - 1].keep_trans){
+			pInstanceData[ i ].instanceTransform = objs_[ind - 1].trans[played_];
+			old_trans = pInstanceData[ i ].instanceTransform;
+		}else{
+			pInstanceData[ i ].instanceTransform = old_trans;
+		}
+
+		//set InstacneData.color
+		if(obj.fill){
+			if(obj.fill->trans_color.empty())
+				pInstanceData[ i ].instanceColor = obj.fill->color;
+			else
+				pInstanceData[ i ].instanceColor = obj.fill->trans_color[played_];
+		}
+
+		if(obj.stroke){
+			if(obj.stroke->trans_color.empty())
+				pInstanceData[i].instanceColor = obj.stroke->color;
+			else
+				pInstanceData[i].instanceColor = obj.stroke->trans_color[played_];
+		}
+		pInstanceDataBuffer->didModifyRange( NS::Range::Make( 0, pInstanceDataBuffer->length() ) );
+
+		//set vertices
+		auto path = obj.path;
+		if(path->has_keyframe){
+			auto vert_vec = path->trans_verts[played_];
+			memcpy(pVertexBuffer->contents(), &vert_vec[0], sizeof(float) * vert_vec.size());
+			pVertexBuffer->didModifyRange(NS::Range::Make(0, pVertexBuffer->length()));
+			if(path->closed){
+				auto trig_vec = path->trans_tri_ind[played_];
+				memcpy(pIndexBuffer->contents(), &trig_vec[0], sizeof(unsigned int) * trig_vec.size());
+				pIndexBuffer->didModifyRange(NS::Range::Make(0, pIndexBuffer->length()))
+			}
+		}
+
+		// Begin render pass:
+		MTL::RenderPassDescriptor* pRpd = pView->currentRenderPassDescriptor();
+		MTL::RenderCommandEncoder* pEnc = pCmd->renderCommandEncoder( pRpd );
+		pEnc->setRenderPipelineState( _pPSO );
+		pEnc->setDepthStencilState( _pDepthStencilState );
+
+		pEnc->setVertexBuffer( _pVertexDataBuffer, /* offset */ 0, /* index */ 0 );
+		pEnc->setVertexBuffer( pInstanceDataBuffer, /* offset */ 0, /* index */ 1 );
+		pEnc->setVertexBuffer( pCameraDataBuffer, /* offset */ 0, /* index */ 2 );
+
+		pEnc->setCullMode( MTL::CullModeBack );
+		pEnc->setFrontFacingWinding( MTL::Winding::WindingCounterClockwise );
+
+		if(path->closed){
+			pEnc->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangleStrip,
+																	path->trans_tri_ind[played_].size(),
+																	MTL::IndexType::IndexTypeUInt16,
+																	pIndexBuffer, 0);
+		}else{
+			pEnc->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeLineStrip,
+													0, path->trans_verts[played_].size())
+		}
+		pEnc->endEncoding();
+	}
+	played_ = played_ > frame_count_ ? 0 : ++played_;
+
+	pCmd->presentDrawable( pView->currentDrawable() );
+	pCmd->commit();
 	pPool->release();
 }

@@ -87,6 +87,10 @@ void MetalAppDelegate::applicationDidFinishLaunching( NS::Notification* pNotific
 	_pViewDelegate = new MetalMTKViewDelegate( _pDevice );
 	if(!path_objs_.empty())
 		_pViewDelegate->setRePathObjs(path_objs_);
+	if(window_width_ != 0 && window_height_ != 0)
+		_pViewDelegate->setScrSize(window_width_, window_height_);
+	if(frame_count != 0)
+		_pViewDelegate->setFrameCount(frame_count_);
 	_pMtkView->setDelegate( _pViewDelegate );
 
 	_pWindow->setContentView( _pMtkView );
@@ -110,4 +114,8 @@ void MetalAppDelegate::setWindowSize(unsigned int width, unsigned int height) {
 
 void MetalAppDelegate::setPathObjs(const std::vector<R2grap::RePathObj> &objs) {
 	path_objs_ = objs;
+}
+
+void MetalAppDelegate::setFrameCount(unsigned count){
+	frame_count_ = count;
 }

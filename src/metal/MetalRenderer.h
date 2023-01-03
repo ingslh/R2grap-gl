@@ -31,9 +31,11 @@ public:
 		void buildBuffers();
 		void draw( MTK::View* pView );
 
+		void setScrSize(unsigned width, unsigned height);
 		void setRePathObjs(const std::vector<R2grap::RePathObj> objs);
+		void setFrameCount(unsigned count);
 		void buildBuffers(const R2grap::RePathObj& obj);
-		void drawPathObjs();
+		void drawPathObjs(MTK::View* pView);
 
 private:
 		MTL::Device* _pDevice;
@@ -50,9 +52,13 @@ private:
 		dispatch_semaphore_t _semaphore;
 		static const int kMaxFramesInFlight;
 
+		unsigned played_ = 0;
+		unsigned frame_count_;
+		unsigned scr_width_ = 0;
+		unsigned scr_height_ = 0;
 		std::vector<R2grap::RePathObj> path_objs_;
 		std::vector<MTL::Buffer*> pVertDataBufferList_;//size = objs's size
-		std::vector<MTL::Buffer*> pIndexBufferList_;//size != objs's size(path maybe not closed)
+		std::map<unsigned, MTL::Buffer*> pIndexBufferList_;//size != objs's size(path maybe not closed)
 		std::vector<MTL::Buffer*> pInstanceDataBufferList_;//size = objs's size
 		MTL::Buffer* pCameraDataBuffer_;
 };

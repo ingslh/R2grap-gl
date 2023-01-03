@@ -23,6 +23,14 @@ void MetalMTKViewDelegate::setRePathObjs(const std::vector<R2grap::RePathObj> &o
 	_pRenderer->setRePathObjs(objs);
 }
 
+void MetalMTKViewDelegate::setScrSize(unsigned width, unsigned height){
+	_pRenderer->setScrSize(width, height);
+}
+
+void MetalMTKViewDelegate::setFrameCount(unsigned count){
+	_pRenderer->setFrameCount(count);
+}
+
 void MetalMTKViewDelegate::drawInMTKView( MTK::View* pView )
 {
 	_pRenderer->draw( pView );

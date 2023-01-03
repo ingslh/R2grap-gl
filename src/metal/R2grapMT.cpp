@@ -12,6 +12,7 @@ R2grapMT::R2grapMT(const std::string &filename) {
 	JsonReader reader("../assets/" + filename);
 	window_width_ = AniInfoManager::GetIns().GetWidth();
 	window_height_ = AniInfoManager::GetIns().GetHeight();
+	frame_count_ = AniInfoManager::GetIns().GetIns();
 
 	auto layers_count = reader.getLayersCount();
 	std::vector<std::shared_ptr<RenderContent>> contents;
