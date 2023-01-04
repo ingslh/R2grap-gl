@@ -1,8 +1,10 @@
 #include "opengl/r2grapgl.h"
-#if(WIN32)
+#if(_WIN32)
 #include "directx/d3dApp.h"
 #endif
+#if(__APPLE__)
 #include "metal/R2grapMT.h"
+#endif
 
 
 

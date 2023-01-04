@@ -17,7 +17,7 @@ MetalRenderer::MetalRenderer( MTL::Device* pDevice )
 	_pCommandQueue = _pDevice->newCommandQueue();
 	buildShaders();
 	buildDepthStencilStates();
-	buildBuffers();
+	//buildBuffers();
 
 	_semaphore = dispatch_semaphore_create( MetalRenderer::kMaxFramesInFlight );
 }
@@ -43,6 +43,8 @@ MetalRenderer::~MetalRenderer()
 
 void MetalRenderer::setRePathObjs(const std::vector<R2grap::RePathObj> objs) {
 	path_objs_ = objs;
+	for(auto& obj : path_objs_)
+		buildBuffers(obj);
 }
 
 void MetalRenderer::setScrSize(unsigned width, unsigned height){
@@ -355,7 +357,6 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		MTL::Buffer* pIndexBuffer = pIndexBufferList_[ind];
 		MTL::Buffer* pInstanceDataBuffer = pInstanceDataBufferList_[ind];
 		shader_types::InstanceData* pInstanceData = reinterpret_cast< shader_types::InstanceData *>( pInstanceDataBuffer->contents() );
-		
 		
 		auto obj = path_objs_[ind];
 		if(obj.in_pos > static_cast<float>(played_) || obj.out_pos < static_cast<float>(played_)) continue;

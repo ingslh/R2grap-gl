@@ -33,5 +33,6 @@ void MetalMTKViewDelegate::setFrameCount(unsigned count){
 
 void MetalMTKViewDelegate::drawInMTKView( MTK::View* pView )
 {
-	_pRenderer->draw( pView );
+	//_pRenderer->draw( pView );
+	_pRenderer->drawPathObjs(pView);
 }

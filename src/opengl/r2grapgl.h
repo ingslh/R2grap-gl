@@ -20,8 +20,8 @@ private:
 	unsigned int* VBOs = nullptr;
   unsigned int* VAOs = nullptr;
 	unsigned int* EBOs = nullptr;
-	unsigned int SCR_WIDTH;
-	unsigned int SCR_HEIGHT;
+	unsigned int window_width_;
+	unsigned int window_height_;
 };
 
 
