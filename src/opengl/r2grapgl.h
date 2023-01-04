@@ -8,20 +8,26 @@
 class Shader;
 namespace R2grap{
 struct RePathObj;
+class JsonReader;
 class R2grapGl{
 public:
-  R2grapGl(const std::string& file_name);
+  explicit R2grapGl(const std::string& file_name);
+  ~R2grapGl();
   void run();
 
 private:
+  void processInput(GLFWwindow *window);
+
+private:
+  std::shared_ptr<JsonReader> reader_;
 	GLFWwindow* window_ = nullptr;
 	Shader* shader_ = nullptr;
 	std::vector<RePathObj> objs_;
 	unsigned int* VBOs = nullptr;
   unsigned int* VAOs = nullptr;
 	unsigned int* EBOs = nullptr;
-	unsigned int SCR_WIDTH;
-	unsigned int SCR_HEIGHT;
+	unsigned int window_width_;
+	unsigned int window_height_;
 };
 
 

@@ -4,16 +4,14 @@
 #include "codec/JsonReader.h"
 
 namespace R2grap{
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
 // timing
 float input_deltaTime = 0.0f;	// time between current frame and last frame 
   
 R2grapGl::R2grapGl(const std::string& filename){
 
-  JsonReader reader("../assets/" + filename);
-  SCR_WIDTH = AniInfoManager::GetIns().GetWidth();
-  SCR_HEIGHT = AniInfoManager::GetIns().GetHeight();
+  reader_ = std::make_shared<JsonReader>("../assets/" + filename);
+  window_width_ = AniInfoManager::GetIns().GetWidth();
+  window_height_ = AniInfoManager::GetIns().GetHeight();
 
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -27,7 +25,7 @@ R2grapGl::R2grapGl(const std::string& filename){
 
 // glfw window creation
   // --------------------
-  window_ = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "R2grap", NULL, NULL);
+  window_ = glfwCreateWindow(window_width_, window_height_, "R2grap", NULL, NULL);
   if (window_ == nullptr){
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
@@ -46,81 +44,88 @@ R2grapGl::R2grapGl(const std::string& filename){
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-
-	// build and compile shaders
-	// -------------------------
-	shader_ = new Shader("../src/shader/glsl/r2grap_m.vert", "../src/shader/glsl/r2grap_m.frag");
-
-	auto layers_count = reader.getLayersCount();
-
-	std::vector<std::shared_ptr<RenderContent>> contents;
-	for (auto i = 0; i < layers_count; i++) {
-		auto layer_info = reader.GetLayersInfo(i).get();
-		contents.emplace_back(std::make_shared<RenderContent>(layer_info));
-	}
-	RenderContent::UpdateTransRenderData(contents,objs_);
-
-	auto paths_count = static_cast<int>(objs_.size());
-
-	VBOs = new unsigned int[paths_count];
-	VAOs = new unsigned int[paths_count];
-	EBOs = new unsigned int[paths_count];
-	glGenBuffers(paths_count, VBOs);
-	glGenBuffers(paths_count, EBOs);
-	glGenVertexArrays(paths_count, VAOs);
-
-	for(auto ind = 0; ind < objs_.size() ; ind++){
-
-		auto path_data = objs_[ind].path;
-		if(!path_data->has_keyframe){
-			auto vert_array = path_data->verts;
-			auto out_vert = new float[vert_array.size()];
-			memcpy(out_vert, &vert_array[0], sizeof(float) * vert_array.size());
-
-			glBindVertexArray(VAOs[ind]);
-			glBindBuffer(GL_ARRAY_BUFFER, VBOs[ind]);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vert_array.size(), out_vert, GL_STATIC_DRAW);
-
-			if(path_data->closed){
-				auto tri_array = path_data->tri_ind;
-				auto out_tri = new unsigned int[tri_array.size()];
-				memcpy(out_tri, &tri_array[0], tri_array.size() * sizeof(tri_array[0]));
-
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[ind]);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tri_array.size(), out_tri, GL_STATIC_DRAW);
-			}
-		}
-		else{
-			auto max_verts_size = path_data->GetMaxVectorSize(PathData::PathVecContentType::t_Vertices);
-			glBindVertexArray(VAOs[ind]);
-			glBindBuffer(GL_ARRAY_BUFFER, VBOs[ind]);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * max_verts_size, NULL, GL_DYNAMIC_DRAW);
-
-			if(path_data->closed){
-				auto max_tri_size = path_data->GetMaxVectorSize(PathData::PathVecContentType::t_TriangleIndex);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[ind]);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*max_tri_size, NULL, GL_DYNAMIC_DRAW);
-			}
-		}
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-		glEnableVertexAttribArray(0);
-	}
-
-	glfwSwapInterval(1);// open the vertical synchronization
-
-	shader_->use();
-  run();
+  glfwSwapInterval(1);// open the vertical synchronization
 }
+
+R2grapGl::~R2grapGl() {
+  delete VBOs;
+  delete VAOs;
+  delete EBOs;
+}
+
 
 Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 void R2grapGl::run() {
+
+  // build and compile shaders
+// -------------------------
+  shader_ = new Shader("../src/shader/glsl/r2grap_m.vert", "../src/shader/glsl/r2grap_m.frag");
+
+  auto layers_count = reader_->getLayersCount();
+
+  std::vector<std::shared_ptr<RenderContent>> contents;
+  for (auto i = 0; i < layers_count; i++) {
+    auto layer_info = reader_->GetLayersInfo(i).get();
+    contents.emplace_back(std::make_shared<RenderContent>(layer_info));
+  }
+  RenderContent::UpdateTransRenderData(contents, objs_);
+
+  auto paths_count = static_cast<int>(objs_.size());
+
+  VBOs = new unsigned int[paths_count];
+  VAOs = new unsigned int[paths_count];
+  EBOs = new unsigned int[paths_count];
+  glGenBuffers(paths_count, VBOs);
+  glGenBuffers(paths_count, EBOs);
+  glGenVertexArrays(paths_count, VAOs);
+
+  for (auto ind = 0; ind < objs_.size(); ind++) {
+
+    auto path_data = objs_[ind].path;
+    if (!path_data->has_keyframe) {
+      auto vert_array = path_data->verts;
+      auto out_vert = new float[vert_array.size()];
+      memcpy(out_vert, &vert_array[0], sizeof(float) * vert_array.size());
+
+      glBindVertexArray(VAOs[ind]);
+      glBindBuffer(GL_ARRAY_BUFFER, VBOs[ind]);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vert_array.size(), out_vert, GL_STATIC_DRAW);
+      delete[]out_vert;
+
+      if (path_data->closed) {
+        auto tri_array = path_data->tri_ind;
+        auto out_tri = new unsigned int[tri_array.size()];
+        memcpy(out_tri, &tri_array[0], tri_array.size() * sizeof(tri_array[0]));
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[ind]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tri_array.size(), out_tri, GL_STATIC_DRAW);
+        delete[]out_tri;
+      }
+    }
+    else {
+      auto max_verts_size = path_data->GetMaxVectorSize(PathData::PathVecContentType::t_Vertices);
+      glBindVertexArray(VAOs[ind]);
+      glBindBuffer(GL_ARRAY_BUFFER, VBOs[ind]);
+      glBufferData(GL_ARRAY_BUFFER, sizeof(float) * max_verts_size, NULL, GL_DYNAMIC_DRAW);
+
+      if (path_data->closed) {
+        auto max_tri_size = path_data->GetMaxVectorSize(PathData::PathVecContentType::t_TriangleIndex);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[ind]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*max_tri_size, NULL, GL_DYNAMIC_DRAW);
+      }
+    }
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glEnableVertexAttribArray(0);
+  }
+  shader_->use();
+
+
 	static double limitFPS = 1.0 / AniInfoManager::GetIns().GetFrameRate();
 	double lastTime = glfwGetTime(), timer = lastTime;
 	double deltaTime = 0, nowTime = 0;
 	int frames = 0, played = 0;
 	auto frame_count = AniInfoManager::GetIns().GetDuration() * AniInfoManager::GetIns().GetFrameRate();
 
-	auto paths_count = objs_.size();
 	// render loop
 	// -----------
 	while(!glfwWindowShouldClose(window_)){
@@ -137,7 +142,7 @@ void R2grapGl::run() {
 			glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)window_width_ / (float)window_height_, 0.1f, 100.0f);
 			glm::mat4 view = camera.GetViewMatrix();
 			glm::mat4 model = glm::mat4(1.0f);
 			shader_->setMat4("projection", projection);
@@ -214,7 +219,7 @@ void R2grapGl::run() {
 	glfwTerminate();
 }
 
-void processInput(GLFWwindow *window)
+void R2grapGl::processInput(GLFWwindow *window)
 {
    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
