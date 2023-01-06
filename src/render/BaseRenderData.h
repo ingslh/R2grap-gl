@@ -1,6 +1,6 @@
 #pragma once
 #include <mutex>
-
+#include <memory>
 namespace R2grap{
 enum rDataType{
   tNoneData = 0,
