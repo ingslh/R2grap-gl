@@ -2,6 +2,7 @@
 #include <camera.h>
 #include <shader_g.h>
 #include "codec/JsonReader.h"
+#include <memory>
 
 namespace R2grap{
 // timing

@@ -21,12 +21,12 @@ file(GLOB RENDER CONFIG_DEFENDS
 	src/render/*.h
 	src/render/*.cpp
 )
-
+if(WIN32)
 file(GLOB DIRECTX CONFIG_DEPENDS
   src/directx/*.h
   src/directx/*.cpp
 )
-
+endif()
 file(GLOB OPENGL CONFIG_DEPENDS
   src/opengl/*h
   src/opengl/*cpp
@@ -41,7 +41,7 @@ set(SHADER
     src/shader/hlsl/r2grap_d3d_VS.hlsl
 )
 
-set(MAIN 
+set(MAIN
     src/main.cpp
 )
 
@@ -52,7 +52,7 @@ source_group(render FILES ${RENDER})
 source_group(directx FILES ${DIRECTX})
 source_group(opengl FILES ${OPENGL})
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON) 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(WIN32)
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
@@ -81,9 +81,9 @@ if(APPLE)
 else()
   set(CONFIG_TYPE ${CMAKE_CFG_INTDIR})
 endif()
-set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})	
+set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})
 
-set(INCLUDE_DIRECTORIES 
+set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/include
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
@@ -102,7 +102,7 @@ set(LIBS_DIRECTORIES
 
 if(WIN32)
 	link_directories(${LIBS_DIRECTORIES})
-else()	
+else()
 	link_directories(/opt/homebrew/Cellar//glew/2.2.0_1/lib)
 	link_directories(/opt/homebrew/Cellar/glfw/3.3.7/lib)
 endif()
@@ -125,11 +125,13 @@ endif()
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} glfw3 GLAD)
 	target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
-else()
+elseif(APPLE)
 	target_link_libraries(${PROJECT_NAME} GLFW GLAD)
+else()
+target_link_libraries(${PROJECT_NAME} glfw GLAD)
 endif()
 
-if(MSVC)    
+if(MSVC)
   add_definitions(/W2 /GR)
 else()
   add_definitions(-fexceptions -frtti)
