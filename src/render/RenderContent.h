@@ -12,7 +12,7 @@ struct PathData {
   bool closed;
   bool has_keyframe = false;
   std::vector<float> verts;//path's vertices, can have mulitity paths;
-  std::vector<unsigned int> tri_ind;//for gerenate EBO array
+  std::vector<unsigned> tri_ind;//for gerenate EBO array
 
   //key is frame index
   std::map<unsigned int, std::vector<float>> trans_verts; 
