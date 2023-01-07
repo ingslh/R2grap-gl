@@ -23,7 +23,7 @@ R2grapDx::R2grapDx(const std::string& filename){
 }
 
 int R2grapDx::run(){
-  if(!dx_render_->Init(objs_)) return;
+  if(!dx_render_->Init(objs_)) return 0;
 
   return dx_render_->Run();
 }

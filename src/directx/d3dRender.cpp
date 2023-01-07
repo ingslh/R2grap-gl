@@ -1,6 +1,7 @@
 #include "d3dRender.h"
 #include "d3dUtil.h"
 #include "DXTrace.h"
+#include "d3dApp.h"
 
 const D3D11_INPUT_ELEMENT_DESC D3DRender::VertexPosColor::inputLayout[2] = {
     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -96,11 +97,49 @@ bool D3DRender::InitResource(){
         InitData.pSysMem = indices;
         HR(m_pd3dDevice->CreateBuffer(&ibd, &InitData, m_pIndexBuffer.GetAddressOf()));
         m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+        delete indices;
       }
     }else {
 
     }
     
   }
+  //constant buffer, not use initial values
+  D3D11_BUFFER_DESC cbd;
+  ZeroMemory(&cbd, sizeof(cbd));
+  cbd.Usage = D3D11_USAGE_DYNAMIC;
+  cbd.ByteWidth = sizeof(ConstantBuffer);
+  cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+  HR(m_pd3dDevice->CreateBuffer(&cbd, nullptr, m_pConstantBuffer.GetAddressOf()));
+
+  m_CBuffer.world = DirectX::XMMatrixIdentity();
+  m_CBuffer.view = XMMatrixTranspose(DirectX::XMMatrixLookAtLH(
+    DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f),
+    DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
+    DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+  ));
+  m_CBuffer.proj = XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, AspectRatio(), 1.0f, 100.0f));
+
+  //Enter vertex buffer settings for the assembly phase
+  UINT stride = sizeof(VertexPosColor);
+  UINT offset = 0;
+  m_pd3dImmediateContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+  //Set element type, set input layout
+  m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  m_pd3dImmediateContext->IASetInputLayout(m_pVertexLayout.Get());
+  //Bind shaders to render pipelines
+  m_pd3dImmediateContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
+  //Bind the updated constant buffer to the vertex shader
+  m_pd3dImmediateContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
+  m_pd3dImmediateContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
+
+  D3D11SetDebugObjectName(m_pVertexLayout.Get(), "VertexPosColorLayout");
+  D3D11SetDebugObjectName(m_pVertexBuffer.Get(), "VertexBuffer");
+  D3D11SetDebugObjectName(m_pIndexBuffer.Get(), "IndexBuffer");
+  D3D11SetDebugObjectName(m_pConstantBuffer.Get(), "ConstantBuffer");
+  D3D11SetDebugObjectName(m_pVertexShader.Get(), "Cube_VS");
+  D3D11SetDebugObjectName(m_pPixelShader.Get(), "Cube_PS");
+  return true;
 }
 
