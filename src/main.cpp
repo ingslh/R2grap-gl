@@ -2,10 +2,7 @@
 #if(_WIN32)
 #include "directx/d3dApp.h"
 #endif
-#if(__APPLE__)
 #include "metal/R2grapMT.h"
-#endif
-
 
 
 int main(int argc, char *argv[]){
@@ -15,10 +12,10 @@ int main(int argc, char *argv[]){
 	HINSTANCE hInstance = GetModuleHandle(NULL);
 #endif
 
-	//R2grap::R2grapGl grapgl(std::string(argv[1]));
+	//auto grapl = new R2grap::R2grapGl(std::string(argv[1]));
 
-	R2grap::R2grapMT grap_mt(argv[1]);
-	grap_mt.run();
+	auto grap_mt = new R2grap::R2grapMT(argv[1]);
+	grap_mt->run();
 
 	return 0;
 }

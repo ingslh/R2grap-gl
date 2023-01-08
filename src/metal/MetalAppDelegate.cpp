@@ -85,12 +85,13 @@ void MetalAppDelegate::applicationDidFinishLaunching( NS::Notification* pNotific
 	_pMtkView->setClearDepth( 1.0f );
 
 	_pViewDelegate = new MetalMTKViewDelegate( _pDevice );
-	if(!path_objs_.empty())
-		_pViewDelegate->setRePathObjs(path_objs_);
+
 	if(window_width_ != 0 && window_height_ != 0)
 		_pViewDelegate->setScrSize(window_width_, window_height_);
 	if(frame_count_ != 0)
 		_pViewDelegate->setFrameCount(frame_count_);
+	if(!path_objs_.empty())
+		_pViewDelegate->setRePathObjs(path_objs_);
 	_pMtkView->setDelegate( _pViewDelegate );
 
 	_pWindow->setContentView( _pMtkView );
