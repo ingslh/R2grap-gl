@@ -3,7 +3,7 @@
 #include <memory>
 #include "opengl/r2grapgl.h"
 #if(WIN32)
-#include "directx/d3dApp.h"
+#include "directx/R2grapdx.h"
 #endif
 
 int main(int argc, char *argv[]){
@@ -13,10 +13,10 @@ int main(int argc, char *argv[]){
   HINSTANCE hInstance = GetModuleHandle(NULL);
 #endif
 
-  //auto grap = new R2grap::R2grapGl(std::string(argv[1]));
-  //grap->run();
+  //R2grap::R2grapGl grapgl(argv[1]);
+  //grapgl.run();
 
-  R2grap::R2grapGl grapgl(argv[1]);
-  grapgl.run();
+  R2grap::R2grapDx grapdx(argv[1]);
+  grapdx.run();
 }
 

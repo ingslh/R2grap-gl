@@ -109,6 +109,9 @@ endif()
 
 
 add_library(GLAD include/glad/glad.c)
+if(WIN32)
+add_definitions(-D_DISABLE_EXTENDED_ALIGNED_STORAGE)
+endif()
 add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})

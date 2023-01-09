@@ -14,18 +14,19 @@ public:
 
   struct ConstantBuffer
   {
+    DirectX::XMMATRIX transform;
     DirectX::XMMATRIX world;
     DirectX::XMMATRIX view;
     DirectX::XMMATRIX proj;
   };
 
 public:
-  D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight);
+  D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count);
   ~D3DRender();
 
   bool Init(const std::vector<R2grap::RePathObj>& objs);
   void OnResize();
-  void UpdateScene();
+  void UpdateScene(float dt);
   void DrawScene();
 
 private:
@@ -45,5 +46,7 @@ private:
   ConstantBuffer m_CBuffer;  	
 
   std::vector<R2grap::RePathObj> objs_;
+  unsigned frame_count_ = 0;
+  unsigned played_ = 0;
 };
 

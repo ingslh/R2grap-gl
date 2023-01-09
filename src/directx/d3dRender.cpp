@@ -2,38 +2,62 @@
 #include "d3dUtil.h"
 #include "DXTrace.h"
 #include "d3dApp.h"
+#include "PathRenderData.h"
 
 const D3D11_INPUT_ELEMENT_DESC D3DRender::VertexPosColor::inputLayout[2] = {
     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
-D3DRender::D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight)
-  :D3DApp(hInstance, windowName, initWidth, initHeight), m_CBuffer(){}
+D3DRender::D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count)
+  :D3DApp(hInstance, windowName, initWidth, initHeight), m_CBuffer(), frame_count_(frame_count){}
 
 D3DRender::~D3DRender(){}
 
 bool D3DRender::Init(const std::vector<R2grap::RePathObj>& objs){
+  objs_ = objs;
   if(!D3DApp::Init()) return false;
   
   if(!InitEffect()) return false;
 
   if(!InitResource()) return false;
-
-  objs_ = objs;
   return true;
 }
 
 void D3DRender::OnResize(){
-  D3DRender::OnResize();
+  D3DApp::OnResize();
 }
 
-void D3DRender::UpdateScene(){
 
+void D3DRender::UpdateScene(float dt){
+  for (auto i = 0; i < 1; ++i) {
+    auto trans = objs_[i].trans[played_];
+    
+    m_CBuffer.transform = DirectX::XMMATRIX(trans[0].x, trans[1].x, trans[2].x, trans[3].x,
+                                            trans[0].y, trans[1].y, trans[2].y, trans[3].y,
+                                            trans[0].z, trans[1].z, trans[2].z, trans[3].z,
+                                            trans[0].w, trans[1].w, trans[2].w, trans[3].w);
+    
+    //update m_pConstantBuffer
+    D3D11_MAPPED_SUBRESOURCE mappedData;
+    HR(m_pd3dImmediateContext->Map(m_pConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+    memcpy_s(mappedData.pData, sizeof(m_CBuffer), &m_CBuffer, sizeof(m_CBuffer));
+    m_pd3dImmediateContext->Unmap(m_pConstantBuffer.Get(), 0);
+  }
+  played_ = played_ > frame_count_ ? 0 : ++played_;
 }
 
 void D3DRender::DrawScene(){
+  assert(m_pd3dImmediateContext);
+  assert(m_pSwapChain);
 
+  static float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };	// RGBA = (0,0,0,255)
+  m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), reinterpret_cast<const float*>(&black));
+  m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+  auto index_size = objs_.front().path->tri_ind.size();
+  m_pd3dImmediateContext->DrawIndexed(index_size, 0, 0);
+  HR(m_pSwapChain->Present(0, 0));
 }
 
 bool D3DRender::InitEffect(){ //blend shader
@@ -56,7 +80,7 @@ bool D3DRender::InitEffect(){ //blend shader
 bool D3DRender::InitResource(){
   if (objs_.empty()) return false;
 
-  for (auto ind = 0; ind < objs_.size(); ind++) {
+  for (auto ind = 0; ind < 1; ind++) {
     auto fill = objs_[ind].fill;
     auto stroke = objs_[ind].stroke;
     glm::vec4 tmp_color = fill ? fill->color : stroke->color;
@@ -73,7 +97,7 @@ bool D3DRender::InitResource(){
       D3D11_BUFFER_DESC vbd;
       ZeroMemory(&vbd, sizeof(vbd));
       vbd.Usage = D3D11_USAGE_IMMUTABLE;
-      vbd.ByteWidth = sizeof vertices;
+      vbd.ByteWidth = sizeof(VertexPosColor) * (vert_array.size() / 3);
       vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
       vbd.CPUAccessFlags = 0;
 
@@ -81,7 +105,7 @@ bool D3DRender::InitResource(){
       ZeroMemory(&InitData, sizeof(InitData));
       InitData.pSysMem = vertices;
       HR(m_pd3dDevice->CreateBuffer(&vbd, &InitData, m_pVertexBuffer.GetAddressOf()));
-      delete vertices;
+      //delete vertices;
 
       if (path_data->closed) {
         auto tri_array = path_data->tri_ind;
@@ -91,13 +115,13 @@ bool D3DRender::InitResource(){
         D3D11_BUFFER_DESC ibd;
         ZeroMemory(&ibd, sizeof(ibd));
         ibd.Usage = D3D11_USAGE_IMMUTABLE;
-        ibd.ByteWidth = sizeof indices;
+        ibd.ByteWidth = sizeof(DWORD) * tri_array.size();
         ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         ibd.CPUAccessFlags = 0;
         InitData.pSysMem = indices;
         HR(m_pd3dDevice->CreateBuffer(&ibd, &InitData, m_pIndexBuffer.GetAddressOf()));
         m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-        delete indices;
+        //delete indices;
       }
     }else {
 
