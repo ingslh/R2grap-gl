@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <camera.h>
+#include <simd/simd.h>
 
 const int MetalRenderer::kMaxFramesInFlight = 1;
 static constexpr size_t kNumInstances = 32;
@@ -94,9 +95,9 @@ void MetalRenderer::buildShaders()
         {
             v2f o;
             float4 pos = float4( vertexData[ vertexId ].position, 1.0 );
-            pos = instanceData[ instanceId ].instanceTransform * pos;
-            pos = cameraData.perspectiveTransform * cameraData.viewTransform * cameraData.modelTransform * pos;
-            o.position = pos;
+						pos = instanceData[ instanceId ].instanceTransform * pos;
+            pos = cameraData.perspectiveTransform * cameraData.viewTransform *cameraData.modelTransform * pos;
+						o.position = pos;
             o.color = half3( instanceData[ instanceId ].instanceColor.rgb );
             return o;
         }
@@ -152,27 +153,27 @@ void MetalRenderer::buildBuffers(const R2grap::RePathObj &obj) {
 	auto path_data = obj.path;
 	if(!path_data->has_keyframe){
 		auto vert_array = path_data->verts;
-		const size_t vertexDataSize = sizeof(float) * vert_array.size();
-		/*
-		MTL::Buffer* pVertexBuffer = _pDevice->newBuffer( vertexDataSize, MTL::ResourceStorageModeManaged );
-		pVertDataBufferList_.push_back(pVertexBuffer);
-		memcpy(pVertexBuffer->contents(), &vert_array[0], vertexDataSize);
-		pVertexBuffer->didModifyRange(NS::Range::Make(0, pVertexBuffer->length()));
-		*/
+		simd::float3 *vert_ptr = new simd::float3[vert_array.size() / 3];
+		for(auto i = 0; i < vert_array.size() / 3 ; i++){
+			vert_ptr[i] = {vert_array[3 *i], vert_array[3 *i + 1]  /*- (float)0.3*/, vert_array[3 *i + 2]};
+		}
+		const size_t vertexDataSize = sizeof(simd::float3) * vert_array.size() / 3;
 		_pVertexDataBuffer = _pDevice->newBuffer( vertexDataSize, MTL::ResourceStorageModeManaged );
-		memcpy( _pVertexDataBuffer->contents(), &vert_array[0], vertexDataSize );
+		memcpy( _pVertexDataBuffer->contents(), vert_ptr, vertexDataSize );
 		_pVertexDataBuffer->didModifyRange( NS::Range::Make( 0, _pVertexDataBuffer->length() ) );
+		delete []vert_ptr;
 
 		if(path_data->closed){
 			auto ind_array = path_data->tri_ind;
-			const size_t indexDataSize = sizeof(unsigned int) * ind_array.size();
-			/*MTL::Buffer* pIndexBuffer = _pDevice->newBuffer( indexDataSize, MTL::ResourceStorageModeManaged );
-			pIndexBufferList_[pVertDataBufferList_.size() - 1] = pIndexBuffer;
-			memcpy(pIndexBuffer->contents(), &ind_array[0], indexDataSize);
-			pIndexBuffer->didModifyRange(NS::Range::Make(0,pIndexBuffer->length()));*/
+			const size_t indexDataSize = sizeof(uint16_t) * ind_array.size();
+			uint16_t* ind_ptr = new uint16_t[ind_array.size()];
+			for(auto i = 0; i < ind_array.size(); i++){
+				ind_ptr[i] = static_cast<uint16_t>(ind_array[i]);
+			}
 			_pIndexBuffer = _pDevice->newBuffer( indexDataSize, MTL::ResourceStorageModeManaged );
-			memcpy( _pIndexBuffer->contents(), &ind_array[0], indexDataSize );
-			_pIndexBuffer->didModifyRange( NS::Range::Make( 0, _pIndexBuffer->length() ) );
+			memcpy( _pIndexBuffer->contents(), ind_ptr, indexDataSize );
+			_pIndexBuffer->didModifyRange( NS::Range::Make( 0, _pIndexBuffer->length()));
+			delete []ind_ptr;
 		}
 	}
 
@@ -197,8 +198,9 @@ void MetalRenderer::setCameraData() {
 	shader_types::CameraData* pCameraData = reinterpret_cast< shader_types::CameraData *>( pCameraDataBuffer_->contents() );
 	Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 	pCameraData->perspectiveTransform = glm::perspective( glm::radians(camera.Zoom) ,(float)scr_width_/(float)scr_height_, 0.1f, 100.0f ) ;
+	//pCameraData->perspectiveTransform = MetalMath::makePerspective(45.f * M_PI / 180.f, 1.f, 0.03f, 500.0f);
 	pCameraData->viewTransform = camera.GetViewMatrix();
-	pCameraData->modelTransform = glm::mat4(1);
+	pCameraData->modelTransform = glm::mat4(1.0);
 	pCameraDataBuffer_->didModifyRange( NS::Range::Make( 0, sizeof( shader_types::CameraData ) ) );
 }
 
@@ -228,8 +230,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		
 		//set InstanceData.transform
 		if(!obj.keep_trans){
-			//pInstanceData->instanceTransform = obj.trans[played_];
-			pInstanceData->instanceTransform = obj.trans[15];
+			pInstanceData->instanceTransform = obj.trans[played_];
 		}/*
 		else if(obj.keep_trans && !path_objs_[ind - 1].keep_trans){
 			pInstanceData->instanceTransform = path_objs_[ind - 1].trans[played_];
@@ -242,8 +243,8 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		if(obj.fill){
 			if(obj.fill->trans_color.empty())
 				pInstanceData->instanceColor = obj.fill->color;
-			else
-				pInstanceData->instanceColor = obj.fill->trans_color[played_];
+			//else
+			//	pInstanceData->instanceColor = obj.fill->trans_color[played_];
 		}
 
 		/*if(obj.stroke){
@@ -274,7 +275,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		pEnc->setRenderPipelineState( _pPSO );
 		pEnc->setDepthStencilState( _pDepthStencilState );
 
-		pEnc->setVertexBuffer( pVertexBuffer, /* offset */ 0, /* index */ 0 );
+		pEnc->setVertexBuffer( _pVertexDataBuffer, /* offset */ 0, /* index */ 0 );
 		pEnc->setVertexBuffer( pInstanceDataBuffer, /* offset */ 0, /* index */ 1 );
 		pEnc->setVertexBuffer( pCameraDataBuffer_, /* offset */ 0, /* index */ 2 );
 
@@ -283,15 +284,11 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 
 		if(path->closed){
 			//auto index_size = path->has_keyframe ? path->trans_tri_ind[played_].size() : path->tri_ind.size();
-			auto index_size = path->tri_ind.size();
-			/*
-			pEnc->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeLine,
+			unsigned index_size = path->tri_ind.size();
+			pEnc->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
 																	index_size,
 																	MTL::IndexType::IndexTypeUInt16,
-																	_pIndexBuffer, 0, 1);*/
-			pEnc->drawPrimitives(MTL::PrimitiveType::PrimitiveTypeLineStrip,
-													 (int)0,
-													 (int)path->verts.size());
+																	_pIndexBuffer, 0);
 		}
 		/*
 		else{
@@ -302,7 +299,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		}*/
 		pEnc->endEncoding();
 	}
-	//played_ = played_ > frame_count_ ? 0 : ++played_;
+	played_ = played_ > frame_count_ ? 0 : ++played_;
 
 	pCmd->presentDrawable( pView->currentDrawable() );
 	pCmd->commit();

@@ -7,6 +7,7 @@
 #include <AppKit/AppKit.hpp>
 #include <MetalKit/MetalKit.hpp>
 #include <glm/glm.hpp>
+#include <simd/simd.h>
 #include "PathRenderData.h"
 
 namespace shader_types
