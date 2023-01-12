@@ -3,6 +3,7 @@
 #include "DXTrace.h"
 #include "d3dApp.h"
 #include "PathRenderData.h"
+#include "camera.h"
 
 const D3D11_INPUT_ELEMENT_DESC D3DRender::VertexPosColor::inputLayout[2] = {
     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -31,12 +32,11 @@ void D3DRender::OnResize(){
 
 void D3DRender::UpdateScene(float dt){
   for (auto i = 0; i < 1; ++i) {
-    auto trans = objs_[i].trans[played_];
-    
-    m_CBuffer.transform = DirectX::XMMATRIX(trans[0].x, trans[1].x, trans[2].x, trans[3].x,
-                                            trans[0].y, trans[1].y, trans[2].y, trans[3].y,
-                                            trans[0].z, trans[1].z, trans[2].z, trans[3].z,
-                                            trans[0].w, trans[1].w, trans[2].w, trans[3].w);
+    auto trans = objs_[i].trans[15];
+    m_CBuffer.transform = XMMatrixTranspose(DirectX::XMMATRIX(trans[0].x, trans[0].y, trans[0].z, trans[0].w,
+                                            trans[1].x, trans[1].y, trans[1].z, trans[1].w,
+                                            trans[2].x, trans[2].y, trans[2].z, trans[2].w,
+                                            trans[3].x, trans[3].y, trans[3].z, trans[3].w));
     
     //update m_pConstantBuffer
     D3D11_MAPPED_SUBRESOURCE mappedData;
@@ -44,7 +44,7 @@ void D3DRender::UpdateScene(float dt){
     memcpy_s(mappedData.pData, sizeof(m_CBuffer), &m_CBuffer, sizeof(m_CBuffer));
     m_pd3dImmediateContext->Unmap(m_pConstantBuffer.Get(), 0);
   }
-  played_ = played_ > frame_count_ ? 0 : ++played_;
+  played_ = played_ >= frame_count_ ? 0 : ++played_;
 }
 
 void D3DRender::DrawScene(){
@@ -55,8 +55,11 @@ void D3DRender::DrawScene(){
   m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), reinterpret_cast<const float*>(&black));
   m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+  auto vert_size = objs_.front().path->verts.size() / 3;
   auto index_size = objs_.front().path->tri_ind.size();
+
   m_pd3dImmediateContext->DrawIndexed(index_size, 0, 0);
+  //m_pd3dImmediateContext->Draw(vert_size, 0);
   HR(m_pSwapChain->Present(0, 0));
 }
 
@@ -90,8 +93,8 @@ bool D3DRender::InitResource(){
     if (!path_data->has_keyframe) {
       auto vert_array = path_data->verts;
       auto vertices = new VertexPosColor[vert_array.size() / 3];
-      for (auto i = 0; i < vert_array.size() / 3; i = i + 3) {
-        vertices[i].pos = DirectX::XMFLOAT3(vert_array[i], vert_array[i + 1], vert_array[i + 2]);
+      for (auto i = 0; i < vert_array.size() / 3; i++) {
+        vertices[i].pos = DirectX::XMFLOAT3(vert_array[3 * i], vert_array[3 * i + 1], vert_array[3 * i + 2]);
         vertices[i].color = color;
       }
       D3D11_BUFFER_DESC vbd;
@@ -105,23 +108,24 @@ bool D3DRender::InitResource(){
       ZeroMemory(&InitData, sizeof(InitData));
       InitData.pSysMem = vertices;
       HR(m_pd3dDevice->CreateBuffer(&vbd, &InitData, m_pVertexBuffer.GetAddressOf()));
-      //delete vertices;
+      delete []vertices;
 
       if (path_data->closed) {
         auto tri_array = path_data->tri_ind;
         auto indices = new DWORD[tri_array.size()];
         for (auto j = 0; j < tri_array.size(); j++)
-          indices[j] = static_cast<DWORD>(tri_array[j]);
+          indices[j] = tri_array[j];
+        //memcpy(indices, &tri_array[0], tri_array.size() * sizeof(DWORD));
         D3D11_BUFFER_DESC ibd;
         ZeroMemory(&ibd, sizeof(ibd));
         ibd.Usage = D3D11_USAGE_IMMUTABLE;
         ibd.ByteWidth = sizeof(DWORD) * tri_array.size();
+        auto test = sizeof(indices);
         ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         ibd.CPUAccessFlags = 0;
         InitData.pSysMem = indices;
         HR(m_pd3dDevice->CreateBuffer(&ibd, &InitData, m_pIndexBuffer.GetAddressOf()));
-        m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-        //delete indices;
+        delete []indices;
       }
     }else {
 
@@ -139,18 +143,19 @@ bool D3DRender::InitResource(){
 
   m_CBuffer.world = DirectX::XMMatrixIdentity();
   m_CBuffer.view = XMMatrixTranspose(DirectX::XMMatrixLookAtLH(
-    DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f),
+    DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f),
     DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
     DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
   ));
-  m_CBuffer.proj = XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, AspectRatio(), 1.0f, 100.0f));
+  m_CBuffer.proj = XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, AspectRatio(), 0.1f, 100.0f));
 
   //Enter vertex buffer settings for the assembly phase
   UINT stride = sizeof(VertexPosColor);
   UINT offset = 0;
   m_pd3dImmediateContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
+  m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
   //Set element type, set input layout
-  m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
   m_pd3dImmediateContext->IASetInputLayout(m_pVertexLayout.Get());
   //Bind shaders to render pipelines
   m_pd3dImmediateContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
