@@ -55,8 +55,8 @@ void D3DRender::DrawScene(){
   m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), reinterpret_cast<const float*>(&black));
   m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-  auto vert_size = objs_.front().path->verts.size() / 3;
-  auto index_size = objs_.front().path->tri_ind.size();
+  UINT vert_size = objs_.front().path->verts.size() / 3;
+  UINT index_size = objs_.front().path->tri_ind.size();
 
   m_pd3dImmediateContext->DrawIndexed(index_size, 0, 0);
   //m_pd3dImmediateContext->Draw(vert_size, 0);
@@ -103,7 +103,6 @@ bool D3DRender::InitResource(){
       vbd.ByteWidth = sizeof(VertexPosColor) * (vert_array.size() / 3);
       vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
       vbd.CPUAccessFlags = 0;
-
       D3D11_SUBRESOURCE_DATA InitData;
       ZeroMemory(&InitData, sizeof(InitData));
       InitData.pSysMem = vertices;
@@ -112,15 +111,13 @@ bool D3DRender::InitResource(){
 
       if (path_data->closed) {
         auto tri_array = path_data->tri_ind;
-        auto indices = new DWORD[tri_array.size()];
+        DWORD* indices = new DWORD[tri_array.size()];
         for (auto j = 0; j < tri_array.size(); j++)
-          indices[j] = tri_array[j];
-        //memcpy(indices, &tri_array[0], tri_array.size() * sizeof(DWORD));
+          indices[j] = static_cast<DWORD>(tri_array[j]);
         D3D11_BUFFER_DESC ibd;
         ZeroMemory(&ibd, sizeof(ibd));
         ibd.Usage = D3D11_USAGE_IMMUTABLE;
         ibd.ByteWidth = sizeof(DWORD) * tri_array.size();
-        auto test = sizeof(indices);
         ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         ibd.CPUAccessFlags = 0;
         InitData.pSysMem = indices;
@@ -154,8 +151,9 @@ bool D3DRender::InitResource(){
   UINT offset = 0;
   m_pd3dImmediateContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
   m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
   //Set element type, set input layout
-  m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+  m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   m_pd3dImmediateContext->IASetInputLayout(m_pVertexLayout.Get());
   //Bind shaders to render pipelines
   m_pd3dImmediateContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
@@ -167,8 +165,8 @@ bool D3DRender::InitResource(){
   D3D11SetDebugObjectName(m_pVertexBuffer.Get(), "VertexBuffer");
   D3D11SetDebugObjectName(m_pIndexBuffer.Get(), "IndexBuffer");
   D3D11SetDebugObjectName(m_pConstantBuffer.Get(), "ConstantBuffer");
-  D3D11SetDebugObjectName(m_pVertexShader.Get(), "Cube_VS");
-  D3D11SetDebugObjectName(m_pPixelShader.Get(), "Cube_PS");
+  D3D11SetDebugObjectName(m_pVertexShader.Get(), "Shader_VS");
+  D3D11SetDebugObjectName(m_pPixelShader.Get(), "Shader_PS");
   return true;
 }
 
