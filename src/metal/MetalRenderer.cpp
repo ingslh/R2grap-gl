@@ -107,6 +107,7 @@ void MetalRenderer::buildShaders()
             pos = instanceData[ instanceId ].instanceTransform * pos;
             pos = cameraData.perspectiveTransform * cameraData.viewTransform *cameraData.modelTransform * pos;
             o.position = pos;
+						o.position.y = -o.position.y;
             o.color = half3( instanceData[ instanceId ].instanceColor.rgb );
             return o;
         }
@@ -209,7 +210,6 @@ void MetalRenderer::setCameraData() {
 	shader_types::CameraData* pCameraData = reinterpret_cast< shader_types::CameraData *>( pCameraDataBuffer_->contents() );
 	Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 	pCameraData->perspectiveTransform = glm::perspective( glm::radians(camera.Zoom) ,(float)scr_width_/(float)scr_height_, 0.1f, 100.0f ) ;
-	//pCameraData->perspectiveTransform = MetalMath::makePerspective(45.f * M_PI / 180.f, 1.f, 0.03f, 500.0f);
 	pCameraData->viewTransform = camera.GetViewMatrix();
 	pCameraData->modelTransform = glm::mat4(1.0);
 	pCameraDataBuffer_->didModifyRange( NS::Range::Make( 0, sizeof( shader_types::CameraData ) ) );
@@ -233,13 +233,9 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 
 	glm::mat4 old_trans;
 	for(auto ind = 0; ind < path_objs_.size(); ind++){
-	//for(auto ind = 0; ind < 1; ind++){
 		MTL::Buffer* pVertexBuffer = pVertDataBufferList_[ind];
 		MTL::Buffer* pIndexBuffer = pIndexBufferList_[ind];
 		MTL::Buffer* pInstanceDataBuffer = pInstanceDataBufferList_[ind];
-		//MTL::Buffer* pVertexBuffer = _pVertexDataBuffer;
-		//MTL::Buffer* pIndexBuffer = _pIndexBuffer;
-		//MTL::Buffer* pInstanceDataBuffer = _pInstanceDataBuffer;
 		shader_types::InstanceData* pInstanceData = reinterpret_cast< shader_types::InstanceData *>( pInstanceDataBuffer->contents() );
 		
 		auto obj = path_objs_[ind];
@@ -272,9 +268,6 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		}
 		pInstanceDataBuffer->didModifyRange( NS::Range::Make( 0, pInstanceDataBuffer->length() ) );
 
-		//set vertices
-		//auto path = obj.path;
-
 		if(obj.path->has_keyframe){
 			auto vert_vec = obj.path->trans_verts[played_];
 			memcpy(pVertexBuffer->contents(), &vert_vec[0], sizeof(float) * vert_vec.size());
@@ -290,7 +283,7 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 		pEnc->setVertexBuffer( pInstanceDataBuffer, /* offset */ 0, /* index */ 1 );
 		pEnc->setVertexBuffer( pCameraDataBuffer_, /* offset */ 0, /* index */ 2 );
 
-		pEnc->setCullMode( MTL::CullModeBack );
+		pEnc->setCullMode( MTL::CullModeFront );
 		pEnc->setFrontFacingWinding( MTL::Winding::WindingCounterClockwise );
 
 		if(obj.path->closed){
