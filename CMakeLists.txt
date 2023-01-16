@@ -32,6 +32,16 @@ file(GLOB OPENGL CONFIG_DEPENDS
   src/opengl/*cpp
 )
 
+file(GLOB OPENGL CONFIG_DEPENDS
+  src/opengl/*.h
+  src/opengl/*.cpp
+)
+
+file(GLOB METAL CONFIG_DEFENDS
+    src/metal/*.h
+    src/metal/*.cpp
+)
+
 set(SHADER
     src/shader/glsl/bezier_insert.geom
     src/shader/glsl/r2grap_m.frag
@@ -49,8 +59,13 @@ source_group(shader FILES ${SHADER})
 source_group(base FILES ${BASE})
 source_group(codec FILES ${CODEC})
 source_group(render FILES ${RENDER})
-source_group(directx FILES ${DIRECTX})
 source_group(opengl FILES ${OPENGL})
+
+if(win32)
+  source_group(directx FILES ${DIRECTX})
+elseif(APPLE)
+  source_group(metal FILES ${METAL})
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -85,15 +100,23 @@ set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})
 
 set(INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_LIST_DIR}/include
+  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
+  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
   ${CMAKE_CURRENT_LIST_DIR}/src/codec
   ${CMAKE_CURRENT_LIST_DIR}/src/base
   ${CMAKE_CURRENT_LIST_DIR}/src/render
-  ${CMAKE_CURRENT_LIST_DIR}/src/directx
+  ${CMAKE_CURRENT_LIST_DIR}/src/opengl
   ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
+if(win32)
+list(APPEND ${CMAKE_CURRENT_LIST_DIR}/src/directx)
+endif()
+
 include_directories(
     ${CMAKE_CURRENT_LIST_DIR}/include
+    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
+    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
 )
 
 set(LIBS_DIRECTORIES
@@ -107,12 +130,18 @@ else()
 	link_directories(/opt/homebrew/Cellar/glfw/3.3.7/lib)
 endif()
 
+if(APPLE)
+  add_subdirectory(include/metal-cmake)
+endif()
 
 add_library(GLAD include/glad/glad.c)
+
 if(WIN32)
-add_definitions(-D_DISABLE_EXTENDED_ALIGNED_STORAGE)
+  add_definitions(-D_DISABLE_EXTENDED_ALIGNED_STORAGE)
+  add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
+elseif(APPLE)
+  add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${METAL} ${MAIN})
 endif()
-add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
@@ -127,11 +156,10 @@ endif()
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} glfw3 GLAD)
-	target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
+  target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
 elseif(APPLE)
-	target_link_libraries(${PROJECT_NAME} GLFW GLAD)
-else()
-target_link_libraries(${PROJECT_NAME} glfw GLAD)
+  target_link_libraries(${PROJECT_NAME} GLFW GLAD)
+  target_link_libraries(${PROJECT_NAME} METAL_CPP)
 endif()
 
 if(MSVC)
