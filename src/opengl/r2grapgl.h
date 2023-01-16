@@ -4,16 +4,24 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <vector>
+#include <memory>
+
 
 class Shader;
 namespace R2grap{
 struct RePathObj;
+class JsonReader;
 class R2grapGl{
 public:
-  R2grapGl(const std::string& file_name);
+  explicit R2grapGl(const std::string& file_name);
+  ~R2grapGl();
   void run();
 
 private:
+  void processInput(GLFWwindow *window);
+
+private:
+  std::shared_ptr<JsonReader> reader_;
 	GLFWwindow* window_ = nullptr;
 	Shader* shader_ = nullptr;
 	std::vector<RePathObj> objs_;
