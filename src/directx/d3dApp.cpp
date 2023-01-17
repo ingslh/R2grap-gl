@@ -4,6 +4,7 @@
 #include "DXTrace.h"
 #include <sstream>
 #include <time.h>
+#include <iostream>
 
 #pragma warning(disable: 6031)
 
@@ -31,12 +32,12 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return g_pd3dApp->MsgProc(hwnd, msg, wParam, lParam);
 }
 
-D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned framecount)
+D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned framerate)
     : m_hAppInst(hInstance),
     m_MainWndCaption(windowName),
     m_ClientWidth(initWidth),
     m_ClientHeight(initHeight),
-    m_FrameCount(framecount),
+    m_FrameRate(framerate),
     m_hMainWnd(nullptr),
     m_AppPaused(false),
     m_Minimized(false),
@@ -84,10 +85,9 @@ float D3DApp::AspectRatio()const
 int D3DApp::Run()
 {
     MSG msg = { 0 };
-    m_Timer.Reset();
-
-    static double limitFPS = 1.0 / m_FrameCount;
-    double lastTime = GetTickCount()/1000.0f;
+    double startTime = GetTickCount()/1000.0f;
+    double lastTime = GetTickCount()/1000.0f - startTime, timer = lastTime;
+    int frames = 0;
     double deltaTime = 0, nowTime = 0;
 
     while (msg.message != WM_QUIT)
@@ -99,17 +99,23 @@ int D3DApp::Run()
         }
         else
         {
-            
-            nowTime = GetTickCount()/1000.0f;
-            deltaTime = (nowTime - lastTime) * m_FrameCount;
+            nowTime = GetTickCount()/1000.0f - startTime;
+            if (nowTime - lastTime <= 0) continue;
+            deltaTime += (nowTime - lastTime) * m_FrameRate;
             lastTime = nowTime;
 
-            if (!m_AppPaused && deltaTime >= 1.0)
+            while(deltaTime >= 1.0f)
             {
-                UpdateScene(m_Timer.DeltaTime());
+                //UpdateScene(float());
                 DrawScene();
+                frames++;
+                deltaTime--;
             }
-            deltaTime = 0;
+            if (GetTickCount() / 1000.0f - startTime - timer > 1.0f) {
+              timer++;
+              std::cout << "FPS: " << frames << std::endl;
+              frames = 0;
+            }
         }
     }
 

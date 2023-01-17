@@ -21,20 +21,15 @@ file(GLOB RENDER CONFIG_DEFENDS
 	src/render/*.h
 	src/render/*.cpp
 )
-if(WIN32)
+
 file(GLOB DIRECTX CONFIG_DEPENDS
-  src/directx/*.h
-  src/directx/*.cpp
-)
-endif()
-file(GLOB OPENGL CONFIG_DEPENDS
-  src/opengl/*h
-  src/opengl/*cpp
+	src/directx/*.h
+	src/directx/*.cpp
 )
 
 file(GLOB OPENGL CONFIG_DEPENDS
-  src/opengl/*.h
-  src/opengl/*.cpp
+	src/opengl/*.h
+	src/opengl/*.cpp
 )
 
 file(GLOB METAL CONFIG_DEFENDS
@@ -60,29 +55,25 @@ source_group(base FILES ${BASE})
 source_group(codec FILES ${CODEC})
 source_group(render FILES ${RENDER})
 source_group(opengl FILES ${OPENGL})
-
-if(win32)
-  source_group(directx FILES ${DIRECTX})
-elseif(APPLE)
-  source_group(metal FILES ${METAL})
-endif()
+source_group(directx FILES ${DIRECTX})
+source_group(metal FILES ${METAL})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(WIN32)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
-  set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF /SUBSYSTEM:WINDOWS /entry:mainCRTStartup")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF /SUBSYSTEM:WINDOWS /entry:mainCRTStartup")
 endif()
 
 if(UNIX)
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-  if(NOT APPLE)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN")
-  else()
-    set(CMAKE_MACOSX_RPATH ON)
-    set(CMAKE_INSTALL_RPATH "@executable_path")
-  endif()
+	set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+	set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+	if(NOT APPLE)
+		set(CMAKE_INSTALL_RPATH "$ORIGIN")
+	else()
+		set(CMAKE_MACOSX_RPATH ON)
+		set(CMAKE_INSTALL_RPATH "@executable_path")
+	endif()
 endif()
 
 if(CMAKE_SIZEOF_VOID_P MATCHES 8)
@@ -92,35 +83,25 @@ elseif(CMAKE_SIZEOF_VOID_P MATCHES 4)
 endif()
 
 if(APPLE)
-  set(CONFIG_TYPE $(CONFIGURATION))
+	set(CONFIG_TYPE $(CONFIGURATION))
 else()
-  set(CONFIG_TYPE ${CMAKE_CFG_INTDIR})
+	set(CONFIG_TYPE ${CMAKE_CFG_INTDIR})
 endif()
 set(TARGET_TRIPLE_CONFIG ${CMAKE_SYSTEM_NAME}-${PROJECT_ARCH}-${CONFIG_TYPE})
 
-set(INCLUDE_DIRECTORIES
-  ${CMAKE_CURRENT_LIST_DIR}/include
-  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
-  ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
-  ${CMAKE_CURRENT_LIST_DIR}/src/codec
-  ${CMAKE_CURRENT_LIST_DIR}/src/base
-  ${CMAKE_CURRENT_LIST_DIR}/src/render
-  ${CMAKE_CURRENT_LIST_DIR}/src/opengl
-  ${CMAKE_CURRENT_LIST_DIR}/src
-)
-
-if(win32)
-list(APPEND ${CMAKE_CURRENT_LIST_DIR}/src/directx)
-endif()
-
-include_directories(
-    ${CMAKE_CURRENT_LIST_DIR}/include
-    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
-    ${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
-)
-
 set(LIBS_DIRECTORIES
 	lib
+)
+
+include_directories(
+	${CMAKE_CURRENT_LIST_DIR}/include
+	${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp
+	${CMAKE_CURRENT_LIST_DIR}/include/metal-cpp-extensions
+	${CMAKE_CURRENT_LIST_DIR}/src/codec
+	${CMAKE_CURRENT_LIST_DIR}/src/base
+	${CMAKE_CURRENT_LIST_DIR}/src/render
+	${CMAKE_CURRENT_LIST_DIR}/src/opengl
+	${CMAKE_CURRENT_LIST_DIR}/src
 )
 
 if(WIN32)
@@ -131,39 +112,39 @@ else()
 endif()
 
 if(APPLE)
-  add_subdirectory(include/metal-cmake)
+	add_subdirectory(include/metal-cmake)
 endif()
 
 add_library(GLAD include/glad/glad.c)
 
 if(WIN32)
-  add_definitions(-D_DISABLE_EXTENDED_ALIGNED_STORAGE)
-  add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
+	add_definitions(-D_DISABLE_EXTENDED_ALIGNED_STORAGE)
+	add_executable(${PROJECT_NAME} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${DIRECTX} ${MAIN})
 elseif(APPLE)
-  add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${METAL} ${MAIN})
+	add_executable(${PROJECT_NAME} ${SHADER} ${RENDER} ${CODEC} ${BASE} ${OPENGL} ${METAL} ${MAIN})
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
 
 if(WIN32)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC _CRT_SECURE_NO_DEPRECATE _CRT_SECURE_NO_WARNINGS)
 else()
-  target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC _FILE_OFFSET_BITS=64)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE USING_OPENGL_RENDER=1)
+	target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17)
+	target_compile_definitions(${PROJECT_NAME} PUBLIC _FILE_OFFSET_BITS=64)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE USING_OPENGL_RENDER=1)
 endif()
 
 if(WIN32)
 	target_link_libraries(${PROJECT_NAME} glfw3 GLAD)
-  target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
+	target_link_libraries(${PROJECT_NAME} d3d11.lib dxgi.lib dxguid.lib D3DCompiler.lib d2d1.lib dwrite.lib winmm.lib)
 elseif(APPLE)
-  target_link_libraries(${PROJECT_NAME} GLFW GLAD)
-  target_link_libraries(${PROJECT_NAME} METAL_CPP)
+	target_link_libraries(${PROJECT_NAME} GLFW GLAD)
+	target_link_libraries(${PROJECT_NAME} METAL_CPP)
 endif()
 
 if(MSVC)
-  add_definitions(/W2 /GR)
+	add_definitions(/W2 /GR)
 else()
-  add_definitions(-fexceptions -frtti)
+	add_definitions(-fexceptions -frtti)
 endif()

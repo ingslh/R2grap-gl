@@ -21,7 +21,7 @@ public:
   };
 
 public:
-  D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count);
+  D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count, unsigned frame_rate);
   ~D3DRender();
 
   bool Init(const std::vector<R2grap::RePathObj>& objs);

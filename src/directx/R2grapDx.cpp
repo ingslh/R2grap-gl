@@ -10,9 +10,10 @@ R2grapDx::R2grapDx(const std::string& filename){
   auto window_width = AniInfoManager::GetIns().GetWidth();
   auto window_height = AniInfoManager::GetIns().GetHeight();
   auto frame_count = AniInfoManager::GetIns().GetDuration() * AniInfoManager::GetIns().GetFrameRate();
+  auto frame_rate = AniInfoManager::GetIns().GetFrameRate();
 
   HINSTANCE hInstance = GetModuleHandle(NULL);
-  dx_render_ = std::make_shared<D3DRender>(hInstance, L"R2GrapDx", window_width, window_height, frame_count);
+  dx_render_ = std::make_shared<D3DRender>(hInstance, L"R2GrapDx", window_width, window_height, frame_count, frame_rate);
 }
 
 int R2grapDx::run(){

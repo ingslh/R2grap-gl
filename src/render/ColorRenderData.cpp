@@ -69,7 +69,8 @@ void ColorRenderData::ProcessColorData(const KeyframePair& key_pair, ColorCacheD
       std::vector<glm::vec4> v4lastvalue_list({ v4lastvalue });
       auto v4curvalue = glm::vec4(el.keyValue.x, el.keyValue.y, el.keyValue.z, 1);
       std::vector<glm::vec4> v4curvalue_list({ v4curvalue });
-      auto linear_data = std::make_shared<LinearGenerator<glm::vec4>>(v4lastvalue_list, el.lastkeyTime, v4curvalue_list, el.keyTime);
+      auto linear_data = std::make_shared<LinearGenerator<glm::vec4>>(v4lastvalue_list, static_cast<unsigned>(el.lastkeyTime), 
+                                                                      v4curvalue_list, static_cast<unsigned>(el.keyTime));
       if (!linear_data) continue;
       color_data.trans_color.insert(linear_data->GetLinearMapToSignal().begin(), linear_data->GetLinearMapToSignal().end());
     }

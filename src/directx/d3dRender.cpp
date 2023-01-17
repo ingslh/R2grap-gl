@@ -10,8 +10,8 @@ const D3D11_INPUT_ELEMENT_DESC D3DRender::VertexPosColor::inputLayout[2] = {
     { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 };
 
-D3DRender::D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count)
-  :D3DApp(hInstance, windowName, initWidth, initHeight, frame_count), m_CBuffer(), frame_count_(frame_count){}
+D3DRender::D3DRender(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned frame_count, unsigned framerate)
+  :D3DApp(hInstance, windowName, initWidth, initHeight, framerate), m_CBuffer(), frame_count_(frame_count){}
 
 D3DRender::~D3DRender(){}
 
@@ -72,9 +72,6 @@ void D3DRender::DrawScene(){
       m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
       m_pd3dImmediateContext->IASetIndexBuffer(m_pIndexBufferList[i].Get(), DXGI_FORMAT_R32_UINT, 0);
       m_pd3dImmediateContext->DrawIndexed(objs_[i].path->tri_ind.size(), 0, 0);
-
-      /*m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-      m_pd3dImmediateContext->Draw(objs_[i].path->verts.size() / 3, 0);*/
     }
     else {
       m_pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -132,7 +129,6 @@ bool D3DRender::InitResource(){
       ComPtr<ID3D11Buffer> vertexBuffer;
       HR(m_pd3dDevice->CreateBuffer(&vbd, &InitData, vertexBuffer.GetAddressOf()));
       m_pVertexBufferList.push_back(vertexBuffer);
-      //m_pd3dImmediateContext->IASetVertexBuffers(0, 1, m_pVertexBufferList.back().GetAddressOf(), &stride, &offset);
       delete []vertices;
 
       if (path_data->closed) {

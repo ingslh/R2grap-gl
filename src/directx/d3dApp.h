@@ -95,7 +95,7 @@ protected:
 
     int m_ClientHeight;                                  /* 视口高度 */
 
-    unsigned int m_FrameCount;
+    unsigned int m_FrameRate;
 };
 
 #endif /* D3DAPP_H */

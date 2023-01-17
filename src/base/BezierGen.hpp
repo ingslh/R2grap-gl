@@ -161,7 +161,7 @@ public:
     if (curve1.size() != curve2.size()) return false;
     for (auto i = 0; i < curve1.size(); i++) {
       if (curve1[i].x != curve2[i].x) return false;
-      out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
+      out_curve[static_cast<unsigned>(curve1[i].x)] = { curve1[i].y, curve2[i].y };
     }
 		return true;
   }
@@ -170,7 +170,7 @@ public:
     if (curve1.size() != curve2.size()) return false;
     for (auto i = 0; i < curve1.size(); i++) {
       if (curve1[i].x != curve2[i].x) return false;
-      out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
+      out_curve[static_cast<unsigned>(curve1[i].x)] = { curve1[i].y, curve2[i].y };
     }
     return true;
   }
@@ -193,14 +193,14 @@ public:
 
     for (auto i = 0; i < curve1.size(); ++i) {
       if (curve1[i].x != curve2[i].x) return false;
-      out_curve[curve1[i].x] = { curve1[i].y, curve2[i].y };
+      out_curve[static_cast<unsigned>(curve1[i].x)] = { curve1[i].y, curve2[i].y };
     }
     return true;
   }
 
   static bool ConverCurve(const std::vector<glm::vec2>& curve1, std::map<unsigned int, std::vector<float>>& out_curve) {
     for (auto i = 0; i < curve1.size(); ++i) {
-      out_curve[curve1[i].x] = { curve1[i].y };
+      out_curve[static_cast<unsigned>(curve1[i].x)] = { curve1[i].y };
     }
     return true;
   }
@@ -216,7 +216,7 @@ private:
     if (f(l)*f(r) > 0 && ((r - 1) < 1)) return;
     float mid = (l + r) / 2;
     if (f(mid) <= 1e-4 && f(mid) >= -1e-4) {
-      ret.emplace_back(round(mid * pow(10,3)) * pow(10,-3));
+      ret.emplace_back(static_cast<float>(round(mid * pow(10,3)) * pow(10,-3)));
       return;
     }
     CubicPolynomial(l, mid, elements, ret), CubicPolynomial(mid, r, elements, ret);
