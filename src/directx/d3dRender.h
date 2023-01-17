@@ -34,15 +34,18 @@ private:
   bool InitResource();
 
 private:
-  ComPtr<ID3D11InputLayout> m_pVertexLayout;	
-  //std::vector<ComPtr<ID3D11Buffer>> m_pVertexBufferList;		
-  //std::vector<ComPtr<ID3D11Buffer>> m_pIndexBufferList;    
+  ComPtr<ID3D11InputLayout> m_pVertexLayout;	  
   ComPtr<ID3D11Buffer> m_pVertexBuffer;
   ComPtr<ID3D11Buffer> m_pIndexBuffer;
-  ComPtr<ID3D11Buffer> m_pConstantBuffer;         
+  ComPtr<ID3D11Buffer> m_pConstantBuffer;  
+
+  std::vector<ComPtr<ID3D11Buffer>> m_pVertexBufferList;		
+  std::map<unsigned, ComPtr<ID3D11Buffer>> m_pIndexBufferList;  
+  std::vector<ComPtr<ID3D11Buffer>> m_pConstantBufferList;
 
   ComPtr<ID3D11VertexShader> m_pVertexShader;	
   ComPtr<ID3D11PixelShader> m_pPixelShader;
+  ComPtr<ID3D11RasterizerState> m_pRSWireframe;
   ConstantBuffer m_CBuffer;  	
 
   std::vector<R2grap::RePathObj> objs_;

@@ -3,6 +3,7 @@
 #include "d3dUtil.h"
 #include "DXTrace.h"
 #include <sstream>
+#include <time.h>
 
 #pragma warning(disable: 6031)
 
@@ -30,11 +31,12 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     return g_pd3dApp->MsgProc(hwnd, msg, wParam, lParam);
 }
 
-D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight)
+D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned framecount)
     : m_hAppInst(hInstance),
     m_MainWndCaption(windowName),
     m_ClientWidth(initWidth),
     m_ClientHeight(initHeight),
+    m_FrameCount(framecount),
     m_hMainWnd(nullptr),
     m_AppPaused(false),
     m_Minimized(false),
@@ -82,8 +84,11 @@ float D3DApp::AspectRatio()const
 int D3DApp::Run()
 {
     MSG msg = { 0 };
-
     m_Timer.Reset();
+
+    static double limitFPS = 1.0 / m_FrameCount;
+    double lastTime = GetTickCount()/1000.0f;
+    double deltaTime = 0, nowTime = 0;
 
     while (msg.message != WM_QUIT)
     {
@@ -94,18 +99,17 @@ int D3DApp::Run()
         }
         else
         {
-            m_Timer.Tick();
+            
+            nowTime = GetTickCount()/1000.0f;
+            deltaTime = (nowTime - lastTime) * m_FrameCount;
+            lastTime = nowTime;
 
-            if (!m_AppPaused)
+            if (!m_AppPaused && deltaTime >= 1.0)
             {
-                CalculateFrameStats();
                 UpdateScene(m_Timer.DeltaTime());
                 DrawScene();
             }
-            else
-            {
-                Sleep(100);
-            }
+            deltaTime = 0;
         }
     }
 

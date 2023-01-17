@@ -11,7 +11,7 @@
 class D3DApp
 {
 public:
-    D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight);
+    D3DApp(HINSTANCE hInstance, const std::wstring& windowName, int initWidth, int initHeight, unsigned framecount);
     virtual ~D3DApp();
 
     HINSTANCE AppInst()const;                   /* 获取应用实例的句柄 */
@@ -94,6 +94,8 @@ protected:
     int m_ClientWidth;                                   /* 视口宽度 */
 
     int m_ClientHeight;                                  /* 视口高度 */
+
+    unsigned int m_FrameCount;
 };
 
 #endif /* D3DAPP_H */
