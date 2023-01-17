@@ -9,7 +9,7 @@ A 2D After Effect shape animation renderer.
 2. Fit AE’s layer-groud(s)-path clip construction；
 
 
-
+## File Directory 
 ```
 R2grap-gl
    |___assets //some configured animation json files
