@@ -28,4 +28,4 @@ R2grap-gl
 ```
 
 ## system design and workflow
-<img src="doc/img/Render&Code.png" width = "500" height = "400" alt="thinking" />
+<img src="doc/img/Render&Code.png" alt="workflow" />
