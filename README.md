@@ -25,3 +25,7 @@ R2grap-gl
          |___metal   //metal render process
          |___directx //directx render process
          |___opengl  //opengl render process
+```
+
+## system design and workflow
+<img src="doc/img/Render&Code.png" width = "500" height = "400" alt="thinking" />

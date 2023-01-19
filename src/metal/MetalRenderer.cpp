@@ -288,7 +288,6 @@ void MetalRenderer::drawPathObjs(MTK::View* pView){
 
 		if(obj.path->closed){
 			auto index_size = obj.path->has_keyframe ? obj.path->trans_tri_ind[played_].size() : obj.path->tri_ind.size();
-			//unsigned index_size = obj.path->tri_ind.size();
 			pEnc->drawIndexedPrimitives(MTL::PrimitiveType::PrimitiveTypeTriangle,
 																	index_size,
 																	MTL::IndexType::IndexTypeUInt16,
